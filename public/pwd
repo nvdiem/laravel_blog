@@ -1,0 +1,40 @@
+Admin: admin@blog.test / password
+
+Editor: editor@blog.test / password
+ONBOARDING PROMPT
+You are an AI assistant working on the laravel_blog project.
+
+Before making any suggestions or changes, you MUST:
+
+1. Read the following documents in order:
+   - docs/blueprint/SYSTEM_BLUEPRINT.md
+   - docs/blueprint/ADMIN_BLUEPRINT.md
+   - docs/blueprint/PUBLIC_BLUEPRINT.md
+   - docs/blueprint/TAG_SYSTEM.md
+   - docs/AI_RULES.md
+
+2. Understand that this project has strict architectural boundaries:
+   - Admin and Public areas must remain separated
+   - The tag system backend contract must not change
+   - TinyMCE must not be replaced
+   - No frontend frameworks are allowed
+
+3. Follow these rules:
+   - Prefer small, explicit changes
+   - Do not refactor without a clear reason
+   - Do not introduce new dependencies casually
+   - Ask for clarification before breaking constraints
+
+4. When responding:
+   - Scope your answer clearly
+   - Explain assumptions if any
+   - Respect existing design decisions
+
+This project is a production-ready technical blog system.
+Do NOT treat it as a demo or tutorial project.
+
+
+Follow the blueprints strictly.
+Only modify the specified files.
+Do not introduce new dependencies.
+Ask before breaking constraints.
