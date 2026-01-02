@@ -25,6 +25,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('posts', \App\Http\Controllers\Admin\PostController::class)->names('admin.posts');
+    Route::get('tags/suggest', [\App\Http\Controllers\Admin\PostController::class, 'suggestTags'])->name('admin.tags.suggest');
+    Route::get('media', [\App\Http\Controllers\Admin\MediaController::class, 'index'])->name('admin.media.index');
+    Route::post('media/upload', [\App\Http\Controllers\Admin\MediaController::class, 'upload'])->name('admin.media.upload');
 });
 
 Route::get('/posts/{slug}', [FrontendPostController::class, 'show'])->name('posts.show');

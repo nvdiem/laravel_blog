@@ -151,6 +151,16 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    public function suggestTags(Request $request)
+    {
+        $query = $request->get('q', '');
+        $tags = Tag::where('name', 'like', "%{$query}%")
+            ->orderBy('name')
+            ->limit(10)
+            ->get(['id', 'name']);
+        return response()->json($tags);
+    }
+
     public function destroy(Post $post)
     {
         if ($post->thumbnail) {

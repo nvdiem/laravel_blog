@@ -101,17 +101,21 @@
                 <div class="card-body">
                     <div id="tags-container" class="mb-2"></div>
 
-                    <input type="text"
-                           id="tag-input"
-                           class="form-control"
-                           placeholder="Add tag and press Enter">
+                    <div class="position-relative">
+                        <input type="text"
+                               id="tag-input"
+                               class="form-control"
+                               placeholder="Add tag and press Enter"
+                               autocomplete="off">
+                        <div id="suggestions" class="position-absolute w-100 bg-white border rounded shadow-sm" style="display: none; z-index: 1000; max-height: 200px; overflow-y: auto;"></div>
+                    </div>
 
                     <input type="hidden"
                            id="tags"
                            name="tags"
                            value="{{ old('tags', $post->tags->pluck('name')->implode(',')) }}">
 
-                    <small class="text-muted">Press Enter or comma to add tag</small>
+                    <small class="text-muted">Press Enter or comma to add tag, or select from suggestions</small>
                 </div>
             </div>
 
@@ -157,13 +161,29 @@ tinymce.init({
   height:600,
   menubar:true,
   plugins:'lists link code table fullscreen',
-  toolbar:'undo redo | blocks | bold italic | bullist numlist | link table | code fullscreen'
+  toolbar:'undo redo | blocks | bold italic | bullist numlist | link table | media | code fullscreen',
+
+  // Custom media button
+  setup: function(editor) {
+    editor.ui.registry.addButton('media', {
+      text: 'Media Library',
+      icon: 'image',
+      tooltip: 'Insert from Media Library',
+      onAction: function() {
+        // Open media library modal
+        const modal = new bootstrap.Modal(document.getElementById('mediaLibraryModal'));
+        modal.show();
+      }
+    });
+  }
 });
 </script>
 
-{{-- ================= TAG JS (FIXED) ================= --}}
+{{-- ================= TAG JS WITH AUTOCOMPLETE ================= --}}
 <script>
 let tags = [];
+let suggestions = [];
+let selectedIndex = -1;
 
 function syncHidden() {
     document.getElementById('tags').value = tags.join(',');
@@ -192,6 +212,50 @@ function renderTags() {
     });
 }
 
+function renderSuggestions() {
+    const container = document.getElementById('suggestions');
+    container.innerHTML = '';
+    if (suggestions.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+    container.style.display = 'block';
+    suggestions.forEach((suggestion, index) => {
+        const item = document.createElement('div');
+        item.className = `px-3 py-2 ${index === selectedIndex ? 'bg-primary text-white' : 'bg-white text-dark'}`;
+        item.style.cursor = 'pointer';
+        item.textContent = suggestion.name;
+        item.onclick = () => selectSuggestion(suggestion.name);
+        container.appendChild(item);
+    });
+}
+
+function fetchSuggestions(query) {
+    if (query.length < 1) {
+        suggestions = [];
+        renderSuggestions();
+        return;
+    }
+    fetch(`{{ route('admin.tags.suggest') }}?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            suggestions = data.filter(tag => !tags.includes(tag.name));
+            selectedIndex = -1;
+            renderSuggestions();
+        });
+}
+
+function selectSuggestion(tagName) {
+    if (!tags.includes(tagName)) {
+        tags.push(tagName);
+        renderTags();
+        syncHidden();
+    }
+    document.getElementById('tag-input').value = '';
+    suggestions = [];
+    renderSuggestions();
+}
+
 function loadTags() {
     const raw = document.getElementById('tags').value;
     if (!raw) return;
@@ -199,16 +263,59 @@ function loadTags() {
     renderTags();
 }
 
-document.getElementById('tag-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ',') {
+const tagInput = document.getElementById('tag-input');
+tagInput.addEventListener('input', e => {
+    const query = e.target.value.trim();
+    fetchSuggestions(query);
+});
+
+tagInput.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = Math.min(selectedIndex + 1, suggestions.length - 1);
+        renderSuggestions();
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = Math.max(selectedIndex - 1, -1);
+        renderSuggestions();
+    } else if (e.key === 'Enter') {
+        if (selectedIndex >= 0 && selectedIndex < suggestions.length) {
+            e.preventDefault();
+            selectSuggestion(suggestions[selectedIndex].name);
+        } else {
+            const val = e.target.value.trim();
+            if (val && !tags.includes(val)) {
+                e.preventDefault();
+                tags.push(val);
+                renderTags();
+                syncHidden();
+                e.target.value = '';
+                suggestions = [];
+                renderSuggestions();
+            }
+        }
+    } else if (e.key === ',') {
         e.preventDefault();
         const val = e.target.value.trim();
         if (val && !tags.includes(val)) {
             tags.push(val);
             renderTags();
             syncHidden();
+            e.target.value = '';
+            suggestions = [];
+            renderSuggestions();
         }
-        e.target.value = '';
+    } else if (e.key === 'Escape') {
+        suggestions = [];
+        renderSuggestions();
+    }
+});
+
+// Hide suggestions when clicking outside
+document.addEventListener('click', e => {
+    if (!tagInput.contains(e.target) && !document.getElementById('suggestions').contains(e.target)) {
+        suggestions = [];
+        renderSuggestions();
     }
 });
 
