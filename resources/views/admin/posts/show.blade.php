@@ -64,7 +64,7 @@
                         </dd>
 
                         <dt class="col-sm-4">Category:</dt>
-                        <dd class="col-sm-8">{{ $post->category?->name ?? 'Uncategorized' }}</dd>
+                        <dd class="col-sm-8">{{ $post->primaryCategory()?->name ?? 'Uncategorized' }}</dd>
 
                         <dt class="col-sm-4">Slug:</dt>
                         <dd class="col-sm-8"><code>{{ $post->slug }}</code></dd>

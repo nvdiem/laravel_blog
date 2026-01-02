@@ -38,8 +38,8 @@
                         {{ $post->created_at->format('F j, Y') }}
                     </span>
 
-                    @if($post->category)
-                    <span class="badge bg-primary">{{ $post->category->name }}</span>
+                    @if($post->primaryCategory())
+                    <span class="badge bg-primary">{{ $post->primaryCategory()->name }}</span>
                     @endif
                 </div>
             </header>
@@ -91,9 +91,9 @@
                                 <p class="card-text small text-muted mb-2">
                                     {{ $relatedPost->created_at->format('M j, Y') }}
                                 </p>
-                                @if($relatedPost->category)
+                                @if($relatedPost->primaryCategory())
                                 <span class="badge bg-primary-subtle text-primary small">
-                                    {{ $relatedPost->category->name }}
+                                    {{ $relatedPost->primaryCategory()->name }}
                                 </span>
                                 @endif
                             </div>

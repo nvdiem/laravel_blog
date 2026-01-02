@@ -6,6 +6,8 @@
 
     <title>Admin · Laravel Blog</title>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
 
@@ -15,31 +17,70 @@
 </head>
 <body>
 
-<!-- ===== ADMIN NAVBAR ===== -->
-<nav class="navbar navbar-dark bg-dark admin-navbar">
-    <div class="container-fluid">
-        <a class="navbar-brand admin-title" href="{{ route('admin.posts.index') }}">
-            Admin · <span>Laravel Blog</span>
+<!-- ===== ADMIN SIDEBAR ===== -->
+<div class="admin-sidebar">
+    <div class="sidebar-header">
+        <a class="sidebar-brand" href="{{ route('admin.posts.index') }}">
+            <span>📝</span> Laravel Blog
         </a>
+    </div>
 
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <div class="nav-section-title">Content</div>
+            <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
+                <span class="nav-icon">📄</span>
+                Posts
+            </a>
+            <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                <span class="nav-icon">🏷️</span>
+                Categories
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Media</div>
+            <a href="#" class="nav-link" onclick="document.getElementById('uploadForm').click()">
+                <span class="nav-icon">📎</span>
+                Media Library
+            </a>
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
         @auth
-        <div class="d-flex align-items-center text-white">
-            <span class="me-3 small">👋 {{ Auth::user()->name }}</span>
-            <form action="{{ route('logout') }}" method="POST" class="mb-0">
-                @csrf
-                <button type="submit" class="btn btn-outline-light btn-sm">
-                    Logout
-                </button>
-            </form>
+        <div class="user-info">
+            <div class="user-avatar">
+                {{ substr(Auth::user()->name, 0, 1) }}
+            </div>
+            <div class="user-details">
+                <div class="user-name">{{ Auth::user()->name }}</div>
+                <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                    @csrf
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
         </div>
         @endauth
     </div>
-</nav>
+</div>
 
-<!-- ===== CONTENT ===== -->
-<main class="container-fluid admin-content">
-    @yield('content')
-</main>
+<!-- ===== ADMIN MAIN ===== -->
+<div class="admin-main">
+    <!-- ===== ADMIN NAVBAR ===== -->
+    <nav class="navbar navbar-light bg-white admin-navbar">
+        <div class="container-fluid">
+            <span class="navbar-text mb-0 fw-semibold">
+                {{ $title ?? 'Admin Panel' }}
+            </span>
+        </div>
+    </nav>
+
+    <!-- ===== CONTENT ===== -->
+    <main class="admin-content">
+        @yield('content')
+    </main>
+</div>
 
 <!-- ===== FOOTER ===== -->
 <footer class="border-top py-3 bg-white admin-footer">

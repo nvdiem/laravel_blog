@@ -14,7 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('category', 'tags')
+        $posts = Post::with('categories', 'tags')
             ->where('status', 'published')
             ->latest()
             ->paginate(6);
@@ -27,7 +27,7 @@ class PostController extends Controller
      */
     public function show($slug)
     {
-        $post = Post::with('category', 'tags')
+        $post = Post::with('categories', 'tags')
             ->where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();
@@ -35,13 +35,20 @@ class PostController extends Controller
         $seoTitle = $post->seo_title ?: $post->title;
         $seoDescription = $post->seo_description ?: Str::limit(strip_tags($post->content), 160);
 
-        $relatedPosts = Post::with('category')
-            ->where('category_id', $post->category_id)
-            ->where('id', '!=', $post->id)
-            ->where('status', 'published')
-            ->latest()
-            ->limit(3)
-            ->get();
+        // Get related posts from the same primary category
+        $primaryCategory = $post->primaryCategory();
+        $relatedPosts = collect();
+        if ($primaryCategory) {
+            $relatedPosts = Post::with('categories')
+                ->whereHas('categories', function ($query) use ($primaryCategory) {
+                    $query->where('categories.id', $primaryCategory->id);
+                })
+                ->where('id', '!=', $post->id)
+                ->where('status', 'published')
+                ->latest()
+                ->limit(3)
+                ->get();
+        }
 
         return view('frontend.posts.show', compact('post', 'seoTitle', 'seoDescription', 'relatedPosts'));
     }

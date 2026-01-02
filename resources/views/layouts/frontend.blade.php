@@ -89,7 +89,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-xl">
         <a class="navbar-brand" href="{{ url('/') }}">
-            <span>&lt;/&gt;</span> Laravel Blog
+            <span></></span> Laravel Blog
         </a>
 
         <div class="navbar-nav ms-auto align-items-center gap-3">

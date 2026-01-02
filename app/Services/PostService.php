@@ -32,8 +32,12 @@ class PostService
             'status' => $data['status'],
             'seo_title' => $data['seo_title'] ?? null,
             'seo_description' => $data['seo_description'] ?? null,
-            'category_id' => $data['category_id'] ?? null,
         ]);
+
+        // Sync categories with primary category
+        if (isset($data['categories'])) {
+            $this->syncCategories($post, $data['categories'], $data['primary_category'] ?? null);
+        }
 
         if (isset($data['tags'])) {
             $this->tagService->syncTags($post, $data['tags']);
@@ -58,8 +62,12 @@ class PostService
             'status' => $data['status'],
             'seo_title' => $data['seo_title'] ?? null,
             'seo_description' => $data['seo_description'] ?? null,
-            'category_id' => $data['category_id'] ?? null,
         ]);
+
+        // Sync categories with primary category
+        if (isset($data['categories'])) {
+            $this->syncCategories($post, $data['categories'], $data['primary_category'] ?? null);
+        }
 
         if (isset($data['tags'])) {
             $this->tagService->syncTags($post, $data['tags']);
@@ -120,5 +128,22 @@ class PostService
         }
 
         return $file->store('posts', 'public');
+    }
+
+    /**
+     * Sync categories for a post with primary category.
+     */
+    protected function syncCategories(Post $post, array $categoryIds, ?int $primaryCategoryId = null): void
+    {
+        // Prepare pivot data
+        $pivotData = [];
+        foreach ($categoryIds as $categoryId) {
+            $pivotData[$categoryId] = [
+                'is_primary' => $categoryId == $primaryCategoryId,
+            ];
+        }
+
+        // Sync categories with pivot data
+        $post->categories()->sync($pivotData);
     }
 }

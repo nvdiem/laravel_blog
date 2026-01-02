@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Post extends Model
 {
@@ -17,12 +18,24 @@ class Post extends Model
         'status',
         'seo_title',
         'seo_description',
-        'category_id',
     ];
 
-    public function category()
+    // Categories relationship (many-to-many)
+    public function categories(): BelongsToMany
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class)->withPivot('is_primary');
+    }
+
+    // Get primary category
+    public function primaryCategory()
+    {
+        return $this->categories()->wherePivot('is_primary', true)->first();
+    }
+
+    // Get all categories except primary
+    public function secondaryCategories()
+    {
+        return $this->categories()->wherePivot('is_primary', false);
     }
 
     public function tags()

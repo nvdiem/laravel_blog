@@ -23,7 +23,7 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Post::with('category', 'tags');
+        $query = Post::with('categories', 'tags');
 
         // Search
         if ($request->filled('search')) {
@@ -41,7 +41,9 @@ class PostController extends Controller
 
         // Category filter
         if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->where('categories.id', $request->category_id);
+            });
         }
 
         // Tag filter
@@ -80,7 +82,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::active()->orderBy('name')->get();
         return view('admin.posts.create', compact('categories'));
     }
 
@@ -94,11 +96,18 @@ class PostController extends Controller
             'content' => 'required',
             'status' => 'required|in:draft,published',
             'thumbnail' => 'nullable|image|max:2048',
-            'category_id' => 'nullable|exists:categories,id',
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
+            'primary_category' => 'nullable|exists:categories,id',
             'tags' => 'nullable|string',
             'seo_title' => 'nullable|string',
             'seo_description' => 'nullable|string',
         ]);
+
+        // Validate primary category is in selected categories
+        if ($request->primary_category && !in_array($request->primary_category, $request->categories ?? [])) {
+            return back()->withErrors(['primary_category' => 'Primary category must be one of the selected categories.'])->withInput();
+        }
 
         $this->postService->createPost($validated);
 
@@ -121,7 +130,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        $categories = Category::all();
+        $post->load('categories'); // Load categories relationship
+        $categories = Category::active()->orderBy('name')->get();
         return view('admin.posts.edit', compact('post', 'categories'));
     }
 
@@ -135,11 +145,18 @@ class PostController extends Controller
             'content' => 'required',
             'status' => 'required|in:draft,published',
             'thumbnail' => 'nullable|image|max:2048',
-            'category_id' => 'nullable|exists:categories,id',
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
+            'primary_category' => 'nullable|exists:categories,id',
             'tags' => 'nullable|string',
             'seo_title' => 'nullable|string',
             'seo_description' => 'nullable|string',
         ]);
+
+        // Validate primary category is in selected categories
+        if ($request->primary_category && !in_array($request->primary_category, $request->categories ?? [])) {
+            return back()->withErrors(['primary_category' => 'Primary category must be one of the selected categories.'])->withInput();
+        }
 
         $this->postService->updatePost($post, $validated);
 

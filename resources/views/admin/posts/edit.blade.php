@@ -81,17 +81,68 @@
 
             {{-- CATEGORY --}}
             <div class="card mb-4">
-                <div class="card-header bg-light fw-semibold">Category</div>
+                <div class="card-header bg-light fw-semibold">Categories</div>
                 <div class="card-body">
-                    <select class="form-select" name="category_id">
-                        <option value="">No category</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat->id }}"
-                                {{ old('category_id',$post->category_id)==$cat->id?'selected':'' }}>
-                                {{ $cat->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    @if($errors->has('categories') || $errors->has('primary_category'))
+                        <div class="alert alert-danger">
+                            @if($errors->has('categories'))
+                                <div>{{ $errors->first('categories') }}</div>
+                            @endif
+                            @if($errors->has('primary_category'))
+                                <div>{{ $errors->first('primary_category') }}</div>
+                            @endif
+                        </div>
+                    @endif
+
+                    <div class="mb-3">
+                        <label class="form-label">Select Categories</label>
+                        <div class="row">
+                            @foreach($categories as $category)
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input category-checkbox"
+                                               type="checkbox"
+                                               name="categories[]"
+                                               value="{{ $category->id }}"
+                                               id="category-{{ $category->id }}"
+                                               {{ in_array($category->id, old('categories', $post->categories->pluck('id')->toArray())) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="category-{{ $category->id }}">
+                                            {{ $category->name }}
+                                            @if($category->parent)
+                                                <small class="text-muted">(Child of {{ $category->parent->name }})</small>
+                                            @endif
+                                        </label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <small class="text-muted">Select one or more categories for this post.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Primary Category</label>
+                        <div class="row">
+                            @foreach($categories as $category)
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input primary-radio"
+                                               type="radio"
+                                               name="primary_category"
+                                               value="{{ $category->id }}"
+                                               id="primary-{{ $category->id }}"
+                                               {{ old('primary_category', $post->primaryCategory()?->id) == $category->id ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="primary-{{ $category->id }}">
+                                            {{ $category->name }}
+                                            @if($category->parent)
+                                                <small class="text-muted">(Child of {{ $category->parent->name }})</small>
+                                            @endif
+                                        </label>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <small class="text-muted">Select the primary category (must be one of the selected categories above).</small>
+                    </div>
                 </div>
             </div>
 
@@ -320,5 +371,25 @@ document.addEventListener('click', e => {
 });
 
 loadTags();
+
+// Category selection logic
+function updatePrimaryRadios() {
+    const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked')).map(cb => cb.value);
+    const primaryRadios = document.querySelectorAll('.primary-radio');
+
+    primaryRadios.forEach(radio => {
+        const categoryId = radio.value;
+        radio.disabled = !selectedCategories.includes(categoryId);
+        radio.parentElement.style.opacity = selectedCategories.includes(categoryId) ? '1' : '0.5';
+    });
+}
+
+// Initial update
+updatePrimaryRadios();
+
+// Listen for category checkbox changes
+document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', updatePrimaryRadios);
+});
 </script>
 @endsection

@@ -19,6 +19,8 @@ class Media extends Model
         'created_by',
     ];
 
+    protected $appends = ['url'];
+
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');

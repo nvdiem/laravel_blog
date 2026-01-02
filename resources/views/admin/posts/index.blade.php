@@ -150,7 +150,7 @@
                 </td>
 
                 <td>
-                    {{ $post->category?->name ?? 'Uncategorized' }}
+                    {{ $post->primaryCategory()?->name ?? 'Uncategorized' }}
                 </td>
 
                 <td>
