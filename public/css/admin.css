@@ -1,0 +1,115 @@
+/* ===== ADMIN LAYOUT STYLES ===== */
+.admin-navbar {
+    background-color: #1f2933 !important;
+}
+
+.admin-navbar .navbar-brand {
+    color: #c3c4c7;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+.admin-navbar .navbar-brand:hover {
+    color: #ffffff;
+}
+
+.admin-navbar .navbar-brand span {
+    color: var(--tech-accent);
+}
+
+.admin-navbar .navbar-text {
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.admin-navbar .btn-outline-light {
+    color: #9ca3af;
+    border-color: #374151;
+}
+
+.admin-navbar .btn-outline-light:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #6b7280;
+}
+
+/* ===== ADMIN POSTS INDEX STYLES ===== */
+/* Toolbar alignment */
+#filter-form .form-control,
+#filter-form .form-select {
+    height: 30px;
+    font-size: 13px;
+}
+
+#filter-form .form-control:focus {
+    border-color: #9ca3af;
+    box-shadow: none;
+}
+
+#filter-form .form-control::placeholder {
+    color: #9ca3af;
+    opacity: 0.7;
+}
+
+/* Filter button secondary */
+#filter-form .btn-outline-secondary {
+    border-color: #d1d5db;
+    color: #6b7280;
+}
+
+#filter-form .btn-outline-secondary:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+/* Title hierarchy */
+.post-row .fw-medium {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* Soften other elements */
+.post-row .badge {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+.post-row td:not(:nth-child(2)) {
+    color: #6b7280;
+}
+
+/* Table borders */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table td,
+.table th {
+    border-top: 1px solid rgba(229, 231, 235, 0.5);
+    border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.table thead th {
+    border-bottom: 1px solid rgba(209, 213, 219, 0.8);
+}
+
+/* Row actions */
+.post-row:hover .row-actions {
+    display: block !important;
+}
+
+.row-actions a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.row-actions a:hover {
+    color: #1d4ed8;
+}
+
+.row-actions a.text-danger:hover {
+    color: #dc2626;
+}

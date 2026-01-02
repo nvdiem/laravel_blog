@@ -37,9 +37,10 @@
     <div class="col-md-3">
         <input type="text"
                name="search"
-               class="form-control form-control-sm"
+               class="form-control"
                placeholder="Search posts..."
-               value="{{ request('search') }}">
+               value="{{ request('search') }}"
+               style="height: 30px; font-size: 13px; border: 1px solid #d1d5db; border-radius: 4px; background-color: #f9fafb; color: #374151;">
     </div>
     <div class="col-md-2">
         <select name="status" class="form-select form-select-sm">
@@ -220,9 +221,5 @@
 </div>
 @endif
 
-<style>
-.post-row:hover .row-actions {
-    display: block !important;
-}
-</style>
+
 @endsection
