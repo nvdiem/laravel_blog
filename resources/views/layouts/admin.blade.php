@@ -8,7 +8,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
+<style>
         :root {
             --tech-accent: #0d6efd;
         }
@@ -22,16 +22,38 @@
         /* ===== NAVBAR ===== */
         .admin-navbar {
             min-height: 48px;
+            background-color: #1f2933 !important;
         }
 
-        .admin-title {
+        .admin-navbar .navbar-brand {
+            color: #c3c4c7;
             font-size: 1rem;
             font-weight: 500;
             letter-spacing: 0.2px;
         }
 
-        .admin-title span {
+        .admin-navbar .navbar-brand:hover {
+            color: #ffffff;
+        }
+
+        .admin-navbar .navbar-brand span {
             color: var(--tech-accent);
+        }
+
+        .admin-navbar .navbar-text {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        .admin-navbar .btn-outline-light {
+            color: #9ca3af;
+            border-color: #374151;
+        }
+
+        .admin-navbar .btn-outline-light:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: #6b7280;
         }
 
         /* ===== CONTENT ===== */

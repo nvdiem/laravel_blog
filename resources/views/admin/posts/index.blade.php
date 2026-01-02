@@ -10,6 +10,28 @@
     </a>
 </div>
 
+{{-- ===== STATUS TABS ===== --}}
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link {{ !request('status') ? 'active' : '' }}"
+           href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => ''])) }}">
+            All <span class="badge bg-secondary">{{ $allCount }}</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ request('status') === 'published' ? 'active' : '' }}"
+           href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => 'published'])) }}">
+            Published <span class="badge bg-success">{{ $publishedCount }}</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ request('status') === 'draft' ? 'active' : '' }}"
+           href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => 'draft'])) }}">
+            Draft <span class="badge bg-secondary">{{ $draftCount }}</span>
+        </a>
+    </li>
+</ul>
+
 {{-- ===== FILTERS ===== --}}
 <form method="GET" class="row g-3 mb-3">
     <div class="col-md-4">
@@ -84,16 +106,22 @@
                         @endif
                     </a>
                 </th>
-                <th width="170">Actions</th>
             </tr>
         </thead>
         <tbody>
             @forelse($posts as $post)
-            <tr>
+            <tr class="post-row">
                 <td class="text-muted">{{ $post->id }}</td>
 
                 <td class="fw-medium">
                     {{ $post->title }}
+                    <div class="row-actions" style="display: none;">
+                        <a href="{{ route('admin.posts.edit', $post) }}">Edit</a> |
+                        <a href="{{ route('admin.posts.show', $post) }}">View</a>
+                        @if(auth()->user()->isAdmin())
+                        | <a href="#" class="text-danger" onclick="if(confirm('Delete this post?')) { event.preventDefault(); document.getElementById('delete-form-{{ $post->id }}').submit(); }">Trash</a>
+                        @endif
+                    </div>
                 </td>
 
                 <td class="text-muted small">
@@ -119,11 +147,14 @@
                         <img
                             src="{{ asset('storage/' . $post->thumbnail) }}"
                             class="rounded border"
-                            style="width: 60px; height: 40px; object-fit: cover;"
+                            style="width: 45px; height: 45px; object-fit: cover;"
                             alt="Thumbnail"
                         >
                     @else
-                        <span class="text-muted small">No image</span>
+                        <div class="rounded border bg-light d-flex align-items-center justify-content-center"
+                             style="width: 45px; height: 45px;">
+                            <span class="text-muted small">—</span>
+                        </div>
                     @endif
                 </td>
 
@@ -139,35 +170,16 @@
                     @endif
                 </td>
 
-                <td>
-                    <div class="d-flex gap-1">
-                        <a href="{{ route('admin.posts.show', $post) }}"
-                           class="btn btn-sm btn-outline-secondary">
-                            Show
-                        </a>
-
-                        <a href="{{ route('admin.posts.edit', $post) }}"
-                           class="btn btn-sm btn-outline-warning">
-                            Edit
-                        </a>
-
-                        @if(auth()->user()->isAdmin())
-                        <form action="{{ route('admin.posts.destroy', $post) }}"
-                              method="POST"
-                              onsubmit="return confirm('Delete this post?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-sm btn-danger">
-                                Delete
-                            </button>
-                        </form>
-                        @endif
-                    </div>
-                </td>
+                @if(auth()->user()->isAdmin())
+                <form id="delete-form-{{ $post->id }}" action="{{ route('admin.posts.destroy', $post) }}" method="POST" style="display: none;">
+                    @csrf
+                    @method('DELETE')
+                </form>
+                @endif
             </tr>
             @empty
             <tr>
-                <td colspan="8" class="text-center text-muted py-4">
+                <td colspan="7" class="text-center text-muted py-4">
                     No posts found.
                 </td>
             </tr>
@@ -188,4 +200,9 @@
 </div>
 @endif
 
+<style>
+.post-row:hover .row-actions {
+    display: block !important;
+}
+</style>
 @endsection

@@ -50,7 +50,12 @@ class PostController extends Controller
 
         $posts = $query->paginate(10);
 
-        return view('admin.posts.index', compact('posts'));
+        // Status counts for tabs
+        $allCount = Post::count();
+        $publishedCount = Post::where('status', 'published')->count();
+        $draftCount = Post::where('status', 'draft')->count();
+
+        return view('admin.posts.index', compact('posts', 'allCount', 'publishedCount', 'draftCount'));
     }
 
     /**
