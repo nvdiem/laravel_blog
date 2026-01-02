@@ -10,6 +10,32 @@
     </a>
 </div>
 
+{{-- ===== FILTERS ===== --}}
+<form method="GET" class="row g-3 mb-3">
+    <div class="col-md-4">
+        <input type="text"
+               name="search"
+               class="form-control form-control-sm"
+               placeholder="Search posts..."
+               value="{{ request('search') }}">
+    </div>
+    <div class="col-md-3">
+        <select name="status" class="form-select form-select-sm">
+            <option value="">All Status</option>
+            <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
+            <option value="published" {{ request('status') === 'published' ? 'selected' : '' }}>Published</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-secondary btn-sm">Filter</button>
+    </div>
+    <div class="col-md-3 text-end">
+        @if(request()->hasAny(['search', 'status']))
+            <a href="{{ route('admin.posts.index') }}" class="btn btn-outline-secondary btn-sm">Clear Filters</a>
+        @endif
+    </div>
+</form>
+
 <hr class="mt-2 mb-3">
 
 {{-- ===== ALERTS ===== --}}
@@ -36,12 +62,28 @@
         <thead class="table-light text-muted small">
             <tr>
                 <th width="50">ID</th>
-                <th>Title</th>
+                <th>
+                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'title', 'sort_dir' => request('sort_by') === 'title' && request('sort_dir') === 'asc' ? 'desc' : 'asc']) }}"
+                       class="text-decoration-none text-muted">
+                        Title
+                        @if(request('sort_by') === 'title')
+                            {{ request('sort_dir') === 'asc' ? '↑' : '↓' }}
+                        @endif
+                    </a>
+                </th>
                 <th>Slug</th>
                 <th>Category</th>
                 <th>Tags</th>
                 <th width="90">Thumbnail</th>
-                <th>Status</th>
+                <th>
+                    <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'status', 'sort_dir' => request('sort_by') === 'status' && request('sort_dir') === 'asc' ? 'desc' : 'asc']) }}"
+                       class="text-decoration-none text-muted">
+                        Status
+                        @if(request('sort_by') === 'status')
+                            {{ request('sort_dir') === 'asc' ? '↑' : '↓' }}
+                        @endif
+                    </a>
+                </th>
                 <th width="170">Actions</th>
             </tr>
         </thead>
