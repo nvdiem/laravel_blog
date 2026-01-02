@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -18,7 +18,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with('category', 'tags')->latest()->paginate(10);
-        return view('posts.index', compact('posts'));
+        return view('admin.posts.index', compact('posts'));
     }
 
     /**
@@ -27,7 +27,7 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('posts.create', compact('categories'));
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
@@ -70,7 +70,7 @@ class PostController extends Controller
 
         $this->syncTags($post, $request->tags);
 
-        return redirect()->route('posts.index')->with('success', 'Post created successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post created successfully.');
     }
 
     /**
@@ -81,7 +81,7 @@ class PostController extends Controller
         $post->load('tags');
         $seoTitle = $post->seo_title ?: $post->title;
         $seoDescription = $post->seo_description ?: Str::limit(strip_tags($post->content), 160);
-        return view('posts.show', compact('post', 'seoTitle', 'seoDescription'));
+        return view('admin.posts.show', compact('post', 'seoTitle', 'seoDescription'));
     }
 
     /**
@@ -90,7 +90,7 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all();
-        return view('posts.edit', compact('post', 'categories'));
+        return view('admin.posts.edit', compact('post', 'categories'));
     }
 
     /**
@@ -138,7 +138,7 @@ class PostController extends Controller
 
         $this->syncTags($post, $request->tags);
 
-        return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
     }
 
     /**
@@ -150,7 +150,7 @@ class PostController extends Controller
             Storage::disk('public')->delete($post->thumbnail);
         }
         $post->delete();
-        return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post deleted successfully.');
     }
 
     private function syncTags(Post $post, $tagsString)

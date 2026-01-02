@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.frontend')
 
 @push('head')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
@@ -83,7 +83,7 @@
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-3">
                                 <h6 class="card-title mb-2">
-                                    <a href="{{ route('posts.public.show', $relatedPost->slug) }}"
+                                    <a href="{{ route('posts.show', $relatedPost->slug) }}"
                                        class="text-decoration-none text-dark fw-medium">
                                         {{ $relatedPost->title }}
                                     </a>

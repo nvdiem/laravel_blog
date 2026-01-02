@@ -2,11 +2,12 @@
 
 @section('content')
 <form id="post-form"
-      action="{{ route('posts.store') }}"
+      action="{{ route('admin.posts.update', $post) }}"
       method="POST"
       enctype="multipart/form-data">
 
 @csrf
+@method('PUT')
 
 <div class="container-fluid">
     <div class="row g-4">
@@ -32,19 +33,19 @@
                        class="form-control form-control-lg border-0 shadow-none"
                        name="title"
                        id="title"
-                       value="{{ old('title') }}"
+                       value="{{ old('title', $post->title) }}"
                        placeholder="Add title"
                        style="font-size:2rem;font-weight:600;border-bottom:2px solid #dee2e6"
                        required>
             </div>
 
-            {{-- SLUG PREVIEW --}}
+            {{-- SLUG --}}
             <div class="mb-4">
                 <small class="text-muted">Permalink: /posts/</small>
                 <input type="text"
                        class="border-0 bg-transparent p-0 text-muted small"
                        id="slug-preview"
-                       value="{{ old('title') ? Str::slug(old('title')) : '' }}"
+                       value="{{ $post->slug }}"
                        readonly>
             </div>
 
@@ -52,8 +53,9 @@
             <textarea name="content"
                       id="content"
                       rows="20"
-                      class="form-control border-0 shadow-none"
-                      placeholder="Start writing your post content...">{{ old('content') }}</textarea>
+                      class="form-control border-0 shadow-none">
+                {{ old('content', $post->content) }}
+            </textarea>
         </div>
 
         {{-- ================= SIDEBAR ================= --}}
@@ -65,13 +67,13 @@
                 <div class="card-body">
 
                     <label class="form-label small">Status</label>
-                    <select class="form-select form-select-sm mb-3" name="status" required>
-                        <option value="draft" {{ old('status')=='draft'?'selected':'' }}>Draft</option>
-                        <option value="published" {{ old('status')=='published'?'selected':'' }}>Published</option>
+                    <select class="form-select form-select-sm mb-3" name="status">
+                        <option value="draft" {{ old('status',$post->status)=='draft'?'selected':'' }}>Draft</option>
+                        <option value="published" {{ old('status',$post->status)=='published'?'selected':'' }}>Published</option>
                     </select>
 
-                    <button class="btn btn-primary w-100 mb-2">Publish</button>
-                    <a href="{{ route('posts.index') }}" class="btn btn-outline-secondary btn-sm w-100">
+                    <button class="btn btn-primary w-100 mb-2">Update</button>
+                    <a href="{{ route('admin.posts.index') }}" class="btn btn-outline-secondary btn-sm w-100">
                         ← Back to Posts
                     </a>
                 </div>
@@ -85,7 +87,7 @@
                         <option value="">No category</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}"
-                                {{ old('category_id')==$cat->id?'selected':'' }}>
+                                {{ old('category_id',$post->category_id)==$cat->id?'selected':'' }}>
                                 {{ $cat->name }}
                             </option>
                         @endforeach
@@ -107,7 +109,7 @@
                     <input type="hidden"
                            id="tags"
                            name="tags"
-                           value="{{ old('tags') }}">
+                           value="{{ old('tags', $post->tags->pluck('name')->implode(',')) }}">
 
                     <small class="text-muted">Press Enter or comma to add tag</small>
                 </div>
@@ -117,6 +119,10 @@
             <div class="card mb-4">
                 <div class="card-header bg-light fw-semibold">Featured Image</div>
                 <div class="card-body">
+                    @if($post->thumbnail)
+                        <img src="{{ asset('storage/'.$post->thumbnail) }}"
+                             class="img-fluid rounded border mb-2">
+                    @endif
                     <input type="file" name="thumbnail" class="form-control form-control-sm">
                 </div>
             </div>
@@ -129,11 +135,11 @@
                            class="form-control form-control-sm mb-2"
                            name="seo_title"
                            placeholder="SEO Title"
-                           value="{{ old('seo_title') }}">
+                           value="{{ old('seo_title',$post->seo_title) }}">
                     <textarea class="form-control form-control-sm"
                               name="seo_description"
                               rows="3"
-                              placeholder="Meta description">{{ old('seo_description') }}</textarea>
+                              placeholder="Meta description">{{ old('seo_description',$post->seo_description) }}</textarea>
                 </div>
             </div>
 
@@ -207,16 +213,5 @@ document.getElementById('tag-input').addEventListener('keydown', e => {
 });
 
 loadTags();
-</script>
-
-<script>
-document.getElementById('title').addEventListener('input', function() {
-    const slug = this.value.toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .trim();
-    document.getElementById('slug-preview').value = slug;
-});
 </script>
 @endsection

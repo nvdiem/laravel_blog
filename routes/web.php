@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Frontend\PostController as FrontendPostController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\PostPublicController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,12 +17,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [FrontendPostController::class, 'index']);
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::resource('posts', PostController::class)->middleware('auth');
-Route::get('/posts/{slug}', [PostPublicController::class, 'show'])->name('posts.public.show');
-Route::delete('/posts/{post}', [PostController::class, 'destroy'])->middleware(['auth', 'admin'])->name('posts.destroy');
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::resource('posts', AdminPostController::class)->names('admin.posts');
+});
+
+Route::get('/posts/{slug}', [FrontendPostController::class, 'show'])->name('posts.show');

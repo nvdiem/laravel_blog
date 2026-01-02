@@ -38,3 +38,19 @@ Follow the blueprints strictly.
 Only modify the specified files.
 Do not introduce new dependencies.
 Ask before breaking constraints.
+
+
+Refactor UI ONLY.
+Keep form structure intact.
+Do NOT change backend logic.
+Follow ADMIN_BLUEPRINT.md.
+
+
+Identify the root cause.
+Propose the minimal fix.
+Avoid refactoring unrelated code.
+
+
+Focus on correctness and clarity.
+Do NOT introduce new dependencies.
+Explain trade-offs.

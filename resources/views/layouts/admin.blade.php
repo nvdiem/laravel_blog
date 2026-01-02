@@ -72,7 +72,7 @@
 <!-- ===== ADMIN NAVBAR ===== -->
 <nav class="navbar navbar-dark bg-dark admin-navbar">
     <div class="container-fluid">
-        <a class="navbar-brand admin-title" href="{{ route('posts.index') }}">
+        <a class="navbar-brand admin-title" href="{{ route('admin.posts.index') }}">
             Admin · <span>Laravel Blog</span>
         </a>
 

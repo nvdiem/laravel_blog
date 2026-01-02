@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.frontend')
 
 @section('content')
 <div class="container-xl">
@@ -19,7 +19,7 @@
                     @else
                         <div class="card-img-top d-flex align-items-center justify-content-center"
                              style="height:180px; background: linear-gradient(135deg, #667eea, #764ba2);">
-                            <span class="text-white fs-1 opacity-75">&lt;/&gt;</span>
+                            <span class="text-white fs-1 opacity-75"></></span>
                         </div>
                     @endif
 
@@ -35,7 +35,7 @@
 
                         {{-- TITLE --}}
                         <h2 class="card-title mb-2">
-                            <a href="{{ route('posts.public.show', $post->slug) }}"
+                            <a href="{{ route('posts.show', $post->slug) }}"
                                class="text-decoration-none text-dark">
                                 {{ $post->title }}
                             </a>
@@ -61,7 +61,7 @@
                             <small class="text-muted">
                                 {{ $post->created_at->format('M j, Y') }}
                             </small>
-                            <a href="{{ route('posts.public.show', $post->slug) }}"
+                            <a href="{{ route('posts.show', $post->slug) }}"
                                class="btn btn-outline-primary btn-sm">
                                 Read article →
                             </a>

@@ -5,7 +5,7 @@
 {{-- ===== PAGE HEADER ===== --}}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="fw-semibold mb-0">Posts</h4>
-    <a href="{{ route('posts.create') }}" class="btn btn-primary btn-sm">
+    <a href="{{ route('admin.posts.create') }}" class="btn btn-primary btn-sm">
         + Create Post
     </a>
 </div>
@@ -99,18 +99,18 @@
 
                 <td>
                     <div class="d-flex gap-1">
-                        <a href="{{ route('posts.show', $post) }}"
+                        <a href="{{ route('admin.posts.show', $post) }}"
                            class="btn btn-sm btn-outline-secondary">
                             Show
                         </a>
 
-                        <a href="{{ route('posts.edit', $post) }}"
+                        <a href="{{ route('admin.posts.edit', $post) }}"
                            class="btn btn-sm btn-outline-warning">
                             Edit
                         </a>
 
                         @if(auth()->user()->isAdmin())
-                        <form action="{{ route('posts.destroy', $post) }}"
+                        <form action="{{ route('admin.posts.destroy', $post) }}"
                               method="POST"
                               onsubmit="return confirm('Delete this post?')">
                             @csrf
