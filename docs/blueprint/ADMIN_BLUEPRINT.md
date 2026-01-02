@@ -1,145 +1,106 @@
-# ADMIN BLUEPRINT – laravel_blog
-
-## 1. Purpose of Admin Area
-
-The Admin Area acts as a lightweight CMS focused on:
-- Writing technical articles
-- Managing post lifecycle
-- Managing metadata (category, tags, SEO)
-
-The Admin Area prioritizes author productivity over visual complexity.
+# ADMIN_BLUEPRINT.md
+Laravel Blog / CMS – Admin Area Blueprint
 
 ---
 
-## 2. Target Users
-
-- Developers
-- Content editors
-- Technical writers
-
-Users are assumed to be authenticated and familiar with CMS workflows.
+## 1. Purpose
+Defines responsibilities, rules, and UX principles of the Admin Area.
+Admin Area is a CMS for content management, not public-facing.
 
 ---
 
-## 3. Admin Responsibilities
-
-The Admin Area is responsible for:
-- Creating posts
-- Editing posts
-- Managing post status (draft / published)
-- Assigning categories
-- Managing tags
-- Uploading featured images
-- Managing SEO metadata
-
-The Admin Area must NOT:
-- Render public-facing content
-- Handle public navigation logic
+## 2. Core Principles (NON-NEGOTIABLE)
+- Writing & managing content only
+- State-mutating
+- Authenticated access
+- No shared views with Frontend
+- Productivity > visual polish
 
 ---
 
-## 4. Editor Layout (WordPress-like)
-
-The editor uses a two-column layout:
-
-- Left column (8/12):
-  - Title input (large, prominent)
-  - Slug preview (read-only)
-  - Content editor (TinyMCE)
-
-- Right column (4/12):
-  - Publish box
-  - Category selector
-  - Tag management
-  - Featured image
-  - SEO metadata
-
-This layout is non-negotiable.
+## 3. Actors
+- Admin
+- Editor
 
 ---
 
-## 5. Content Editor
-
-Editor requirements:
-- TinyMCE self-hosted
-- Supports:
-  - Headings
-  - Lists
-  - Links
-  - Tables
-  - Code blocks
-- Generates clean HTML
-
-Editor must NOT be replaced without architectural review.
-
----
-
-## 6. Tag Management System
-
-- Tag input behaves like WordPress
-- Tags are entered via Enter or comma
-- Tags are displayed as removable chips
-- Backend receives tags as a comma-separated string
-
-Constraints:
-- No external JS tag libraries
-- No JS frameworks
-- UI logic must not bypass backend contract
-
----
-
-## 7. Form Architecture (CRITICAL)
-
-- Admin editor uses a SINGLE HTML form
-- All inputs must belong to the same form
-- Hidden inputs must be submitted correctly
-
-Form splitting is strictly forbidden.
-
----
-
-## 8. Post Status Workflow
-
-Post statuses:
-- draft
-- published
+## 4. Controller Rules
+Location:
+app/Http/Controllers/Admin/
 
 Rules:
-- Draft posts are visible ONLY in admin
-- Published posts are visible publicly
+- Admin-only use cases
+- Require authentication
+- Delegate business logic to services
+- Must NOT return frontend views
 
-Status handling must remain explicit and simple.
-
----
-
-## 9. Admin UX Principles
-
-- Minimal distractions
-- Clear hierarchy
-- Fast writing workflow
-- No unnecessary animations
-
-The admin UI favors clarity over aesthetics.
+Example:
+Admin\PostController
+- index
+- create
+- store
+- edit
+- update
+- destroy
 
 ---
 
-## 10. Constraints (NON-NEGOTIABLE)
+## 5. View Rules
+Location:
+resources/views/admin/
 
-- Do NOT merge admin and public logic
-- Do NOT introduce frontend frameworks
-- Do NOT replace TinyMCE
-- Bootstrap is the only UI framework
+Rules:
+- Used ONLY by Admin controllers
+- Use admin layout
+- Support complex CMS forms
+
+Example:
+resources/views/admin/posts/
+- index.blade.php
+- create.blade.php
+- edit.blade.php
 
 ---
 
-## 11. Extension Guidelines
+## 6. Layout & UX
+- Two-column layout (content + sidebar)
+- Sidebar: publish, category, tags, thumbnail, SEO
+- WordPress-like familiarity
 
-Safe to extend:
-- Admin UX improvements
-- Editor enhancements
-- Validation feedback
+---
 
-Be careful when modifying:
-- Tag system
-- Form structure
-- Publish workflow
+## 7. Editor
+- TinyMCE (self-hosted)
+- No SaaS dependency
+- Technical writing optimized
+
+---
+
+## 8. Form Architecture
+- Single-form only
+- Sidebar fields belong to the same form
+- No split forms
+
+---
+
+## 9. Data Rules
+- Access draft & published posts
+- Create, update, delete allowed
+
+---
+
+## 10. Forbidden
+- Sharing admin views with frontend
+- Business logic in views
+- Frontend frameworks
+
+---
+
+## 11. AI Rules
+- Preserve form structure
+- Do not refactor editor unless instructed
+- Follow this blueprint strictly
+
+---
+
+End of ADMIN_BLUEPRINT.md

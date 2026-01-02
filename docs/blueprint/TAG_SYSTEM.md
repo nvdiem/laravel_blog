@@ -1,108 +1,81 @@
-# TAG SYSTEM BLUEPRINT – laravel_blog
+# TAG_SYSTEM.md
+Tag System Blueprint – laravel_blog
+
+---
 
 ## 1. Purpose
-
-The Tag System enables flexible content classification and discovery.
-It is a critical subsystem shared between Admin and Public areas.
-
-Any change to this system may affect:
-- Content editing UX
-- Data integrity
-- Public filtering and SEO
+Defines the tag system contract.
+Simple, stable, WordPress-inspired.
 
 ---
 
-## 2. Data Model
-
-Tables:
-- tags
-- post_tag (pivot)
-
-Relationship:
-- Post ⟷ Tag (Many-to-Many)
-
-Tags are unique by name.
+## 2. Core Principles (NON-NEGOTIABLE)
+- Plain text tags
+- Shared across posts
+- Managed during post create/update
+- No separate tag management UI
 
 ---
 
-## 3. Backend Contract (NON-NEGOTIABLE)
-
-Input Format:
-- Backend receives tags as a single string
-- Comma-separated values
-
-Example:
-"laravel,php,clean architecture"
-
-Backend Responsibilities:
-- Parse string
-- Normalize if needed
-- Sync pivot table
-
-Frontend MUST NOT bypass this contract.
+## 3. Data Model
+- Tag: id, name (unique)
+- Relationship: Post ↔ Tag (many-to-many)
 
 ---
 
-## 4. Admin UI Behavior
+## 4. Input Contract (STRICT)
+Format:
+tag1,tag2,tag3
 
-Tag input behaves like WordPress:
-
-- User types a tag
-- Presses Enter or comma (,)
-- Tag becomes a visual chip
-- Each chip can be removed
-- Removing a chip removes it from submission
-
-Implementation:
-- Plain JavaScript
-- Hidden input stores canonical value
-- Hidden input value format:
-  tag1,tag2,tag3
+- Comma-separated
+- Case-insensitive
+- Trimmed
+- Empty ignored
 
 ---
 
-## 5. Constraints
-
-NON-NEGOTIABLE:
-- No external tag libraries
-- No JS frameworks
-- No async tag syncing
-- No auto case normalization on frontend
-- Single form architecture only
+## 5. Backend Rules
+- Normalize tags
+- Create if missing
+- Sync replaces existing tags
+- Remove deleted tags on update
 
 ---
 
-## 6. Public Usage
-
-Tags are used for:
-- Displaying tag badges
-- Optional filtering (future)
-
-Public area MUST:
-- Read tags from relationships
-- Never manipulate tag data
+## 6. Service Layer
+- All tag logic in:
+app/Services/TagService.php
+- Controllers must NOT handle tag logic
 
 ---
 
-## 7. Sensitive Areas
-
-Be extremely careful when modifying:
-- Tag parsing logic
-- Form architecture
-- Hidden input synchronization
-
-Tag system bugs may result in:
-- Ghost tags
-- Data mismatch
-- SEO issues
+## 7. Frontend Behavior
+- Display-only
+- Optional future filtering
 
 ---
 
-## 8. AI Agent Instructions
+## 8. Admin UI Rules
+- Chip-style input
+- Single field
+- No external JS libraries
+- Removal fully replaces tag set
 
-Before modifying the tag system:
-1. Read this document
-2. Review ADMIN_BLUEPRINT.md
-3. Confirm backend contract is preserved
+---
 
-If unsure → DO NOT MODIFY.
+## 9. Forbidden
+- JSON tags in posts
+- Duplicate tag names
+- Append-only updates
+- Tag logic in controllers/views
+
+---
+
+## 10. AI Rules
+- Preserve input contract
+- Preserve replacement behavior
+- No new formats or async behavior
+
+---
+
+End of TAG_SYSTEM.md

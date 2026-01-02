@@ -1,80 +1,94 @@
-# PUBLIC BLUEPRINT – laravel_blog
-
-## 1. Purpose of Public Area
-
-The Public Area displays published content to readers and search engines.
-It is optimized for reading long technical articles.
+# PUBLIC_BLUEPRINT.md
+Laravel Blog – Frontend Area Blueprint
 
 ---
 
-## 2. Public Responsibilities
-
-- Display published posts only
-- Provide clean navigation
-- Support SEO
-- Optimize readability
-
-Public area must NOT:
-- Expose draft content
-- Depend on admin logic
+## 1. Purpose
+Defines rules and UX principles of the public-facing Frontend.
+Frontend is read-only and visitor-focused.
 
 ---
 
-## 3. Public Pages
-
-### Home Page
-- Lists published posts
-- Card-based layout
-- Pagination enabled
-
-### Post Detail Page
-- Accessed via slug
-- Displays full article content
+## 2. Core Principles (NON-NEGOTIABLE)
+- Read-only
+- Published content only
+- No state mutation
+- No shared views with Admin
+- Readability & performance first
 
 ---
 
-## 4. Visibility Rules
-
-- Only published posts are visible
-- Draft posts must never appear
-- Public queries must explicitly filter status
+## 3. Actors
+- Visitors
+- Readers
 
 ---
 
-## 5. Reading Experience
+## 4. Controller Rules
+Location:
+app/Http/Controllers/Frontend/
 
-Design principles:
-- Max-width content
-- Large line-height
-- No sidebar
+Rules:
+- Read-only
+- Published data only
+- No admin views
+
+Example:
+Frontend\PostController
+- index
+- show
+
+---
+
+## 5. View Rules
+Location:
+resources/views/frontend/
+
+Rules:
+- Used ONLY by Frontend controllers
+- Use frontend layout
+- Optimized for reading
+
+Example:
+resources/views/frontend/posts/
+- index.blade.php
+- show.blade.php
+
+---
+
+## 6. UX Guidelines
+- Single-column content focus
+- Clear typography
 - Minimal distractions
 
 ---
 
-## 6. Content Rendering
-
-- Content is rendered as HTML
-- Generated from TinyMCE
-- Code blocks highlighted via Prism.js
-
----
-
-## 7. SEO
-
-- Use SEO title if available
-- Use meta description if available
+## 7. Content Rules
+- Only status = published
 - Slug-based URLs
+- Drafts never accessible
 
 ---
 
-## 8. Extension Guidelines
+## 8. SEO
+- Meta title & description
+- Semantic HTML
+- Human-readable URLs
 
-Safe to extend:
-- Search
-- Category filter
-- Tag filter
-- Related posts
+---
 
-Never change:
-- Draft visibility rules
-- Admin/Public separation
+## 9. Forbidden
+- Admin layout usage
+- CMS interactions
+- Frontend frameworks
+
+---
+
+## 10. AI Rules
+- Preserve readability
+- Respect read-only constraints
+- No admin logic
+
+---
+
+End of PUBLIC_BLUEPRINT.md
