@@ -33,15 +33,15 @@
 </ul>
 
 {{-- ===== FILTERS ===== --}}
-<form method="GET" class="row g-3 mb-3">
-    <div class="col-md-4">
+<form method="GET" id="filter-form" class="row g-3 mb-3">
+    <div class="col-md-3">
         <input type="text"
                name="search"
                class="form-control form-control-sm"
                placeholder="Search posts..."
                value="{{ request('search') }}">
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <select name="status" class="form-select form-select-sm">
             <option value="">All Status</option>
             <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
@@ -49,10 +49,30 @@
         </select>
     </div>
     <div class="col-md-2">
+        <select name="category_id" class="form-select form-select-sm">
+            <option value="">All Categories</option>
+            @foreach($categories as $category)
+            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                {{ $category->name }}
+            </option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select name="tag_id" class="form-select form-select-sm">
+            <option value="">All Tags</option>
+            @foreach($tags as $tag)
+            <option value="{{ $tag->id }}" {{ request('tag_id') == $tag->id ? 'selected' : '' }}>
+                {{ $tag->name }}
+            </option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-md-1">
         <button type="submit" class="btn btn-outline-secondary btn-sm">Filter</button>
     </div>
-    <div class="col-md-3 text-end">
-        @if(request()->hasAny(['search', 'status']))
+    <div class="col-md-2 text-end">
+        @if(request()->hasAny(['search', 'status', 'category_id', 'tag_id']))
             <a href="{{ route('admin.posts.index') }}" class="btn btn-outline-secondary btn-sm">Clear Filters</a>
         @endif
     </div>
@@ -179,7 +199,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="7" class="text-center text-muted py-4">
+                <td colspan="6" class="text-center text-muted py-4">
                     No posts found.
                 </td>
             </tr>

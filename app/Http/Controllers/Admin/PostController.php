@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use App\Services\PostService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -38,6 +39,18 @@ class PostController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Category filter
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Tag filter
+        if ($request->filled('tag_id')) {
+            $query->whereHas('tags', function ($q) use ($request) {
+                $q->where('tags.id', $request->tag_id);
+            });
+        }
+
         // Sorting
         $sortBy = $request->get('sort_by', 'created_at');
         $sortDir = $request->get('sort_dir', 'desc');
@@ -55,7 +68,11 @@ class PostController extends Controller
         $publishedCount = Post::where('status', 'published')->count();
         $draftCount = Post::where('status', 'draft')->count();
 
-        return view('admin.posts.index', compact('posts', 'allCount', 'publishedCount', 'draftCount'));
+        // Filters data
+        $categories = Category::orderBy('name')->get();
+        $tags = Tag::orderBy('name')->get();
+
+        return view('admin.posts.index', compact('posts', 'allCount', 'publishedCount', 'draftCount', 'categories', 'tags'));
     }
 
     /**
@@ -128,6 +145,8 @@ class PostController extends Controller
 
         return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
     }
+
+
 
     /**
      * Remove the specified resource from storage.
