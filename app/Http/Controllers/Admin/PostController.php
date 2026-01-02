@@ -5,13 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
-use App\Models\Tag;
+use App\Services\PostService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+    protected $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -35,40 +39,18 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|min:5',
             'content' => 'required',
             'status' => 'required|in:draft,published',
             'thumbnail' => 'nullable|image|max:2048',
             'category_id' => 'nullable|exists:categories,id',
             'tags' => 'nullable|string',
+            'seo_title' => 'nullable|string',
+            'seo_description' => 'nullable|string',
         ]);
 
-        $slug = Str::slug($request->title);
-        $originalSlug = $slug;
-        $counter = 1;
-        while (Post::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
-            $counter++;
-        }
-
-        $thumbnailPath = null;
-        if ($request->hasFile('thumbnail')) {
-            $thumbnailPath = $request->file('thumbnail')->store('posts', 'public');
-        }
-
-        $post = Post::create([
-            'title' => $request->title,
-            'slug' => $slug,
-            'content' => $request->content,
-            'thumbnail' => $thumbnailPath,
-            'status' => $request->status,
-            'seo_title' => $request->seo_title,
-            'seo_description' => $request->seo_description,
-            'category_id' => $request->category_id,
-        ]);
-
-        $this->syncTags($post, $request->tags);
+        $this->postService->createPost($validated);
 
         return redirect()->route('admin.posts.index')->with('success', 'Post created successfully.');
     }
@@ -98,45 +80,18 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|min:5',
             'content' => 'required',
             'status' => 'required|in:draft,published',
             'thumbnail' => 'nullable|image|max:2048',
             'category_id' => 'nullable|exists:categories,id',
             'tags' => 'nullable|string',
+            'seo_title' => 'nullable|string',
+            'seo_description' => 'nullable|string',
         ]);
 
-        $slug = Str::slug($request->title);
-        if ($slug !== $post->slug) {
-            $originalSlug = $slug;
-            $counter = 1;
-            while (Post::where('slug', $slug)->where('id', '!=', $post->id)->exists()) {
-                $slug = $originalSlug . '-' . $counter;
-                $counter++;
-            }
-        }
-
-        $thumbnailPath = $post->thumbnail;
-        if ($request->hasFile('thumbnail')) {
-            if ($post->thumbnail) {
-                Storage::disk('public')->delete($post->thumbnail);
-            }
-            $thumbnailPath = $request->file('thumbnail')->store('posts', 'public');
-        }
-
-        $post->update([
-            'title' => $request->title,
-            'slug' => $slug,
-            'content' => $request->content,
-            'thumbnail' => $thumbnailPath,
-            'status' => $request->status,
-            'seo_title' => $request->seo_title,
-            'seo_description' => $request->seo_description,
-            'category_id' => $request->category_id,
-        ]);
-
-        $this->syncTags($post, $request->tags);
+        $this->postService->updatePost($post, $validated);
 
         return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully.');
     }
@@ -147,35 +102,9 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         if ($post->thumbnail) {
-            Storage::disk('public')->delete($post->thumbnail);
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($post->thumbnail);
         }
         $post->delete();
         return redirect()->route('admin.posts.index')->with('success', 'Post deleted successfully.');
-    }
-
-    private function syncTags(Post $post, $tagsString)
-    {
-        if (!$tagsString) {
-            $post->tags()->detach();
-            return;
-        }
-
-        $tagNames = array_map('trim', explode(',', $tagsString));
-        $tagNames = array_filter($tagNames, function($tag) {
-            return !empty($tag);
-        });
-
-        $tagIds = [];
-        foreach ($tagNames as $tagName) {
-            $tagName = strtolower($tagName);
-            $slug = Str::slug($tagName);
-            $tag = Tag::firstOrCreate(
-                ['slug' => $slug],
-                ['name' => $tagName, 'slug' => $slug]
-            );
-            $tagIds[] = $tag->id;
-        }
-
-        $post->tags()->sync($tagIds);
     }
 }
