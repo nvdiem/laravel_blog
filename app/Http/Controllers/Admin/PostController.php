@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\Tag;
 use App\Services\PostService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -18,6 +19,7 @@ class PostController extends Controller
     {
         $this->postService = $postService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -218,8 +220,73 @@ class PostController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Handle bulk actions on posts.
      */
+    public function bulkAction(Request $request)
+{
+    $request->validate([
+        'action'   => 'required|string',
+        'post_ids' => 'required|array|min:1',
+        'post_ids.*' => 'integer|exists:posts,id',
+    ]);
+
+    $action   = $request->action;
+    $postIds  = $request->post_ids;
+
+    $successCount = 0;
+    $errors = [];
+
+    $posts = Post::whereIn('id', $postIds)->get();
+
+    DB::transaction(function () use ($action, $posts, &$successCount, &$errors) {
+
+        foreach ($posts as $post) {
+            try {
+                switch ($action) {
+
+                    case 'publish':
+                        if ($post->status !== 'published') {
+                            $post->update([
+                                'status'       => 'published',
+                                'published_at' => now(),
+                            ]);
+                        }
+                        $successCount++;
+                        break;
+
+                    case 'draft':
+                        $post->update([
+                            'status'       => 'draft',
+                            'published_at' => null,
+                        ]);
+                        $successCount++;
+                        break;
+
+                    case 'delete':
+                        $post->delete(); // soft delete
+                        $successCount++;
+                        break;
+
+                    default:
+                        $errors[] = $post->id;
+                        break;
+                }
+            } catch (\Throwable $e) {
+                $errors[] = $post->id;
+            }
+        }
+    });
+
+    // Build success message
+    $message = $successCount . " post" . ($successCount > 1 ? 's' : '') . " processed successfully.";
+
+    // FIXED SYNTAX (đoạn bạn bị lỗi)
+    if (!empty($errors)) {
+        $message .= " " . count($errors) . " post" . (count($errors) > 1 ? 's' : '') . " could not be processed.";
+    }
+    return redirect()->back()->with('success', $message);
+    }
+
     public function suggestTags(Request $request)
     {
         $query = $request->get('q', '');

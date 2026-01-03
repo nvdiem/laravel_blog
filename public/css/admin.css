@@ -245,3 +245,75 @@
 .row-actions a.text-danger:hover {
     color: #dc2626;
 }
+
+/* ===== WORDPRESS-STYLE UX IMPROVEMENTS ===== */
+
+/* Header Checkbox - Larger Click Area */
+th input[type="checkbox"] {
+    position: relative;
+    z-index: 1;
+}
+
+th input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    background: transparent;
+    cursor: pointer;
+    z-index: 0;
+}
+
+th:hover input[type="checkbox"]::before {
+    background: rgba(59, 130, 246, 0.05);
+    border-radius: 4px;
+}
+
+/* Make the entire header cell clickable for checkbox */
+th:has(input[type="checkbox"]) {
+    position: relative;
+    cursor: pointer;
+}
+
+th:has(input[type="checkbox"])::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    cursor: pointer;
+    z-index: -1;
+}
+
+/* Bulk Action Bar - Visually Attached to Table */
+#bulk-form .row {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+}
+
+#bulk-form .row .col-md-9 {
+    padding-top: 6px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* Reduce gap between bulk actions and table */
+#bulk-form {
+    margin-bottom: 16px;
+}
+
+/* Table connection styling */
+.table-responsive {
+    border-top: 1px solid #e5e7eb;
+    border-radius: 6px 6px 0 0;
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+    border-radius: 0;
+}
