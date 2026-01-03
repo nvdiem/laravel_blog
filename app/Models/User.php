@@ -54,33 +54,28 @@ class User extends Authenticatable
     }
 
     /**
-     * User's permissions through roles
-     */
-    public function permissions()
-    {
-        return Permission::join('role_permission', 'permissions.id', '=', 'role_permission.permission_id')
-            ->join('user_role', function ($join) {
-                $join->on('role_permission.role_id', '=', 'user_role.role_id')
-                     ->where('user_role.user_id', '=', $this->id);
-            })
-            ->select('permissions.*');
-    }
-
-    /**
      * Check if user has a specific role
      */
     public function hasRole(string $roleSlug): bool
     {
-        return $this->roles()->where('slug', $roleSlug)->exists();
+        $this->loadMissing('roles');
+
+        return $this->roles->pluck('slug')->contains($roleSlug);
     }
+
 
     /**
      * Check if user has a specific permission
      */
     public function canDo(string $permissionSlug): bool
     {
-        // Check if user has permission through any of their roles
-        return $this->permissions()->where('slug', $permissionSlug)->exists();
+        // Load roles & permissions once per request
+        $this->loadMissing('roles.permissions');
+
+        return $this->roles
+            ->flatMap(fn ($role) => $role->permissions)
+            ->pluck('slug')
+            ->contains($permissionSlug);
     }
 
     /**

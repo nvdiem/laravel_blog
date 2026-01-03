@@ -45,6 +45,16 @@
                 Media Library
             </a>
         </div>
+
+        @can('user.manage')
+        <div class="nav-section">
+            <div class="nav-section-title">System</div>
+            <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <span class="nav-icon">👥</span>
+                Users
+            </a>
+        </div>
+        @endcan
     </nav>
 
     <div class="sidebar-footer">
@@ -73,6 +83,14 @@
             <span class="navbar-text mb-0 fw-semibold">
                 {{ $title ?? 'Admin Panel' }}
             </span>
+
+            <div class="navbar-nav ms-auto">
+                @can('user.manage')
+                <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                    👥 Users
+                </a>
+                @endcan
+            </div>
         </div>
     </nav>
 

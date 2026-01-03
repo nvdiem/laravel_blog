@@ -127,10 +127,10 @@
                                                     <span class="badge bg-warning-subtle text-warning">Draft</span>
                                                 @endif
                                             </span>
-                                            @if($post->primaryCategory())
+                                            @if($post->primaryCategory && $post->primaryCategory->first())
                                             <span>
                                                 <i class="fas fa-tag me-1"></i>
-                                                {{ $post->primaryCategory()->name }}
+                                                {{ $post->primaryCategory->first()->name }}
                                             </span>
                                             @endif
                                             <span>
@@ -173,6 +173,11 @@
                         <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-primary">
                             <i class="fas fa-tags me-2"></i>Manage Categories
                         </a>
+                        @can('user.manage')
+                        <a href="{{ route('admin.users.index') }}" class="btn btn-outline-info">
+                            <i class="fas fa-users me-2"></i>Manage Users
+                        </a>
+                        @endcan
                         <button onclick="openMediaLibrary()" class="btn btn-outline-secondary">
                             <i class="fas fa-images me-2"></i>Open Media Library
                         </button>
