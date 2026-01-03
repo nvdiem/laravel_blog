@@ -20,7 +20,7 @@
 <!-- ===== ADMIN SIDEBAR ===== -->
 <div class="admin-sidebar">
     <div class="sidebar-header">
-        <a class="sidebar-brand" href="{{ route('admin.posts.index') }}">
+        <a class="sidebar-brand" href="{{ route('admin.dashboard') }}">
             <span>📝</span> Laravel Blog
         </a>
     </div>
@@ -40,7 +40,7 @@
 
         <div class="nav-section">
             <div class="nav-section-title">Media</div>
-            <a href="#" class="nav-link" onclick="document.getElementById('uploadForm').click()">
+            <a href="#" class="nav-link" onclick="openMediaLibrary()">
                 <span class="nav-icon">📎</span>
                 Media Library
             </a>
@@ -90,6 +90,15 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Function to open media library modal
+function openMediaLibrary() {
+    const modal = new bootstrap.Modal(document.getElementById('mediaLibraryModal'));
+    modal.show();
+}
+</script>
+
 @stack('scripts')
 
 <!-- Media Library Modal -->
