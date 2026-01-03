@@ -15,6 +15,16 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10 col-12">
+
+            {{-- PREVIEW BANNER --}}
+            @if(isset($isPreview) && $isPreview)
+            <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+                <i class="fas fa-eye me-2"></i>
+                <strong>Preview Mode:</strong> This post is not published yet. This is how it will look when published.
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+            </div>
+            @endif
+
             {{-- Back Link --}}
             <div class="mb-4">
                 <a href="{{ url('/') }}" class="text-decoration-none text-muted d-inline-flex align-items-center">

@@ -34,3 +34,4 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 Route::get('/posts/{slug}', [FrontendPostController::class, 'show'])->name('posts.show');
 Route::get('/category/{slug}', [\App\Http\Controllers\Frontend\CategoryController::class, 'show'])->name('categories.show');
+Route::get('/preview/posts/{post}', [\App\Http\Controllers\Frontend\PostController::class, 'preview'])->name('posts.preview')->middleware('signed');

@@ -80,6 +80,11 @@
                     </select>
 
                     <button class="btn btn-primary w-100 mb-2">Update</button>
+                    <a href="{{ \Illuminate\Support\Facades\URL::signedRoute('posts.preview', ['post' => $post]) }}"
+                       target="_blank"
+                       class="btn btn-outline-info btn-sm w-100 mb-2">
+                        👁️ Preview Post
+                    </a>
                     <a href="{{ route('admin.posts.index') }}" class="btn btn-outline-secondary btn-sm w-100">
                         ← Back to Posts
                     </a>
