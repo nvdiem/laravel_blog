@@ -56,6 +56,13 @@
                       class="form-control border-0 shadow-none">
                 {{ old('content', $post->content) }}
             </textarea>
+
+            {{-- AUTOSAVE STATUS --}}
+            @if($post->status === 'draft')
+            <div id="autosave-status" class="mt-2 small text-muted" style="opacity: 0.7;">
+                Draft saved locally
+            </div>
+            @endif
         </div>
 
         {{-- ================= SIDEBAR ================= --}}
@@ -391,5 +398,173 @@ updatePrimaryRadios();
 document.querySelectorAll('.category-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', updatePrimaryRadios);
 });
+
+// ================= AUTOSAVE FUNCTIONALITY =================
+@if($post->status === 'draft')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const AUTOSAVE_INTERVAL = 30000; // 30 seconds
+    let autosaveTimer = null;
+    let isDirty = false;
+    let isSaving = false;
+    let lastSavedData = null;
+
+    const statusElement = document.getElementById('autosave-status');
+    const postForm = document.getElementById('post-form');
+
+    // Get initial form data for comparison
+    function getFormData() {
+        const formData = new FormData();
+
+        // Get title
+        formData.append('title', document.getElementById('title').value);
+
+        // Get content from TinyMCE
+        if (window.tinymce && window.tinymce.activeEditor) {
+            formData.append('content', window.tinymce.activeEditor.getContent());
+        } else {
+            formData.append('content', document.getElementById('content').value);
+        }
+
+        // Get categories
+        const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked')).map(cb => cb.value);
+        selectedCategories.forEach(catId => {
+            formData.append('categories[]', catId);
+        });
+
+        // Get primary category
+        const primaryCategory = document.querySelector('.primary-radio:checked');
+        if (primaryCategory) {
+            formData.append('primary_category', primaryCategory.value);
+        }
+
+        // Get tags
+        formData.append('tags', document.getElementById('tags').value);
+
+        return formData;
+    }
+
+    // Check if form data has changed
+    function hasFormChanged() {
+        const currentData = getFormData();
+
+        // Convert FormData to string for comparison
+        const currentString = Array.from(currentData.entries())
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([key, value]) => `${key}:${value}`)
+            .join('|');
+
+        const lastString = lastSavedData;
+
+        return currentString !== lastString;
+    }
+
+    // Update last saved data
+    function updateLastSavedData() {
+        lastSavedData = Array.from(getFormData().entries())
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([key, value]) => `${key}:${value}`)
+            .join('|');
+    }
+
+    // Perform autosave
+    function performAutosave() {
+        if (isSaving || !isDirty) return;
+
+        isSaving = true;
+        updateStatus('Saving draft...', 'text-warning');
+
+        const formData = getFormData();
+
+        fetch(`{{ route('admin.posts.autosave', $post) }}`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                isDirty = false;
+                updateLastSavedData();
+                updateStatus(`Draft saved at ${data.timestamp}`, 'text-success');
+            } else {
+                updateStatus('Failed to save draft', 'text-danger');
+                console.error('Autosave failed:', data.message);
+            }
+        })
+        .catch(error => {
+            updateStatus('Failed to save draft', 'text-danger');
+            console.error('Autosave error:', error);
+        })
+        .finally(() => {
+            isSaving = false;
+        });
+    }
+
+    // Update status display
+    function updateStatus(message, className) {
+        if (statusElement) {
+            statusElement.textContent = message;
+            statusElement.className = `mt-2 small ${className}`;
+        }
+    }
+
+    // Mark form as dirty
+    function markDirty() {
+        if (!isDirty) {
+            isDirty = true;
+            updateStatus('Draft has unsaved changes', 'text-warning');
+        }
+
+        // Reset autosave timer
+        clearTimeout(autosaveTimer);
+        autosaveTimer = setTimeout(performAutosave, AUTOSAVE_INTERVAL);
+    }
+
+    // Initialize last saved data
+    updateLastSavedData();
+
+    // Event listeners for form changes
+    const titleInput = document.getElementById('title');
+    const tagInput = document.getElementById('tag-input');
+
+    if (titleInput) {
+        titleInput.addEventListener('input', markDirty);
+    }
+
+    if (tagInput) {
+        tagInput.addEventListener('input', markDirty);
+    }
+
+    // Category changes
+    document.querySelectorAll('.category-checkbox, .primary-radio').forEach(element => {
+        element.addEventListener('change', markDirty);
+    });
+
+    // TinyMCE content changes
+    if (window.tinymce) {
+        window.tinymce.on('init', function() {
+            window.tinymce.activeEditor.on('change keyup', function() {
+                markDirty();
+            });
+        });
+    }
+
+    // Prevent autosave during manual form submission
+    if (postForm) {
+        postForm.addEventListener('submit', function() {
+            clearTimeout(autosaveTimer);
+            isSaving = true; // Prevent any ongoing autosave
+        });
+    }
+
+    // Initial status
+    updateStatus('Draft saved locally', 'text-muted');
+});
+</script>
+@endif
 </script>
 @endsection

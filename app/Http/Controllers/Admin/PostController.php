@@ -166,6 +166,58 @@ class PostController extends Controller
 
 
     /**
+     * Auto-save draft post (AJAX endpoint).
+     */
+    public function autosave(Request $request, Post $post)
+    {
+        // Only allow autosave for draft posts
+        if ($post->status !== 'draft') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Auto-save only available for draft posts.'
+            ], 400);
+        }
+
+        // Validate request data
+        $validated = $request->validate([
+            'title' => 'nullable|string|min:1|max:255',
+            'content' => 'nullable|string',
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
+            'primary_category' => 'nullable|exists:categories,id',
+            'tags' => 'nullable|string',
+        ]);
+
+        // Validate primary category is in selected categories
+        if ($request->primary_category && !in_array($request->primary_category, $request->categories ?? [])) {
+            $validated['primary_category'] = null; // Remove invalid primary category
+        }
+
+        try {
+            // Update post using service (reuses existing logic)
+            $this->postService->updatePost($post, array_merge($validated, [
+                'status' => 'draft', // Ensure it stays as draft
+                'thumbnail' => $post->thumbnail, // Preserve existing thumbnail
+                'seo_title' => $post->seo_title, // Preserve SEO fields
+                'seo_description' => $post->seo_description,
+            ]));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Draft saved',
+                'timestamp' => now()->format('H:i'),
+                'saved_at' => now()->toISOString(),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to save draft: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function suggestTags(Request $request)
