@@ -25,7 +25,14 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Post::with('categories', 'tags');
+        // OPTIMIZE: Selective eager loading - only load essential fields
+        $query = Post::with([
+            'categories:id,name',     // Only id and name for categories
+            'tags:id,name',          // Only id and name for tags
+            'primaryCategory:id,name' // Eager load primary category to prevent N+1
+        ])->select([
+            'id', 'title', 'slug', 'status', 'thumbnail', 'created_at'
+        ]); // Select only necessary columns
 
         // Search
         if ($request->filled('search')) {
@@ -55,26 +62,30 @@ class PostController extends Controller
             });
         }
 
-        // Sorting
+        // Sorting - use indexed columns
         $sortBy = $request->get('sort_by', 'created_at');
         $sortDir = $request->get('sort_dir', 'desc');
 
         if (in_array($sortBy, ['title', 'status', 'created_at'])) {
             $query->orderBy($sortBy, $sortDir);
         } else {
-            $query->latest();
+            $query->orderBy('created_at', 'desc'); // Use indexed column
         }
 
         $posts = $query->paginate(10);
 
-        // Status counts for tabs
-        $allCount = Post::count();
-        $publishedCount = Post::where('status', 'published')->count();
-        $draftCount = Post::where('status', 'draft')->count();
+        // OPTIMIZE: Single grouped query for all status counts
+        $statusCounts = Post::selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
 
-        // Filters data
-        $categories = Category::orderBy('name')->get();
-        $tags = Tag::orderBy('name')->get();
+        $allCount = $statusCounts->sum();
+        $publishedCount = $statusCounts->get('published', 0);
+        $draftCount = $statusCounts->get('draft', 0);
+
+        // OPTIMIZE: Select only essential fields for filters
+        $categories = Category::select('id', 'name')->orderBy('name')->get();
+        $tags = Tag::select('id', 'name')->orderBy('name')->get();
 
         return view('admin.posts.index', compact('posts', 'allCount', 'publishedCount', 'draftCount', 'categories', 'tags'));
     }

@@ -227,23 +227,63 @@
     border-bottom: 1px solid rgba(209, 213, 219, 0.8);
 }
 
-/* Row actions */
-.post-row:hover .row-actions {
-    display: block !important;
+/* ===== WORDPRESS-STYLE ROW ACTIONS ===== */
+
+/* Row actions - hidden by default, shown on hover */
+.row-actions {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    margin-top: 2px;
+    transition: opacity 0.15s ease-in-out;
+    font-size: 12px;
+    line-height: 1.4;
 }
 
+/* Show row actions on post row hover */
+.post-row:hover .row-actions {
+    opacity: 1;
+    height: auto;
+}
+
+/* Row action links styling */
 .row-actions a {
-    color: #3b82f6;
+    color: #6b7280;
     text-decoration: none;
     font-size: 12px;
+    font-weight: 400;
+    margin: 0 4px;
+    padding: 1px 0;
+    border: none;
+    background: none;
+    cursor: pointer;
 }
 
 .row-actions a:hover {
-    color: #1d4ed8;
+    color: #374151;
+    text-decoration: underline;
+}
+
+/* Trash action - red color */
+.row-actions a.text-danger {
+    color: #dc2626;
 }
 
 .row-actions a.text-danger:hover {
-    color: #dc2626;
+    color: #b91c1c;
+}
+
+/* Separator styling */
+.row-actions a:not(:last-child)::after {
+    content: '|';
+    color: #d1d5db;
+    margin-left: 4px;
+    font-weight: normal;
+}
+
+/* Override any existing display styles for smoother transition */
+.post-row:hover .row-actions {
+    display: block !important;
 }
 
 /* ===== WORDPRESS-STYLE UX IMPROVEMENTS ===== */

@@ -135,7 +135,7 @@
                     </th>
                     <th width="50">ID</th>
                     <th>Title</th>
-                    <th>Slug</th>
+                    <th>Created</th>
                     <th>Category</th>
                     <th>Tags</th>
                     <th width="90">Thumbnail</th>
@@ -144,7 +144,7 @@
             </thead>
             <tbody>
                 @forelse($posts as $post)
-                <tr>
+                <tr class="post-row">
                     <td>
                         {{-- 🔧 FIX 2: checkbox nằm trong form --}}
                         <input type="checkbox"
@@ -153,8 +153,19 @@
                                value="{{ $post->id }}">
                     </td>
                     <td class="text-muted">{{ $post->id }}</td>
-                    <td class="fw-medium">{{ $post->title }}</td>
-                    <td class="text-muted small">{{ $post->slug }}</td>
+                    <td class="fw-medium">
+                        <div class="post-title-wrapper">
+                            <strong class="post-title">{{ $post->title }}</strong>
+                            <div class="row-actions">
+                                <a href="{{ route('admin.posts.edit', $post) }}">Edit</a>
+                                <a href="{{ route('admin.posts.show', $post) }}">View</a>
+                                @if(auth()->user()->isAdmin())
+                                <a href="#" class="text-danger" onclick="if(confirm('Delete this post?')) { event.preventDefault(); document.getElementById('delete-form-{{ $post->id }}').submit(); }">Trash</a>
+                                @endif
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-muted small">{{ $post->created_at->format('M j, Y') }}</td>
                     <td>{{ $post->primaryCategory()?->name ?? 'Uncategorized' }}</td>
                     <td>
                         @foreach($post->tags as $tag)
@@ -205,3 +216,68 @@
 @endif
 
 @endsection
+
+@push('scripts')
+<script>
+// ===== SELECT ALL CHECKBOX FUNCTIONALITY =====
+document.addEventListener('DOMContentLoaded', function () {
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+
+    if (!selectAllCheckbox) return;
+
+    // Handle select all checkbox click
+    selectAllCheckbox.addEventListener('change', function () {
+        // Toggle all row checkboxes
+        rowCheckboxes.forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+
+        // Update bulk action button state
+        updateBulkActionButton();
+    });
+
+    // Handle individual row checkbox changes
+    rowCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
+            const totalCount = rowCheckboxes.length;
+
+            // Update select all checkbox state
+            if (checkedCount === 0) {
+                // No checkboxes selected
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+            } else if (checkedCount === totalCount) {
+                // All checkboxes selected
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            } else {
+                // Some checkboxes selected (indeterminate state)
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+            }
+
+            // Update bulk action button state
+            updateBulkActionButton();
+        });
+    });
+
+    // Update bulk action button enabled/disabled state
+    function updateBulkActionButton() {
+        const bulkActionSelect = document.getElementById('bulk-action-select');
+        const bulkApplyBtn = document.getElementById('bulk-apply-btn');
+        const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
+
+        // Enable button only if posts are selected AND an action is chosen
+        bulkApplyBtn.disabled = checkedCount === 0 || !bulkActionSelect.value;
+    }
+
+    // Handle bulk action selection changes
+    document.getElementById('bulk-action-select').addEventListener('change', updateBulkActionButton);
+
+    // Initialize bulk action button state
+    updateBulkActionButton();
+});
+</script>
+@endpush

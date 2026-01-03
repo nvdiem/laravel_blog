@@ -26,10 +26,12 @@ class Post extends Model
         return $this->belongsToMany(Category::class)->withPivot('is_primary');
     }
 
-    // Get primary category
+    // Primary category relationship (for eager loading)
     public function primaryCategory()
     {
-        return $this->categories()->wherePivot('is_primary', true)->first();
+        return $this->belongsToMany(Category::class)
+            ->wherePivot('is_primary', true)
+            ->limit(1);
     }
 
     // Get all categories except primary
