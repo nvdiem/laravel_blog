@@ -5,9 +5,11 @@
 {{-- ===== PAGE HEADER ===== --}}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="fw-semibold mb-0">Posts</h4>
+    @can('create', \App\Models\Post::class)
     <a href="{{ route('admin.posts.create') }}" class="btn btn-primary btn-sm">
         + Create Post
     </a>
+    @endcan
 </div>
 
 {{-- ===== STATUS TABS ===== --}}
@@ -166,7 +168,7 @@
                         </div>
                     </td>
                     <td class="text-muted small">{{ $post->created_at->format('M j, Y') }}</td>
-                    <td>{{ $post->primaryCategory()?->name ?? 'Uncategorized' }}</td>
+                    <td>{{ $post->primaryCategory->first()?->name ?? 'Uncategorized' }}</td>
                     <td>
                         @foreach($post->tags as $tag)
                             <span class="badge bg-secondary-subtle text-secondary border small">
@@ -195,8 +197,36 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" class="text-center text-muted py-4">
-                        No posts found.
+                    <td colspan="8" class="text-center py-5">
+                        @if(request('search'))
+                            {{-- Search with no results --}}
+                            <div class="empty-state">
+                                <h6 class="text-muted mb-3">No posts found for your search</h6>
+                                <p class="text-muted small mb-3">"{{ request('search') }}" returned no results.</p>
+                                <a href="{{ route('admin.posts.index', array_diff_key(request()->query(), array_flip(['search']))) }}"
+                                   class="btn btn-outline-secondary btn-sm">
+                                    Clear Search
+                                </a>
+                            </div>
+                        @elseif(request()->hasAny(['status', 'category_id', 'tag_id']))
+                            {{-- Filtered with no results --}}
+                            <div class="empty-state">
+                                <h6 class="text-muted mb-3">No posts match your current filters</h6>
+                                <p class="text-muted small mb-3">Try adjusting your filters or clearing them to see all posts.</p>
+                                <a href="{{ route('admin.posts.index') }}" class="btn btn-outline-secondary btn-sm">
+                                    Clear Filters
+                                </a>
+                            </div>
+                        @else
+                            {{-- No posts exist at all --}}
+                            <div class="empty-state">
+                                <h6 class="text-muted mb-3">No posts found</h6>
+                                <p class="text-muted small mb-3">Get started by creating your first post.</p>
+                                <a href="{{ route('admin.posts.create') }}" class="btn btn-primary btn-sm">
+                                    Create Post
+                                </a>
+                            </div>
+                        @endif
                     </td>
                 </tr>
                 @endforelse
@@ -217,67 +247,212 @@
 
 @endsection
 
+{{-- ===== BULK ACTION CONFIRMATION MODAL ===== --}}
+<div class="modal fade" id="bulkActionModal" tabindex="-1" aria-labelledby="bulkActionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkActionModalLabel">Confirm Bulk Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="bulkActionMessage">Are you sure you want to perform this action?</p>
+                <div class="alert alert-warning" id="bulkActionWarning" style="display: none;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Warning:</strong> This action cannot be undone.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn" id="bulkActionConfirmBtn" data-bs-dismiss="modal">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
-// ===== SELECT ALL CHECKBOX FUNCTIONALITY =====
+// ===== WORDPRESS-STYLE BULK ACTIONS UX =====
 document.addEventListener('DOMContentLoaded', function () {
     const selectAllCheckbox = document.getElementById('select-all-checkbox');
     const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+    const bulkActionSelect = document.getElementById('bulk-action-select');
+    const bulkApplyBtn = document.getElementById('bulk-apply-btn');
+    const bulkForm = document.getElementById('bulk-form');
 
-    if (!selectAllCheckbox) return;
+    if (!selectAllCheckbox || !bulkActionSelect || !bulkApplyBtn) return;
 
+    // ===== HEADER CHECKBOX BEHAVIOR =====
     // Handle select all checkbox click
     selectAllCheckbox.addEventListener('change', function () {
-        // Toggle all row checkboxes
+        // Toggle all visible row checkboxes
         rowCheckboxes.forEach(checkbox => {
-            checkbox.checked = selectAllCheckbox.checked;
+            if (!checkbox.disabled) {
+                checkbox.checked = selectAllCheckbox.checked;
+            }
         });
 
-        // Update bulk action button state
         updateBulkActionButton();
+        updateHeaderCheckboxState();
     });
 
-    // Handle individual row checkbox changes
+    // ===== INDIVIDUAL ROW CHECKBOXES =====
     rowCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
-            const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
-            const totalCount = rowCheckboxes.length;
-
-            // Update select all checkbox state
-            if (checkedCount === 0) {
-                // No checkboxes selected
-                selectAllCheckbox.checked = false;
-                selectAllCheckbox.indeterminate = false;
-            } else if (checkedCount === totalCount) {
-                // All checkboxes selected
-                selectAllCheckbox.checked = true;
-                selectAllCheckbox.indeterminate = false;
-            } else {
-                // Some checkboxes selected (indeterminate state)
-                selectAllCheckbox.checked = false;
-                selectAllCheckbox.indeterminate = true;
-            }
-
-            // Update bulk action button state
+            updateHeaderCheckboxState();
             updateBulkActionButton();
         });
     });
 
-    // Update bulk action button enabled/disabled state
-    function updateBulkActionButton() {
-        const bulkActionSelect = document.getElementById('bulk-action-select');
-        const bulkApplyBtn = document.getElementById('bulk-apply-btn');
+    // ===== BULK ACTION SELECT =====
+    bulkActionSelect.addEventListener('change', function () {
+        updateBulkActionButton();
+    });
+
+    // ===== FORM SUBMISSION WITH MODAL CONFIRMATION =====
+    bulkForm.addEventListener('submit', function(e) {
+        const action = bulkActionSelect.value;
         const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
 
-        // Enable button only if posts are selected AND an action is chosen
-        bulkApplyBtn.disabled = checkedCount === 0 || !bulkActionSelect.value;
+        // Double-check: prevent submission if no posts selected
+        if (checkedCount === 0) {
+            e.preventDefault();
+            alert('Please select at least one post to perform this action.');
+            return;
+        }
+
+        // Double-check: prevent submission if no action selected
+        if (!action) {
+            e.preventDefault();
+            alert('Please select a bulk action to perform.');
+            return;
+        }
+
+        // Prevent default form submission and show modal
+        e.preventDefault();
+
+        // Configure modal based on action
+        const modal = new bootstrap.Modal(document.getElementById('bulkActionModal'));
+        const modalTitle = document.getElementById('bulkActionModalLabel');
+        const modalMessage = document.getElementById('bulkActionMessage');
+        const modalWarning = document.getElementById('bulkActionWarning');
+        const confirmBtn = document.getElementById('bulkActionConfirmBtn');
+
+        // Set modal content based on action
+        if (action === 'delete') {
+            modalTitle.textContent = 'Move to Trash';
+            modalMessage.textContent = `Are you sure you want to move ${checkedCount} post${checkedCount > 1 ? 's' : ''} to trash?`;
+            modalWarning.style.display = 'block';
+            confirmBtn.textContent = 'Move to Trash';
+            confirmBtn.className = 'btn btn-danger';
+        } else if (action === 'publish') {
+            modalTitle.textContent = 'Publish Posts';
+            modalMessage.textContent = `Are you sure you want to publish ${checkedCount} post${checkedCount > 1 ? 's' : ''}?`;
+            modalWarning.style.display = 'none';
+            confirmBtn.textContent = 'Publish';
+            confirmBtn.className = 'btn btn-success';
+        } else if (action === 'draft') {
+            modalTitle.textContent = 'Move to Draft';
+            modalMessage.textContent = `Are you sure you want to move ${checkedCount} post${checkedCount > 1 ? 's' : ''} to draft?`;
+            modalWarning.style.display = 'none';
+            confirmBtn.textContent = 'Move to Draft';
+            confirmBtn.className = 'btn btn-warning';
+        }
+
+        // Handle confirmation
+        const handleConfirm = function() {
+            // Submit the form
+            bulkForm.submit();
+            modal.hide();
+        };
+
+        // Remove previous event listeners
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+        // Add new event listener
+        newConfirmBtn.addEventListener('click', handleConfirm);
+
+        // Show modal
+        modal.show();
+    });
+
+    // ===== UTILITY FUNCTIONS =====
+
+    // Update header checkbox state based on row selections
+    function updateHeaderCheckboxState() {
+        const checkedBoxes = document.querySelectorAll('.row-checkbox:checked:not(:disabled)');
+        const enabledBoxes = document.querySelectorAll('.row-checkbox:not(:disabled)');
+        const checkedCount = checkedBoxes.length;
+        const totalCount = enabledBoxes.length;
+
+        if (checkedCount === 0) {
+            // No checkboxes selected
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+        } else if (checkedCount === totalCount) {
+            // All checkboxes selected
+            selectAllCheckbox.checked = true;
+            selectAllCheckbox.indeterminate = false;
+        } else {
+            // Some checkboxes selected (indeterminate state)
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = true;
+        }
     }
 
-    // Handle bulk action selection changes
-    document.getElementById('bulk-action-select').addEventListener('change', updateBulkActionButton);
+    // Update bulk action button enabled/disabled state
+    function updateBulkActionButton() {
+        const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
+        const hasAction = bulkActionSelect.value !== '';
 
-    // Initialize bulk action button state
+        // Enable button only if posts are selected AND an action is chosen
+        bulkApplyBtn.disabled = !(checkedCount > 0 && hasAction);
+    }
+
+    // ===== ENHANCE SUCCESS MESSAGES =====
+    // Make success messages more specific and action-oriented
+    function enhanceSuccessMessages() {
+        const successAlert = document.querySelector('.alert-success');
+        if (!successAlert) return;
+
+        const messageText = successAlert.textContent.trim();
+
+        // Parse generic success messages and make them more specific
+        // Example: "3 posts processed successfully." -> "3 posts published."
+
+        // Look for patterns like "X posts processed successfully"
+        const match = messageText.match(/(\d+)\s+posts?\s+processed\s+successfully/);
+        if (match) {
+            const postCount = parseInt(match[1]);
+            const action = bulkActionSelect.value;
+
+            let actionText = '';
+            switch (action) {
+                case 'publish':
+                    actionText = postCount === 1 ? 'published' : 'published';
+                    break;
+                case 'draft':
+                    actionText = postCount === 1 ? 'moved to draft' : 'moved to draft';
+                    break;
+                case 'delete':
+                    actionText = postCount === 1 ? 'moved to trash' : 'moved to trash';
+                    break;
+                default:
+                    actionText = 'processed';
+            }
+
+            const newMessage = `${postCount} post${postCount > 1 ? 's' : ''} ${actionText}.`;
+            successAlert.textContent = newMessage;
+        }
+    }
+
+    // ===== INITIALIZATION =====
+    updateHeaderCheckboxState();
     updateBulkActionButton();
+
+    // Enhance any existing success messages on page load
+    enhanceSuccessMessages();
 });
 </script>
 @endpush

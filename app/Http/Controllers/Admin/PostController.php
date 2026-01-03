@@ -95,6 +95,8 @@ class PostController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Post::class);
+
         $categories = Category::active()->orderBy('name')->get();
         return view('admin.posts.create', compact('categories'));
     }
@@ -104,6 +106,8 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Post::class);
+
         $validated = $request->validate([
             'title' => 'required|min:5',
             'content' => 'required',
@@ -121,6 +125,9 @@ class PostController extends Controller
         if ($request->primary_category && !in_array($request->primary_category, $request->categories ?? [])) {
             return back()->withErrors(['primary_category' => 'Primary category must be one of the selected categories.'])->withInput();
         }
+
+        // Add created_by for ownership tracking
+        $validated['created_by'] = auth()->id();
 
         $this->postService->createPost($validated);
 
@@ -143,6 +150,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        $this->authorize('update', $post);
+
         $post->load('categories'); // Load categories relationship
         $categories = Category::active()->orderBy('name')->get();
         return view('admin.posts.edit', compact('post', 'categories'));
@@ -153,6 +162,8 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        $this->authorize('update', $post);
+
         $validated = $request->validate([
             'title' => 'required|min:5',
             'content' => 'required',
@@ -234,68 +245,70 @@ class PostController extends Controller
      * Handle bulk actions on posts.
      */
     public function bulkAction(Request $request)
-{
-    $request->validate([
-        'action'   => 'required|string',
-        'post_ids' => 'required|array|min:1',
-        'post_ids.*' => 'integer|exists:posts,id',
-    ]);
+    {
+        $this->authorize('bulkAction', Post::class);
 
-    $action   = $request->action;
-    $postIds  = $request->post_ids;
+        $request->validate([
+            'action'   => 'required|string',
+            'post_ids' => 'required|array|min:1',
+            'post_ids.*' => 'integer|exists:posts,id',
+        ]);
 
-    $successCount = 0;
-    $errors = [];
+        $action   = $request->action;
+        $postIds  = $request->post_ids;
 
-    $posts = Post::whereIn('id', $postIds)->get();
+        $successCount = 0;
+        $errors = [];
 
-    DB::transaction(function () use ($action, $posts, &$successCount, &$errors) {
+        $posts = Post::whereIn('id', $postIds)->get();
 
-        foreach ($posts as $post) {
-            try {
-                switch ($action) {
+        DB::transaction(function () use ($action, $posts, &$successCount, &$errors) {
 
-                    case 'publish':
-                        if ($post->status !== 'published') {
+            foreach ($posts as $post) {
+                try {
+                    switch ($action) {
+
+                        case 'publish':
+                            if ($post->status !== 'published') {
+                                $post->update([
+                                    'status'       => 'published',
+                                    'published_at' => now(),
+                                ]);
+                            }
+                            $successCount++;
+                            break;
+
+                        case 'draft':
                             $post->update([
-                                'status'       => 'published',
-                                'published_at' => now(),
+                                'status'       => 'draft',
+                                'published_at' => null,
                             ]);
-                        }
-                        $successCount++;
-                        break;
+                            $successCount++;
+                            break;
 
-                    case 'draft':
-                        $post->update([
-                            'status'       => 'draft',
-                            'published_at' => null,
-                        ]);
-                        $successCount++;
-                        break;
+                        case 'delete':
+                            $post->delete(); // soft delete
+                            $successCount++;
+                            break;
 
-                    case 'delete':
-                        $post->delete(); // soft delete
-                        $successCount++;
-                        break;
-
-                    default:
-                        $errors[] = $post->id;
-                        break;
+                        default:
+                            $errors[] = $post->id;
+                            break;
+                    }
+                } catch (\Throwable $e) {
+                    $errors[] = $post->id;
                 }
-            } catch (\Throwable $e) {
-                $errors[] = $post->id;
             }
+        });
+
+        // Build success message
+        $message = $successCount . " post" . ($successCount > 1 ? 's' : '') . " processed successfully.";
+
+        // FIXED SYNTAX (đoạn bạn bị lỗi)
+        if (!empty($errors)) {
+            $message .= " " . count($errors) . " post" . (count($errors) > 1 ? 's' : '') . " could not be processed.";
         }
-    });
-
-    // Build success message
-    $message = $successCount . " post" . ($successCount > 1 ? 's' : '') . " processed successfully.";
-
-    // FIXED SYNTAX (đoạn bạn bị lỗi)
-    if (!empty($errors)) {
-        $message .= " " . count($errors) . " post" . (count($errors) > 1 ? 's' : '') . " could not be processed.";
-    }
-    return redirect()->back()->with('success', $message);
+        return redirect()->back()->with('success', $message);
     }
 
     public function suggestTags(Request $request)
@@ -310,6 +323,8 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        $this->authorize('delete', $post);
+
         if ($post->thumbnail) {
             \Illuminate\Support\Facades\Storage::disk('public')->delete($post->thumbnail);
         }

@@ -195,6 +195,34 @@
     border-color: #9ca3af;
 }
 
+/* ===== ENTERPRISE-GRADE TABLE HEADER ===== */
+/* Professional table header - cohesive with table design */
+.table thead th {
+    font-weight: 400; /* Light weight */
+    font-size: 11px; /* Smaller for metadata feel */
+    color: #6b7280; /* Muted gray */
+    text-transform: uppercase;
+    letter-spacing: 0.05em; /* Refined spacing */
+    border-bottom: 1px solid #d1d5db; /* Match table borders */
+    padding: 12px 8px; /* Consistent padding */
+    background-color: #ffffff; /* Clean white background */
+    position: relative;
+}
+
+/* Header checkbox alignment - perfect centering */
+.table thead th input[type="checkbox"] {
+    margin: 0;
+    vertical-align: middle;
+}
+
+/* Checkbox column - reduce visual weight */
+.table thead th:first-child {
+    width: 40px;
+    text-align: center;
+    font-weight: 300;
+    color: #9ca3af; /* Even more muted */
+}
+
 /* Title hierarchy */
 .post-row .fw-medium {
     color: #111827;
@@ -227,61 +255,91 @@
     border-bottom: 1px solid rgba(209, 213, 219, 0.8);
 }
 
+/* ===== EMPTY STATE STYLING ===== */
+.empty-state {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.empty-state h6 {
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.empty-state .btn {
+    font-weight: 500;
+}
+
 /* ===== WORDPRESS-STYLE ROW ACTIONS ===== */
 
-/* Row actions - hidden by default, shown on hover */
+/* Row actions - hidden by default, zero height and opacity */
 .row-actions {
     opacity: 0;
-    height: 0;
+    max-height: 0;
     overflow: hidden;
-    margin-top: 2px;
-    transition: opacity 0.15s ease-in-out;
+    margin-top: 3px;
     font-size: 12px;
     line-height: 1.4;
+    transition: opacity 0.1s ease-in-out, max-height 0.1s ease-in-out;
 }
 
-/* Show row actions on post row hover */
+/* Show row actions on post row hover - smooth reveal */
 .post-row:hover .row-actions {
     opacity: 1;
-    height: auto;
+    max-height: 20px; /* Sufficient height for single line of text */
 }
 
-/* Row action links styling */
+/* Row action links - WordPress style */
 .row-actions a {
-    color: #6b7280;
+    color: #6b7280; /* Muted gray */
     text-decoration: none;
     font-size: 12px;
     font-weight: 400;
-    margin: 0 4px;
-    padding: 1px 0;
+    margin: 0 2px;
+    padding: 0;
     border: none;
     background: none;
     cursor: pointer;
+    transition: color 0.1s ease-in-out;
 }
 
 .row-actions a:hover {
-    color: #374151;
+    color: #374151; /* Darker gray on hover */
     text-decoration: underline;
 }
 
-/* Trash action - red color */
+/* Trash action - WordPress red */
 .row-actions a.text-danger {
-    color: #dc2626;
+    color: #dc2626; /* WordPress red */
 }
 
 .row-actions a.text-danger:hover {
-    color: #b91c1c;
+    color: #b91c1c; /* Darker red on hover */
+    text-decoration: underline;
 }
 
-/* Separator styling */
+/* WordPress-style separators between actions */
 .row-actions a:not(:last-child)::after {
     content: '|';
-    color: #d1d5db;
+    color: #d1d5db; /* Light gray separator */
     margin-left: 4px;
+    margin-right: 2px;
     font-weight: normal;
 }
 
-/* Override any existing display styles for smoother transition */
+/* Prevent layout shift - ensure row height doesn't change */
+.post-row {
+    min-height: 60px; /* Ensure consistent row height */
+}
+
+/* Override any conflicting styles for smooth behavior */
 .post-row:hover .row-actions {
     display: block !important;
 }
@@ -328,32 +386,56 @@ th:has(input[type="checkbox"])::after {
     z-index: -1;
 }
 
-/* Bulk Action Bar - Visually Attached to Table */
+/* ===== ENTERPRISE-GRADE BULK ACTION BAR ===== */
+/* Visually bind bulk actions to table - professional cohesion */
 #bulk-form .row {
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 12px;
-    margin-bottom: 8px;
+    border-bottom: 1px solid #d1d5db; /* Subtle border matching table */
+    padding-bottom: 8px; /* Reduced padding */
+    margin-bottom: 0; /* No bottom margin */
+    background-color: #ffffff; /* Clean white background matching header */
+    border-radius: 6px 6px 0 0; /* Rounded top corners */
 }
 
 #bulk-form .row .col-md-9 {
-    padding-top: 6px;
+    padding-top: 4px; /* Fine-tuned alignment */
     color: #6b7280;
-    font-size: 13px;
+    font-size: 12px; /* Smaller, more subtle */
+    font-weight: 400;
 }
 
-/* Reduce gap between bulk actions and table */
+/* Eliminate gap - bulk bar feels attached to table */
 #bulk-form {
-    margin-bottom: 16px;
+    margin-bottom: 0; /* Zero margin */
 }
 
-/* Table connection styling */
+/* Table connection - seamless visual flow */
 .table-responsive {
-    border-top: 1px solid #e5e7eb;
-    border-radius: 6px 6px 0 0;
+    border: 1px solid #d1d5db; /* Full border for containment */
+    border-top: none; /* No double border with bulk bar */
+    border-radius: 0 0 6px 6px; /* Rounded bottom corners only */
     overflow: hidden;
 }
 
 .table {
     margin-bottom: 0;
     border-radius: 0;
+    border: none; /* Remove default table borders */
+}
+
+/* ===== POLISHED SUCCESS NOTIFICATIONS ===== */
+.alert-success {
+    padding: 8px 12px; /* Reduced padding for subtlety */
+    margin-bottom: 16px;
+    border: 1px solid #d1fae5; /* Subtle green border */
+    border-radius: 4px;
+    background-color: #f0fdf4; /* Very light green background */
+    color: #166534; /* Dark green text */
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: none; /* Remove heavy shadow */
+}
+
+.alert-success .btn-close {
+    padding: 0.25rem;
+    margin: -0.25rem -0.25rem -0.25rem 0.5rem;
 }

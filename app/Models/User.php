@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -21,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'role', // Keep for backward compatibility
     ];
 
     /**
@@ -44,13 +45,81 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function isAdmin()
+    /**
+     * User's roles
+     */
+    public function roles(): BelongsToMany
     {
-        return $this->role === 'admin';
+        return $this->belongsToMany(Role::class, 'user_role');
     }
 
-    public function isEditor()
+    /**
+     * User's permissions through roles
+     */
+    public function permissions()
     {
-        return $this->role === 'editor';
+        return Permission::join('role_permission', 'permissions.id', '=', 'role_permission.permission_id')
+            ->join('user_role', function ($join) {
+                $join->on('role_permission.role_id', '=', 'user_role.role_id')
+                     ->where('user_role.user_id', '=', $this->id);
+            })
+            ->select('permissions.*');
+    }
+
+    /**
+     * Check if user has a specific role
+     */
+    public function hasRole(string $roleSlug): bool
+    {
+        return $this->roles()->where('slug', $roleSlug)->exists();
+    }
+
+    /**
+     * Check if user has a specific permission
+     */
+    public function canDo(string $permissionSlug): bool
+    {
+        // Check if user has permission through any of their roles
+        return $this->permissions()->where('slug', $permissionSlug)->exists();
+    }
+
+    /**
+     * Assign role to user
+     */
+    public function assignRole(string $roleSlug): void
+    {
+        $role = Role::where('slug', $roleSlug)->first();
+        if ($role && !$this->hasRole($roleSlug)) {
+            $this->roles()->attach($role);
+        }
+    }
+
+    /**
+     * Remove role from user
+     */
+    public function removeRole(string $roleSlug): void
+    {
+        $role = Role::where('slug', $roleSlug)->first();
+        if ($role) {
+            $this->roles()->detach($role);
+        }
+    }
+
+    /**
+     * BACKWARD COMPATIBILITY: Check if user is admin
+     * Maps to super_admin role in new system
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('super_admin') || $this->role === 'admin';
+    }
+
+    /**
+     * BACKWARD COMPATIBILITY: Check if user is editor
+     * Maps to editor role in new system
+     */
+    public function isEditor(): bool
+    {
+        return $this->hasRole('editor') || $this->role === 'editor';
     }
 }
