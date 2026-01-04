@@ -73,13 +73,13 @@
                                 <div class="card mb-4 border">
                                     <div class="card-header bg-light">
                                         <h6 class="mb-0 text-capitalize fw-semibold">
-                                            <i class="fas fa-folder me-2 text-muted"></i>{{ $module }}
+                                            <i class="fas fa-folder me-2 text-muted"></i>{{ ucfirst($module) }}
                                             <small class="text-muted ms-2">({{ count($modulePermissions) }} permissions)</small>
                                         </h6>
                                     </div>
                                     <div class="card-body">
                                         <div class="row g-3">
-                                            @foreach($modulePermissions as $slug => $description)
+                                            @foreach($modulePermissions as $slug => $permissionData)
                                                 <div class="col-xl-4 col-lg-6 col-md-6">
                                                     <div class="form-check permission-check">
                                                         <input class="form-check-input"
@@ -89,9 +89,9 @@
                                                                id="perm-{{ $slug }}"
                                                                {{ in_array($slug, old('permissions', $rolePermissions)) ? 'checked' : '' }}>
                                                         <label class="form-check-label d-block" for="perm-{{ $slug }}">
-                                                            <span class="fw-medium text-dark">{{ $slug }}</span>
+                                                            <span class="fw-semibold text-dark">{{ $permissionData['label'] }}</span>
                                                             <br>
-                                                            <small class="text-muted">{{ $description }}</small>
+                                                            <small class="text-muted">{{ $permissionData['description'] }}</small>
                                                         </label>
                                                     </div>
                                                 </div>

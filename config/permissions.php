@@ -13,31 +13,70 @@ return [
 
     'modules' => [
         'posts' => [
-            'post.create' => 'Create Posts',
-            'post.edit_own' => 'Edit Own Posts',
-            'post.edit_any' => 'Edit Any Post',
-            'post.delete_own' => 'Delete Own Posts',
-            'post.delete_any' => 'Delete Any Post',
-            'post.publish' => 'Publish Posts',
-            'post.bulk_action' => 'Bulk Actions',
+            'post.create' => [
+                'label' => 'Create Posts',
+                'description' => 'Can create new blog posts and save them as drafts'
+            ],
+            'post.edit_own' => [
+                'label' => 'Edit Own Posts',
+                'description' => 'Can edit posts that they created themselves'
+            ],
+            'post.edit_any' => [
+                'label' => 'Edit Any Post',
+                'description' => 'Can edit all posts created by any user'
+            ],
+            'post.delete_own' => [
+                'label' => 'Delete Own Posts',
+                'description' => 'Can delete posts that they created themselves'
+            ],
+            'post.delete_any' => [
+                'label' => 'Delete Any Post',
+                'description' => 'Can delete all posts created by any user'
+            ],
+            'post.publish' => [
+                'label' => 'Publish Posts',
+                'description' => 'Can publish draft posts to make them live'
+            ],
+            'post.bulk_action' => [
+                'label' => 'Bulk Post Actions',
+                'description' => 'Can perform bulk operations like mass publish or delete'
+            ],
         ],
 
         'taxonomy' => [
-            'taxonomy.manage' => 'Manage Taxonomy (Categories & Tags)',
+            'taxonomy.manage' => [
+                'label' => 'Manage Categories & Tags',
+                'description' => 'Can create, edit, and delete categories and tags'
+            ],
         ],
 
         'media' => [
-            'media.upload' => 'Upload Media',
-            'media.delete' => 'Delete Media',
+            'media.upload' => [
+                'label' => 'Upload Media Files',
+                'description' => 'Can upload images and other media files'
+            ],
+            'media.delete' => [
+                'label' => 'Delete Media Files',
+                'description' => 'Can delete uploaded media files'
+            ],
         ],
 
         'users' => [
-            'user.manage' => 'Manage Users',
-            'role.manage' => 'Manage Roles',
+            'user.manage' => [
+                'label' => 'Manage User Accounts',
+                'description' => 'Can view, create, and modify user accounts'
+            ],
+            'role.manage' => [
+                'label' => 'Manage User Roles',
+                'description' => 'Can assign and modify user roles and permissions'
+            ],
         ],
 
         'system' => [
-            'system.configure' => 'System Configuration',
+            'system.configure' => [
+                'label' => 'System Configuration',
+                'description' => 'Can modify system settings and configuration'
+            ],
         ],
     ],
 

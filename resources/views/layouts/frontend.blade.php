@@ -96,7 +96,7 @@
             <a class="nav-link" href="{{ url('/') }}">Home</a>
 
             @auth
-                <a class="nav-link" href="{{ route('admin.posts.index') }}">Admin</a>
+                <a class="nav-link" href="{{ url('/admin') }}">Admin</a>
                 <span class="navbar-text small text-light">
                     {{ Auth::user()->name }}
                 </span>

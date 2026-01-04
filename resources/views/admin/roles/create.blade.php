@@ -68,25 +68,28 @@
                             @enderror
 
                             @foreach($permissions as $module => $modulePermissions)
-                                <div class="card mb-3">
+                                <div class="card mb-4 border">
                                     <div class="card-header bg-light">
-                                        <h6 class="mb-0 text-capitalize">{{ $module }}</h6>
+                                        <h6 class="mb-0 text-capitalize fw-semibold">
+                                            <i class="fas fa-folder me-2 text-muted"></i>{{ ucfirst($module) }}
+                                            <small class="text-muted ms-2">({{ count($modulePermissions) }} permissions)</small>
+                                        </h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row">
-                                            @foreach($modulePermissions as $slug => $description)
-                                                <div class="col-md-6 mb-2">
-                                                    <div class="form-check">
+                                        <div class="row g-3">
+                                            @foreach($modulePermissions as $slug => $permissionData)
+                                                <div class="col-xl-4 col-lg-6 col-md-6">
+                                                    <div class="form-check permission-check">
                                                         <input class="form-check-input"
                                                                type="checkbox"
                                                                name="permissions[]"
                                                                value="{{ $slug }}"
                                                                id="perm-{{ $slug }}"
                                                                {{ in_array($slug, old('permissions', [])) ? 'checked' : '' }}>
-                                                        <label class="form-check-label" for="perm-{{ $slug }}">
-                                                            <strong>{{ $slug }}</strong>
+                                                        <label class="form-check-label d-block" for="perm-{{ $slug }}">
+                                                            <span class="fw-semibold text-dark">{{ $permissionData['label'] }}</span>
                                                             <br>
-                                                            <small class="text-muted">{{ $description }}</small>
+                                                            <small class="text-muted">{{ $permissionData['description'] }}</small>
                                                         </label>
                                                     </div>
                                                 </div>

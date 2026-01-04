@@ -20,7 +20,7 @@
 <!-- ===== ADMIN SIDEBAR ===== -->
 <div class="admin-sidebar">
     <div class="sidebar-header">
-        <a class="sidebar-brand" href="{{ route('admin.dashboard') }}">
+        <a class="sidebar-brand" href="{{ url('/admin') }}">
             <span>📝</span> Laravel Blog
         </a>
     </div>
@@ -79,16 +79,22 @@
     </div>
 </div>
 
-<!-- ===== ADMIN MAIN ===== -->
-<div class="admin-main">
-    <!-- ===== ADMIN NAVBAR ===== -->
-    <nav class="navbar navbar-light bg-white admin-navbar">
-        <div class="container-fluid">
-            <span class="navbar-text mb-0 fw-semibold">
-                {{ $title ?? 'Admin Panel' }}
-            </span>
-        </div>
-    </nav>
+    <!-- ===== ADMIN MAIN ===== -->
+    <div class="admin-main">
+        <!-- ===== ADMIN NAVBAR ===== -->
+        <nav class="navbar navbar-light bg-white admin-navbar">
+            <div class="container-fluid">
+                <span class="navbar-text mb-0 fw-semibold">
+                    {{ $title ?? 'Admin Panel' }}
+                </span>
+
+                <div class="d-flex gap-2">
+                    <a href="{{ url('/') }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                        <i class="fas fa-external-link-alt me-1"></i>Visit Blog
+                    </a>
+                </div>
+            </div>
+        </nav>
 
     <!-- ===== CONTENT ===== -->
     <main class="admin-content">
