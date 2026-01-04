@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ $seoTitle ?? config('app.name') }}</title>
-    <meta name="description" content="{{ $seoDescription ?? '' }}">
+    <title>{{ $seoTitle ?? \App\Models\SiteSetting::get('seo_title') ?: \App\Models\SiteSetting::get('site_name', config('app.name')) }}</title>
+    <meta name="description" content="{{ $seoDescription ?: \App\Models\SiteSetting::get('seo_description') }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         :root {
-            --tech-accent: #6366f1;
+            --tech-accent: {{ \App\Models\SiteSetting::get('primary_color', '#6366f1') }};
         }
 
         body {
@@ -88,8 +88,16 @@
 {{-- ===== NAVBAR ===== --}}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-xl">
-        <a class="navbar-brand" href="{{ url('/') }}">
-            <span></></span> Laravel Blog
+        <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
+            @if(\App\Models\SiteSetting::get('site_logo'))
+                <img src="{{ asset('storage/' . \App\Models\SiteSetting::get('site_logo')) }}"
+                     alt="{{ \App\Models\SiteSetting::get('site_name', 'Laravel Blog') }}"
+                     class="me-2"
+                     style="height: 32px; width: auto; max-width: 120px;">
+            @else
+                <span class="me-2"></span>
+            @endif
+            {{ \App\Models\SiteSetting::get('site_name', 'Laravel Blog') }}
         </a>
 
         <div class="navbar-nav ms-auto align-items-center gap-3">

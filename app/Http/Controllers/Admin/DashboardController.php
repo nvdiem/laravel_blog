@@ -23,10 +23,10 @@ class DashboardController extends Controller
             'total_users' => User::count(),
         ];
 
-        // Recent activity - latest 10 updated posts
+        // Recent activity - latest 6 updated posts
         $recentPosts = Post::with('categories')
             ->orderBy('updated_at', 'desc')
-            ->limit(10)
+            ->limit(6)
             ->get();
 
         // Notices

@@ -57,6 +57,12 @@
                 <span class="nav-icon">🛡️</span>
                 Roles
             </a>
+            @can('system.configure')
+            <a href="{{ route('admin.site-settings.index') }}" class="nav-link {{ request()->routeIs('admin.site-settings.*') ? 'active' : '' }}">
+                <span class="nav-icon">⚙️</span>
+                Site Settings
+            </a>
+            @endcan
         </div>
         @endcan
     </nav>

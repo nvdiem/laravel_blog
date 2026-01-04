@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BlogSeeder::class);
         $this->call(DummyPostSeeder::class);
         $this->call(PostDetailTestSeeder::class);
+        $this->call(SiteSettingsSeeder::class);
     }
 }
