@@ -41,7 +41,7 @@
                     <form method="POST" action="{{ route('admin.users.update-role', $user) }}" class="d-inline">
                         @csrf
                         <select name="role_slug" class="form-select form-select-sm d-inline-block w-auto"
-                                onchange="if(confirm('Are you sure you want to change the role for {{ addslashes($user->name) }}?')) { this.form.submit(); } else { this.value = '{{ $user->roles->first()?->slug ?? \'\' }}'; }">
+                                >
                             <option value="">No Role</option>
                             @foreach($roles as $role)
                             <option value="{{ $role->slug }}"

@@ -33,6 +33,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('media/upload', [\App\Http\Controllers\Admin\MediaController::class, 'upload'])->name('admin.media.upload');
     Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
     Route::post('users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('admin.users.update-role');
+    Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class)->names('admin.roles');
 });
 
 Route::get('/posts/{slug}', [FrontendPostController::class, 'show'])->name('posts.show');

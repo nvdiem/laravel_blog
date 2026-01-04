@@ -142,7 +142,7 @@
                                                name="primary_category"
                                                value="{{ $category->id }}"
                                                id="primary-{{ $category->id }}"
-                                               {{ old('primary_category', $post->primaryCategory()?->id) == $category->id ? 'checked' : '' }}>
+                                               {{ old('primary_category', $post->primaryCategory->first()?->id) == $category->id ? 'checked' : '' }}>
                                         <label class="form-check-label" for="primary-{{ $category->id }}">
                                             {{ $category->name }}
                                             @if($category->parent)

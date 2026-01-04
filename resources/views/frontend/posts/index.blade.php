@@ -27,9 +27,9 @@
                     <div class="card-body d-flex flex-column">
 
                         {{-- CATEGORY --}}
-                        @if($post->primaryCategory())
+                        @if($post->primaryCategory && $post->primaryCategory->first())
                             <span class="badge tech-badge mb-2 align-self-start">
-                                {{ $post->primaryCategory()->name }}
+                                {{ $post->primaryCategory->first()->name }}
                             </span>
                         @endif
 

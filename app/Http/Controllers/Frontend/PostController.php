@@ -36,7 +36,7 @@ class PostController extends Controller
         $seoDescription = $post->seo_description ?: Str::limit(strip_tags($post->content), 160);
 
         // Get related posts from the same primary category
-        $primaryCategory = $post->primaryCategory();
+        $primaryCategory = $post->primaryCategory->first();
         $relatedPosts = collect();
         if ($primaryCategory) {
             $relatedPosts = Post::with('categories')
@@ -65,7 +65,7 @@ class PostController extends Controller
         $seoDescription = $post->seo_description ?: Str::limit(strip_tags($post->content), 160);
 
         // Get related posts (only from published posts, not drafts)
-        $primaryCategory = $post->primaryCategory();
+        $primaryCategory = $post->primaryCategory->first();
         $relatedPosts = collect();
         if ($primaryCategory) {
             $relatedPosts = Post::where('status', 'published') // Only published posts

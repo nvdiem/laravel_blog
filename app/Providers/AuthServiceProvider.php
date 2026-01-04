@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Category;
 use App\Models\Media;
 use App\Models\Post;
+use App\Models\User;
 use App\Policies\CategoryPolicy;
 use App\Policies\MediaPolicy;
 use App\Policies\PostPolicy;
@@ -29,6 +30,17 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Define Gates for system-level permissions
+        Gate::define('user.manage', function (User $user) {
+            return $user->canDo('user.manage');
+        });
+
+        Gate::define('role.manage', function (User $user) {
+            return $user->canDo('role.manage');
+        });
+
+        Gate::define('system.configure', function (User $user) {
+            return $user->canDo('system.configure');
+        });
     }
 }

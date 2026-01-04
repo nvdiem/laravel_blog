@@ -139,6 +139,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+        $this->authorize('view', $post);
+
         $post->load('tags');
         $seoTitle = $post->seo_title ?: $post->title;
         $seoDescription = $post->seo_description ?: Str::limit(strip_tags($post->content), 160);
@@ -194,6 +196,8 @@ class PostController extends Controller
      */
     public function autosave(Request $request, Post $post)
     {
+        $this->authorize('update', $post);
+
         // Only allow autosave for draft posts
         if ($post->status !== 'draft') {
             return response()->json([

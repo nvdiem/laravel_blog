@@ -53,6 +53,10 @@
                 <span class="nav-icon">👥</span>
                 Users
             </a>
+            <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                <span class="nav-icon">🛡️</span>
+                Roles
+            </a>
         </div>
         @endcan
     </nav>
@@ -83,14 +87,6 @@
             <span class="navbar-text mb-0 fw-semibold">
                 {{ $title ?? 'Admin Panel' }}
             </span>
-
-            <div class="navbar-nav ms-auto">
-                @can('user.manage')
-                <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    👥 Users
-                </a>
-                @endcan
-            </div>
         </div>
     </nav>
 
