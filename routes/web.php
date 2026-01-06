@@ -32,6 +32,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('tags/suggest', [\App\Http\Controllers\Admin\PostController::class, 'suggestTags'])->name('admin.tags.suggest');
     Route::get('media', [\App\Http\Controllers\Admin\MediaController::class, 'index'])->name('admin.media.index');
     Route::post('media/upload', [\App\Http\Controllers\Admin\MediaController::class, 'upload'])->name('admin.media.upload');
+    Route::patch('media/{media}', [\App\Http\Controllers\Admin\MediaController::class, 'update'])->name('admin.media.update');
+    Route::delete('media/{media}', [\App\Http\Controllers\Admin\MediaController::class, 'destroy'])->name('admin.media.destroy');
     Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
     Route::post('users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('admin.users.update-role');
     Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class)->names('admin.roles');

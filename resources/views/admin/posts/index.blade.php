@@ -4,246 +4,221 @@
 
 {{-- ===== PAGE HEADER ===== --}}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-semibold mb-0">Posts</h4>
+    <h1 class="fs-4 fw-medium mb-0" style="color: #1d2327;">Posts</h1>
     @can('create', \App\Models\Post::class)
-    <a href="{{ route('admin.posts.create') }}" class="btn btn-primary btn-sm">
-        + Create Post
+    <a href="{{ route('admin.posts.create') }}" class="btn btn-primary d-inline-flex align-items-center gap-1">
+        <i class="fas fa-plus fa-xs"></i> Add New Post
     </a>
     @endcan
 </div>
 
-{{-- ===== STATUS TABS ===== --}}
-<ul class="nav nav-tabs mb-3">
-    <li class="nav-item">
-        <a class="nav-link {{ !request('status') ? 'active' : '' }}"
-           href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => ''])) }}">
-            All <span class="badge bg-secondary">{{ $allCount }}</span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {{ request('status') === 'published' ? 'active' : '' }}"
-           href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => 'published'])) }}">
-            Published <span class="badge bg-success">{{ $publishedCount }}</span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {{ request('status') === 'draft' ? 'active' : '' }}"
-           href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => 'draft'])) }}">
-            Draft <span class="badge bg-secondary">{{ $draftCount }}</span>
-        </a>
-    </li>
-</ul>
+{{-- ===== STATUS LINKS (ROW 1) ===== --}}
+<div class="wp-status-filters mb-2">
+    <a href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => ''])) }}" 
+       class="{{ !request('status') ? 'current' : '' }}">
+        All <span class="count">({{ $allCount }})</span>
+    </a>
+    <span class="text-secondary opacity-25">|</span>
+    
+    <a href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => 'published'])) }}" 
+       class="{{ request('status') === 'published' ? 'current' : '' }}">
+        Published <span class="count">({{ $publishedCount }})</span>
+    </a>
+    <span class="text-secondary opacity-25">|</span>
 
-{{-- ===== FILTERS (GIỮ NGUYÊN) ===== --}}
-<form method="GET" id="filter-form" class="row g-3 mb-3">
-    <div class="col-md-3">
-        <input type="text" name="search" class="form-control"
-               placeholder="Search posts..." value="{{ request('search') }}">
-    </div>
-    <div class="col-md-2">
-        <select name="status" class="form-select form-select-sm">
-            <option value="">All Status</option>
-            <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
-            <option value="published" {{ request('status') === 'published' ? 'selected' : '' }}>Published</option>
-        </select>
-    </div>
-    <div class="col-md-2">
-        <select name="category_id" class="form-select form-select-sm">
-            <option value="">All Categories</option>
-            @foreach($categories as $category)
-                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                    {{ $category->name }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-md-2">
-        <select name="tag_id" class="form-select form-select-sm">
-            <option value="">All Tags</option>
-            @foreach($tags as $tag)
-                <option value="{{ $tag->id }}" {{ request('tag_id') == $tag->id ? 'selected' : '' }}>
-                    {{ $tag->name }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-md-1">
-        <button type="submit" class="btn btn-outline-secondary btn-sm">Filter</button>
-    </div>
-    <div class="col-md-2 text-end">
-        @if(request()->hasAny(['search','status','category_id','tag_id']))
-            <a href="{{ route('admin.posts.index') }}" class="btn btn-outline-secondary btn-sm">
-                Clear Filters
-            </a>
-        @endif
-    </div>
-</form>
+    <a href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => 'review'])) }}" 
+       class="{{ request('status') === 'review' ? 'current' : '' }}">
+        Review
+    </a>
+    <span class="text-secondary opacity-25">|</span>
 
-{{-- ===================================================== --}}
-{{-- ===== BULK ACTION FORM (FIXED – GIỮ UI CŨ) ===== --}}
-{{-- ===================================================== --}}
-<form method="POST"
-      action="{{ route('admin.posts.bulk') }}"
-      id="bulk-form">
-    @csrf
+    <a href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => 'approved'])) }}" 
+       class="{{ request('status') === 'approved' ? 'current' : '' }}">
+        Approved
+    </a>
+    <span class="text-secondary opacity-25">|</span>
 
-    <div class="row g-3 mb-3 align-items-center">
-        <div class="col-md-2">
-            {{-- 🔧 FIX 1: name="action" --}}
-            <select name="action" class="form-select form-select-sm" id="bulk-action-select">
+    <a href="{{ route('admin.posts.index', array_merge(request()->query(), ['status' => 'draft'])) }}" 
+       class="{{ request('status') === 'draft' ? 'current' : '' }}">
+        Draft <span class="count">({{ $draftCount }})</span>
+    </a>
+</div>
+
+{{-- ===== TOOLBAR (BULK ACTIONS + FILTERS + SEARCH) (ROW 2) ===== --}}
+<div class="bulk-actions-container d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-2 flex-wrap">
+        {{-- Bulk Actions --}}
+        <form method="POST" action="{{ route('admin.posts.bulk') }}" id="bulk-form" class="d-flex gap-2 align-items-center">
+            @csrf
+            <select name="action" class="form-select form-select-sm w-auto" id="bulk-action-select">
                 <option value="">Bulk Actions</option>
                 <option value="publish">Publish</option>
                 <option value="draft">Move to Draft</option>
                 <option value="delete">Move to Trash</option>
             </select>
-        </div>
-        <div class="col-md-1">
-            <button type="submit"
-                    class="btn btn-outline-secondary btn-sm"
-                    id="bulk-apply-btn"
-                    >
-                Apply
-            </button>
-        </div>
-        <div class="col-md-9">
-            <small class="text-muted">
-                Select posts using the checkboxes, then choose an action above.
-            </small>
-        </div>
+            <button type="submit" class="btn btn-outline-secondary btn-sm" id="bulk-apply-btn">Apply</button>
+        </form>
+
+        {{-- Filters --}}
+        <form method="GET" id="filter-form" class="d-flex gap-2 align-items-center mb-0 ms-2">
+            <select name="date" class="form-select form-select-sm w-auto">
+                <option value="">All Dates</option>
+                @foreach($dates as $date)
+                    <option value="{{ $date }}" {{ request('date') == $date ? 'selected' : '' }}>
+                        {{ \Carbon\Carbon::createFromFormat('Y-m', $date)->format('F Y') }}
+                    </option>
+                @endforeach
+            </select>
+
+            <select name="category_id" class="form-select form-select-sm w-auto">
+                <option value="">All Categories</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            <button type="submit" class="btn btn-outline-secondary btn-sm">Filter</button>
+            
+            @if(request()->hasAny(['search','status','category_id','tag_id', 'date']))
+                <a href="{{ route('admin.posts.index') }}" class="btn btn-link btn-sm text-decoration-none p-0 ms-1 text-danger">
+                    Clear
+                </a>
+            @endif
+        </form>
+
+        {{-- Search (Moved here) --}}
+        <form method="GET" class="d-flex gap-1 align-items-center mb-0 ms-2" style="max-width: 200px;">
+            <input type="text" name="search" class="form-control form-control-sm" 
+                   placeholder="Search posts..." value="{{ request('search') }}">
+            <button class="btn btn-outline-secondary btn-sm" type="submit">Search</button>
+        </form>
     </div>
-
-    {{-- ===== ALERTS ===== --}}
-    @if(session('success'))
-        <div class="alert alert-success py-2">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if($errors->any())
-        <div class="alert alert-danger py-2">
-            {{ $errors->first() }}
-        </div>
-    @endif
-
-    {{-- ===================================================== --}}
-    {{-- ===== TABLE (CHỈ DI CHUYỂN VÀO TRONG FORM) ===== --}}
-    {{-- ===================================================== --}}
-    <div class="table-responsive">
-        <table class="table table-sm table-hover align-middle shadow-sm rounded">
-            <thead class="table-light text-muted small">
-                <tr>
-                    <th width="40">
-                        <input type="checkbox" id="select-all-checkbox">
-                    </th>
-                    <th width="50">ID</th>
-                    <th>Title</th>
-                    <th>Created</th>
-                    <th>Category</th>
-                    <th>Tags</th>
-                    <th width="90">Thumbnail</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($posts as $post)
-                <tr class="post-row">
-                    <td>
-                        {{-- 🔧 FIX 2: checkbox nằm trong form --}}
-                        <input type="checkbox"
-                               class="form-check-input row-checkbox"
-                               name="post_ids[]"
-                               value="{{ $post->id }}">
-                    </td>
-                    <td class="text-muted">{{ $post->id }}</td>
-                    <td class="fw-medium">
-                        <div class="post-title-wrapper">
-                            <strong class="post-title">{{ $post->title }}</strong>
-                            <div class="row-actions">
-                                <a href="{{ route('admin.posts.edit', $post) }}">Edit</a>
-                                <a href="{{ route('admin.posts.show', $post) }}">View</a>
-                                @if(auth()->user()->isAdmin())
-                                <a href="#" class="text-danger" onclick="if(confirm('Delete this post?')) { event.preventDefault(); document.getElementById('delete-form-{{ $post->id }}').submit(); }">Trash</a>
-                                @endif
-                            </div>
-                        </div>
-                    </td>
-                    <td class="text-muted small">{{ $post->created_at->format('M j, Y') }}</td>
-                    <td>{{ $post->primaryCategory->first()?->name ?? 'Uncategorized' }}</td>
-                    <td>
-                        @foreach($post->tags as $tag)
-                            <span class="badge bg-secondary-subtle text-secondary border small">
-                                {{ $tag->name }}
-                            </span>
-                        @endforeach
-                    </td>
-                    <td>
-                        @if($post->thumbnail)
-                            <img src="{{ asset('storage/'.$post->thumbnail) }}"
-                                 class="rounded border"
-                                 style="width:45px;height:45px;object-fit:cover;">
-                        @endif
-                    </td>
-                    <td>
-                        @if($post->status === 'published')
-                            <span class="badge bg-success-subtle text-success border">
-                                Published
-                            </span>
-                        @else
-                            <span class="badge bg-secondary-subtle text-secondary border">
-                                Draft
-                            </span>
-                        @endif
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="8" class="text-center py-5">
-                        @if(request('search'))
-                            {{-- Search with no results --}}
-                            <div class="empty-state">
-                                <h6 class="text-muted mb-3">No posts found for your search</h6>
-                                <p class="text-muted small mb-3">"{{ request('search') }}" returned no results.</p>
-                                <a href="{{ route('admin.posts.index', array_diff_key(request()->query(), array_flip(['search']))) }}"
-                                   class="btn btn-outline-secondary btn-sm">
-                                    Clear Search
-                                </a>
-                            </div>
-                        @elseif(request()->hasAny(['status', 'category_id', 'tag_id']))
-                            {{-- Filtered with no results --}}
-                            <div class="empty-state">
-                                <h6 class="text-muted mb-3">No posts match your current filters</h6>
-                                <p class="text-muted small mb-3">Try adjusting your filters or clearing them to see all posts.</p>
-                                <a href="{{ route('admin.posts.index') }}" class="btn btn-outline-secondary btn-sm">
-                                    Clear Filters
-                                </a>
-                            </div>
-                        @else
-                            {{-- No posts exist at all --}}
-                            <div class="empty-state">
-                                <h6 class="text-muted mb-3">No posts found</h6>
-                                <p class="text-muted small mb-3">Get started by creating your first post.</p>
-                                <a href="{{ route('admin.posts.create') }}" class="btn btn-primary btn-sm">
-                                    Create Post
-                                </a>
-                            </div>
-                        @endif
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</form>
-
-{{-- ===== PAGINATION (GIỮ NGUYÊN) ===== --}}
-@if($posts->hasPages())
-<div class="mt-3 d-flex justify-content-between align-items-center">
+    
+    {{-- Pagination Summary (Right) --}}
     <div class="text-muted small">
-        Showing {{ $posts->firstItem() }} to {{ $posts->lastItem() }} of {{ $posts->total() }} results
+        {{ $posts->total() }} items
     </div>
-    <div>{{ $posts->links() }}</div>
 </div>
+
+{{-- ===== ALERTS ===== --}}
+@if(session('success'))
+    <div class="alert alert-success d-flex align-items-center small mb-3">
+        <i class="fas fa-check-circle me-2 text-success"></i> 
+        <div>{{ session('success') }}</div>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 @endif
+
+@if($errors->any())
+    <div class="alert alert-danger m-2 py-1 px-3 small">
+        {{ $errors->first() }}
+    </div>
+@endif
+
+{{-- ===== TABLE ===== --}}
+<div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+            <tr>
+                <th width="30" class="text-center">
+                    <input type="checkbox" id="select-all-checkbox" class="form-check-input">
+                </th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Categories</th>
+                <th>Tags</th>
+                <th class="text-center"><i class="far fa-comments"></i></th>
+                <th width="80">Views</th>
+                <th width="150">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($posts as $post)
+            <tr class="post-row">
+                <td class="text-center">
+                    <input type="checkbox" class="form-check-input row-checkbox" name="post_ids[]" value="{{ $post->id }}" form="bulk-form">
+                </td>
+                <td class="position-relative">
+                    <strong class="d-block mb-1 post-title">
+                        <a href="{{ route('admin.posts.edit', $post) }}">{{ $post->title }}</a>
+                        @if($post->status !== 'published')
+                            <span class="text-muted ms-1 small font-monospace">— {{ ucfirst($post->status) }}</span>
+                        @endif
+                    </strong>
+                    <div class="row-actions small">
+                        <span class="edit"><a href="{{ route('admin.posts.edit', $post) }}">Edit</a></span>
+                         <span class="text-muted opacity-50">|</span> 
+                        <span class="view"><a href="{{ route('admin.posts.show', $post) }}" target="_blank">View</a></span>
+                         <span class="text-muted opacity-50">|</span> 
+                        <span class="trash"><a href="#" class="text-danger" onclick="if(confirm('Delete post?')) { document.getElementById('delete-form-{{ $post->id }}').submit(); return false; }">Trash</a></span>
+                        
+                        <form id="delete-form-{{ $post->id }}" action="{{ route('admin.posts.destroy', $post) }}" method="POST" class="d-none">
+                            @method('DELETE')
+                            @csrf
+                        </form>
+                    </div>
+                </td>
+                <td><a href="#" class="text-decoration-none text-body">{{ $post->author->name ?? 'Admin' }}</a></td>
+                <td>{{ $post->primaryCategory->first()?->name ?? '—' }}</td>
+                <td>
+                    @forelse($post->tags->take(3) as $tag)
+                        {{ $tag->name }}{{ !$loop->last ? ', ' : '' }}
+                    @empty
+                        <span class="text-muted">—</span>
+                    @endforelse
+                </td>
+                <td class="text-center">
+                    <span class="badge position-relative">
+                        0
+                    </span>
+                </td>
+                <td>
+                    {{ $post->views_count ?? 0 }}
+                </td>
+                <td>
+                    @if($post->status === 'published' && $post->published_at)
+                         Published<br>
+                         {{ $post->published_at->format('Y/m/d') }}
+                    @else
+                         Modified<br>
+                         {{ $post->updated_at->format('Y/m/d') }}
+                    @endif
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="8" class="text-center py-5 text-muted">
+                    No posts found.
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+        <tfoot>
+            <tr>
+                <th class="text-center"><input type="checkbox" class="form-check-input select-all-footer"></th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Categories</th>
+                <th>Tags</th>
+                <th class="text-center"><i class="far fa-comments"></i></th>
+                <th>Views</th>
+                <th>Date</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div class="mt-2 d-flex justify-content-between align-items-center">
+    <div class="text-muted small">
+        {{ $posts->total() }} items
+    </div>
+    <div>
+        {{ $posts->withQueryString()->links('pagination::bootstrap-5') }}
+    </div>
+</div>
+
 
 @endsection
 
@@ -405,9 +380,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateBulkActionButton() {
         const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
         const hasAction = bulkActionSelect.value !== '';
-
-        // Enable button only if posts are selected AND an action is chosen
-        bulkApplyBtn.disabled = !(checkedCount > 0 && hasAction);
+        
+        // Fix: Do not disable the button. Let validation handle it. 
+        // WP allows clicking Apply even if nothing is selected (it just warns).
+        // bulkApplyBtn.disabled = !(checkedCount > 0 && hasAction); 
+        bulkApplyBtn.disabled = false;
     }
 
     // ===== ENHANCE SUCCESS MESSAGES =====

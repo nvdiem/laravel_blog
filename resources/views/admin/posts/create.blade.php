@@ -1,19 +1,20 @@
 @extends('layouts.admin')
 
+{{-- Include Media Picker Modal --}}
+@include('admin.media._media_picker')
 @section('content')
-<form id="post-form"
-      action="{{ route('admin.posts.store') }}"
-      method="POST"
-      enctype="multipart/form-data">
 
-@csrf
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fs-3 fw-normal mb-0 font-monospace-system">Add New Post</h1>
+</div>
 
-<div class="container-fluid">
-    <div class="row g-4">
+<form id="post-form" action="{{ route('admin.posts.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
 
+    <div class="row g-3"> {{-- Reduced gutter --}}
         {{-- ================= MAIN CONTENT ================= --}}
-        <div class="col-lg-8">
-
+        <div class="col-lg-9"> {{-- WP uses a wider main column usually --}}
+            
             {{-- ALERTS --}}
             @if($errors->any())
             <div class="alert alert-danger alert-dismissible fade show small">
@@ -29,172 +30,177 @@
             {{-- TITLE --}}
             <div class="mb-3">
                 <input type="text"
-                       class="form-control form-control-lg border-0 shadow-none"
+                       class="form-control form-control-lg rounded-0 border px-3"
                        name="title"
                        id="title"
                        value="{{ old('title') }}"
                        placeholder="Add title"
-                       style="font-size:2rem;font-weight:600;border-bottom:2px solid #dee2e6"
+                       style="font-size: 1.5rem; height: 50px;"
                        required>
             </div>
 
             {{-- SLUG PREVIEW --}}
-            <div class="mb-4">
-                <small class="text-muted">Permalink: /posts/</small>
+            @if(old('title'))
+            <div class="mb-3 d-flex align-items-center bg-white border p-1 ps-2 rounded-1">
+                <small class="text-muted me-1">Permalink:</small>
+                <span class="text-muted small">{{ url('/posts') }}/</span>
                 <input type="text"
-                       class="border-0 bg-transparent p-0 text-muted small"
+                       class="border-0 bg-transparent p-0 text-dark small fw-bold"
                        id="slug-preview"
-                       value="{{ old('title') ? Str::slug(old('title')) : '' }}"
+                       value="{{ Str::slug(old('title')) }}"
                        readonly>
             </div>
+            @endif
 
             {{-- CONTENT --}}
-            <textarea name="content"
-                      id="content"
-                      rows="20"
-                      class="form-control border-0 shadow-none"
-                      placeholder="Start writing your post content...">{{ old('content') }}</textarea>
+            <div class="bg-white">
+                <textarea name="content"
+                          id="content"
+                          rows="20"
+                          class="form-control rounded-0"
+                          placeholder="Start writing...">{{ old('content') }}</textarea>
+            </div>
         </div>
 
         {{-- ================= SIDEBAR ================= --}}
-        <div class="col-lg-4">
+        <div class="col-lg-3">
 
-            {{-- PUBLISH --}}
-            <div class="card mb-4">
-                <div class="card-header bg-light fw-semibold">Publish</div>
+            {{-- PUBLISH META BOX --}}
+            <div class="card mb-3">
+                <div class="card-header">Publish</div>
                 <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Status:</label>
+                        <select class="form-select form-select-sm" name="status" required>
+                            <option value="draft" {{ old('status')=='draft'?'selected':'' }}>Draft</option>
+                            <option value="review" {{ old('status')=='review'?'selected':'' }}>Pending Review</option>
+                            @can('publish', \App\Models\Post::class)
+                            <option value="approved" {{ old('status')=='approved'?'selected':'' }}>Approved</option>
+                            <option value="published" {{ old('status')=='published'?'selected':'' }}>Published</option>
+                            @endcan
+                        </select>
+                    </div>
 
-                    <label class="form-label small">Status</label>
-                    <select class="form-select form-select-sm mb-3" name="status" required>
-                        <option value="draft" {{ old('status')=='draft'?'selected':'' }}>Draft</option>
-                        <option value="published" {{ old('status')=='published'?'selected':'' }}>Published</option>
-                    </select>
-
-                    <button class="btn btn-primary w-100 mb-2">Publish</button>
-                    <a href="{{ route('admin.posts.index') }}" class="btn btn-outline-secondary btn-sm w-100">
-                        ← Back to Posts
-                    </a>
+                    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                        <a href="#" class="text-danger small text-decoration-none">Move to Trash</a>
+                        <button type="submit" class="btn btn-primary">Publish</button>
+                    </div>
                 </div>
             </div>
 
-            {{-- CATEGORY --}}
-            <div class="card mb-4">
-                <div class="card-header bg-light fw-semibold">Categories</div>
-                <div class="card-body">
-                    @if($errors->has('categories') || $errors->has('primary_category'))
-                        <div class="alert alert-danger">
-                            @if($errors->has('categories'))
-                                <div>{{ $errors->first('categories') }}</div>
-                            @endif
-                            @if($errors->has('primary_category'))
-                                <div>{{ $errors->first('primary_category') }}</div>
-                            @endif
-                        </div>
-                    @endif
-
-                    <div class="mb-3">
-                        <label class="form-label">Select Categories</label>
-                        <div class="row">
-                            @foreach($categories as $category)
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input category-checkbox"
-                                               type="checkbox"
-                                               name="categories[]"
-                                               value="{{ $category->id }}"
-                                               id="category-{{ $category->id }}"
-                                               {{ in_array($category->id, old('categories', [])) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="category-{{ $category->id }}">
-                                            {{ $category->name }}
-                                            @if($category->parent)
-                                                <small class="text-muted">(Child of {{ $category->parent->name }})</small>
-                                            @endif
-                                        </label>
-                                    </div>
+            {{-- CATEGORY META BOX --}}
+            <div class="card mb-3">
+                <div class="card-header">Categories</div>
+                <div class="card-body p-0">
+                    <div class="p-2 border-bottom bg-light">
+                        <ul class="nav nav-tabs nav-fill small card-header-tabs" id="categoryTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active py-1" id="all-cats-tab" data-bs-toggle="tab" href="#all-cats" role="tab">All Categories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link py-1" id="pop-cats-tab" data-bs-toggle="tab" href="#pop-cats" role="tab">Most Used</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tab-content p-2" style="max-height: 200px; overflow-y: auto;">
+                        <div class="tab-pane fade show active" id="all-cats" role="tabpanel">
+                             @foreach($categories as $category)
+                                <div class="form-check">
+                                    <input class="form-check-input category-checkbox"
+                                           type="checkbox"
+                                           name="categories[]"
+                                           value="{{ $category->id }}"
+                                           id="category-{{ $category->id }}"
+                                           {{ in_array($category->id, old('categories', [])) ? 'checked' : '' }}>
+                                    <label class="form-check-label small" for="category-{{ $category->id }}">
+                                        {{ $category->name }}
+                                    </label>
                                 </div>
+                                {{-- Simple Child Handling Indentation --}}
+                                @if($category->children && $category->children->count())
+                                     @foreach($category->children as $child)
+                                        <div class="form-check ms-3">
+                                            <input class="form-check-input category-checkbox"
+                                                   type="checkbox"
+                                                   name="categories[]"
+                                                   value="{{ $child->id }}"
+                                                   id="category-{{ $child->id }}"
+                                                   {{ in_array($child->id, old('categories', [])) ? 'checked' : '' }}>
+                                            <label class="form-check-label small" for="category-{{ $child->id }}">
+                                                {{ $child->name }}
+                                            </label>
+                                        </div>
+                                     @endforeach
+                                @endif
                             @endforeach
                         </div>
-                        <small class="text-muted">Select one or more categories for this post.</small>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Primary Category</label>
-                        <div class="row">
-                            @foreach($categories as $category)
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input primary-radio"
-                                               type="radio"
-                                               name="primary_category"
-                                               value="{{ $category->id }}"
-                                               id="primary-{{ $category->id }}"
-                                               {{ old('primary_category') == $category->id ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="primary-{{ $category->id }}">
-                                            {{ $category->name }}
-                                            @if($category->parent)
-                                                <small class="text-muted">(Child of {{ $category->parent->name }})</small>
-                                            @endif
-                                        </label>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <small class="text-muted">Select the primary category (must be one of the selected categories above).</small>
+                    
+                    <div class="p-2 border-top bg-light text-center">
+                        <a href="{{ route('admin.categories.index') }}" target="_blank" class="small text-decoration-none">+ Add New Category</a>
                     </div>
                 </div>
             </div>
 
-            {{-- TAGS --}}
-            <div class="card mb-4">
-                <div class="card-header bg-light fw-semibold">Tags</div>
+            {{-- TAGS META BOX --}}
+            <div class="card mb-3">
+                <div class="card-header">Tags</div>
                 <div class="card-body">
-                    <div id="tags-container" class="mb-2"></div>
-
-                    <div class="position-relative">
-                        <input type="text"
-                               id="tag-input"
-                               class="form-control"
-                               placeholder="Add tag and press Enter"
-                               autocomplete="off">
-                        <div id="suggestions" class="position-absolute w-100 bg-white border rounded shadow-sm" style="display: none; z-index: 1000; max-height: 200px; overflow-y: auto;"></div>
+                    <div class="mb-2">
+                        <input type="text" id="tag-input" class="form-control form-control-sm" placeholder="Add new tag" autocomplete="off">
+                        <small class="text-muted d-block mt-1">Separate tags with commas</small>
                     </div>
-
-                    <input type="hidden"
-                           id="tags"
-                           name="tags"
-                           value="{{ old('tags') }}">
-
-                    <small class="text-muted">Press Enter or comma to add tag, or select from suggestions</small>
+                    <div id="tags-container" class="d-flex flex-wrap gap-1 mt-2"></div>
+                    <input type="hidden" id="tags" name="tags" value="{{ old('tags') }}">
+                    <div id="suggestions" class="position-absolute bg-white border shadow-sm rounded-1" style="display:none; z-index:1050; width: 90%;"></div>
                 </div>
             </div>
 
-            {{-- THUMBNAIL --}}
-            <div class="card mb-4">
-                <div class="card-header bg-light fw-semibold">Featured Image</div>
+            {{-- THUMBNAIL META BOX --}}
+            <div class="card mb-3">
+                <div class="card-header">Featured Image</div>
                 <div class="card-body">
-                    <input type="file" name="thumbnail" class="form-control form-control-sm">
+                    <div id="thumbnailPreview" class="mb-2 bg-light border d-flex align-items-center justify-content-center text-muted small" style="min-height: 150px; border-style: dashed !important;">
+                        <span id="noImageText">No Image Selected</span>
+                        <img id="thumbnailImage" src="" alt="Thumbnail" class="img-fluid d-none" style="max-height: 200px;">
+                    </div>
+                    
+                    <input type="hidden" name="thumbnail" id="thumbnailInput" value="">
+                    
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="openThumbnailPicker()">
+                            <i class="fas fa-images me-1"></i> Select from Media Library
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger d-none" id="removeThumbnailBtn" onclick="removeThumbnail()">
+                            <i class="fas fa-times me-1"></i> Remove
+                        </button>
+                    </div>
+                    <small class="text-muted d-block mt-2">
+                        <i class="fas fa-info-circle"></i> Recommended: 1200x630px or larger
+                    </small>
                 </div>
             </div>
 
-            {{-- SEO --}}
-            <div class="card mb-4">
-                <div class="card-header bg-light fw-semibold">SEO</div>
+            
+            
+            {{-- SEO META BOX --}}
+             <div class="card mb-3">
+                <div class="card-header">SEO Settings</div>
                 <div class="card-body">
-                    <input type="text"
-                           class="form-control form-control-sm mb-2"
-                           name="seo_title"
-                           placeholder="SEO Title"
-                           value="{{ old('seo_title') }}">
-                    <textarea class="form-control form-control-sm"
-                              name="seo_description"
-                              rows="3"
-                              placeholder="Meta description">{{ old('seo_description') }}</textarea>
+                    <div class="mb-2">
+                        <label class="form-label small text-muted">SEO Title</label>
+                        <input type="text" class="form-control form-control-sm" name="seo_title" value="{{ old('seo_title') }}">
+                    </div>
+                     <div class="mb-2">
+                        <label class="form-label small text-muted">Meta Description</label>
+                        <textarea class="form-control form-control-sm" name="seo_description" rows="2">{{ old('seo_description') }}</textarea>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
-</div>
 </form>
 
 {{-- ================= TINYMCE ================= --}}
@@ -397,4 +403,27 @@ document.getElementById('title').addEventListener('input', function() {
     document.getElementById('slug-preview').value = slug;
 });
 </script>
+
+{{-- Thumbnail Picker Functions --}}
+<script>
+function openThumbnailPicker() {
+    openMediaPicker(function(mediaId, mediaUrl) {
+        // Set thumbnail
+        document.getElementById('thumbnailInput').value = mediaUrl.replace('{{ config('app.url') }}/storage/', '');
+        document.getElementById('thumbnailImage').src = mediaUrl;
+        document.getElementById('thumbnailImage').classList.remove('d-none');
+        document.getElementById('noImageText').classList.add('d-none');
+        document.getElementById('removeThumbnailBtn').classList.remove('d-none');
+    });
+}
+
+function removeThumbnail() {
+    document.getElementById('thumbnailInput').value = '';
+    document.getElementById('thumbnailImage').src = '';
+    document.getElementById('thumbnailImage').classList.add('d-none');
+    document.getElementById('noImageText').classList.remove('d-none');
+    document.getElementById('removeThumbnailBtn').classList.add('d-none');
+}
+</script>
+
 @endsection

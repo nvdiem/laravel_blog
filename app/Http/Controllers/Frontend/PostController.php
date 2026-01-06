@@ -19,7 +19,14 @@ class PostController extends Controller
             ->latest()
             ->paginate(6);
 
-        return view('frontend.posts.index', compact('posts'));
+        // Get IDs of popular posts (top 5 in last 7 days)
+        // We only need the IDs to check existence in the loop efficiently
+        $popularPostIds = Post::popular(7, 5) // 7 days, min 5 views
+            ->limit(5)
+            ->pluck('id')
+            ->toArray();
+
+        return view('frontend.posts.index', compact('posts', 'popularPostIds'));
     }
 
     /**

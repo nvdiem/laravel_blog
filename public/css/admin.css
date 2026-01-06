@@ -1,14 +1,400 @@
+/* ===== WORDPRESS PRO MAX DESIGN TOKENS ===== */
+:root {
+    /* Colors */
+    --wp-admin-dark: #1d2327;
+    /* Darker, truer black/gray */
+    --wp-blue: #2271b1;
+    --wp-blue-hover: #135e96;
+    --wp-blue-focus: #4f94d4;
+    --wp-red: #d63638;
+    --wp-green: #008a20;
+    --wp-bg: #f0f0f1;
+    --wp-text: #3c434a;
+    --wp-text-dark: #101517;
+    --wp-border: #c3c4c7;
+    /* Darker border for better definition */
+    --wp-input-border: #8c8f94;
+
+    /* Spacing */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+}
+
+body {
+    background-color: var(--wp-bg);
+    color: var(--wp-text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 13px;
+    /* WP Default size */
+    line-height: 1.5;
+}
+
 /* ===== ADMIN SIDEBAR LAYOUT ===== */
 .admin-sidebar {
     position: fixed;
     top: 0;
     left: 0;
     width: 250px;
+    /* Reduced from 250 in classic, but 250 is fine for modern */
     height: 100vh;
-    background-color: #1f2937;
+    background-color: var(--wp-admin-dark);
     color: #e5e7eb;
     overflow-y: auto;
     z-index: 1000;
+}
+
+.admin-main {
+    margin-left: 250px;
+    min-height: 100vh;
+    background-color: var(--wp-bg);
+}
+
+/* Sidebar Header */
+.sidebar-header {
+    padding: var(--space-4);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.sidebar-brand:hover {
+    color: #ffffff;
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+    padding: var(--space-3) 0;
+}
+
+.nav-section {
+    margin-bottom: var(--space-4);
+}
+
+.nav-section-title {
+    padding: var(--space-2) var(--space-4);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #9ca3af;
+    letter-spacing: 0.05em;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    color: #f3f4f6;
+    text-decoration: none;
+    transition: all 0.1s ease-in-out;
+    font-size: 13px;
+    border-left: 3px solid transparent;
+}
+
+.nav-link:hover {
+    color: var(--wp-blue) !important;
+    /* WP Hover */
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Subtle hover */
+}
+
+.nav-link.active {
+    background-color: var(--wp-blue);
+    color: #ffffff !important;
+    border-left-color: #ffffff;
+    /* Contrast marker */
+    font-weight: 600;
+}
+
+.nav-icon {
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-4);
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    /* Square with slight radius like WP */
+    background-color: #374151;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #fff;
+    font-size: 12px;
+}
+
+.user-details {
+    flex: 1;
+}
+
+.user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f3f4f6;
+    line-height: 1.2;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 11px;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 2px;
+}
+
+.logout-btn:hover {
+    color: #ef4444;
+    /* Red for logout */
+    text-decoration: none;
+}
+
+/* ===== ADMIN TOP NAVBAR ===== */
+.admin-navbar {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid var(--wp-border);
+    padding: var(--space-2) var(--space-5);
+    height: 50px;
+    /* Reduced height */
+}
+
+.admin-navbar .navbar-text {
+    color: #1d2327;
+    font-weight: 600;
+    font-size: 18px;
+    /* Page title size */
+}
+
+/* ===== ADMIN CONTENT ===== */
+.admin-content {
+    padding: var(--space-5);
+    max-width: 1400px;
+    /* Limit width for readability */
+}
+
+/* ===== ADMIN FOOTER ===== */
+.admin-footer {
+    background-color: transparent;
+    border-top: none;
+    color: #646970;
+    font-size: 11px;
+    padding: var(--space-4);
+}
+
+/* ===== FORMS & INPUTS (WP STYLE) ===== */
+.form-control,
+.form-select {
+    border-radius: 3px;
+    /* WP square-ish look */
+    border: 1px solid var(--wp-input-border);
+    padding: 2px 8px;
+    /* Compact */
+    font-size: 13px;
+    /* Standard WP admin font size */
+    line-height: normal;
+    min-height: 30px;
+    box-shadow: none;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--wp-blue);
+    box-shadow: 0 0 0 1px var(--wp-blue);
+}
+
+.form-label {
+    font-size: 13px;
+    /* Standard */
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #1d2327;
+}
+
+.btn {
+    border-radius: 3px;
+    font-size: 13px;
+    padding: 3px 10px;
+    font-weight: 400;
+    /* Regular weight buttons */
+    line-height: 2;
+    transition: 0.05s all ease-in-out;
+}
+
+.btn-primary {
+    background-color: var(--wp-blue);
+    border-color: var(--wp-blue);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: var(--wp-blue-hover);
+    border-color: var(--wp-blue-hover);
+}
+
+.btn-outline-secondary {
+    color: var(--wp-blue);
+    border-color: var(--wp-blue);
+    background: transparent;
+}
+
+.btn-outline-secondary:hover {
+    background: #f0f6fc;
+    color: var(--wp-blue-hover);
+    border-color: var(--wp-blue-hover);
+}
+
+/* ===== TABLES (WP LIST TABLE STYLE) ===== */
+.table-responsive {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    /* WP Table Border */
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.table {
+    margin-bottom: 0;
+    font-size: 13px;
+    color: #3c434a;
+}
+
+.table thead th {
+    background: #ffffff;
+    border-bottom: 1px solid #c3c4c7;
+    font-weight: 600;
+    /* Distinct header */
+    color: #1d2327;
+    text-transform: none;
+    /* WP uses normal case */
+    font-size: 14px;
+    padding: 8px 10px;
+    vertical-align: middle;
+}
+
+.table tbody td {
+    padding: 8px 10px;
+    vertical-align: top;
+    border-bottom: 1px solid #f0f0f1;
+    /* Light row separator */
+}
+
+/* Post Row Specifics */
+.post-title a {
+    font-weight: 600;
+    color: var(--wp-blue);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.post-title a:hover {
+    color: var(--wp-blue-hover);
+}
+
+.post-row:hover {
+    background-color: #f6f7f7;
+    /* Very light gray hover */
+}
+
+.row-actions {
+    visibility: hidden;
+    /* Hide until hover */
+    font-size: 11px;
+    color: #ddd;
+    margin-top: 4px;
+}
+
+.post-row:hover .row-actions {
+    visibility: visible;
+}
+
+.row-actions a {
+    color: var(--wp-blue);
+    text-decoration: none;
+    margin: 0 2px;
+}
+
+.row-actions a:hover {
+    color: var(--wp-red);
+    /* Danger hover implies action */
+}
+
+/* Badges */
+.badge {
+    border-radius: 2px;
+    font-weight: 600;
+    font-size: 10px;
+    padding: 3px 6px;
+    text-transform: uppercase;
+}
+
+/* ===== BULK ACTIONS & FILTER BAR ===== */
+#filter-form,
+#bulk-form {
+    margin-bottom: var(--space-3);
+    align-items: center;
+}
+
+.admin-header-actions {
+    margin-bottom: var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ===== CARDS (WP METABOX STYLE) ===== */
+.card {
+    border: 1px solid #c3c4c7;
+    background: #fff;
+    border-radius: 0;
+    /* Square cards */
+    box-shadow: none;
+    /* Cleaner */
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background: #fff;
+    /* White header */
+    border-bottom: 1px solid #f0f0f1;
+    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1d2327;
+}
+
+.card-body {
+    padding: 12px;
 }
 
 .admin-main {
@@ -198,14 +584,21 @@
 /* ===== ENTERPRISE-GRADE TABLE HEADER ===== */
 /* Professional table header - cohesive with table design */
 .table thead th {
-    font-weight: 400; /* Light weight */
-    font-size: 11px; /* Smaller for metadata feel */
-    color: #6b7280; /* Muted gray */
+    font-weight: 400;
+    /* Light weight */
+    font-size: 11px;
+    /* Smaller for metadata feel */
+    color: #6b7280;
+    /* Muted gray */
     text-transform: uppercase;
-    letter-spacing: 0.05em; /* Refined spacing */
-    border-bottom: 1px solid #d1d5db; /* Match table borders */
-    padding: 12px 8px; /* Consistent padding */
-    background-color: #ffffff; /* Clean white background */
+    letter-spacing: 0.05em;
+    /* Refined spacing */
+    border-bottom: 1px solid #d1d5db;
+    /* Match table borders */
+    padding: 12px 8px;
+    /* Consistent padding */
+    background-color: #ffffff;
+    /* Clean white background */
     position: relative;
 }
 
@@ -220,7 +613,8 @@
     width: 40px;
     text-align: center;
     font-weight: 300;
-    color: #9ca3af; /* Even more muted */
+    color: #9ca3af;
+    /* Even more muted */
 }
 
 /* Title hierarchy */
@@ -293,12 +687,14 @@
 /* Show row actions on post row hover - smooth reveal */
 .post-row:hover .row-actions {
     opacity: 1;
-    max-height: 20px; /* Sufficient height for single line of text */
+    max-height: 20px;
+    /* Sufficient height for single line of text */
 }
 
 /* Row action links - WordPress style */
 .row-actions a {
-    color: #6b7280; /* Muted gray */
+    color: #6b7280;
+    /* Muted gray */
     text-decoration: none;
     font-size: 12px;
     font-weight: 400;
@@ -311,24 +707,28 @@
 }
 
 .row-actions a:hover {
-    color: #374151; /* Darker gray on hover */
+    color: #374151;
+    /* Darker gray on hover */
     text-decoration: underline;
 }
 
 /* Trash action - WordPress red */
 .row-actions a.text-danger {
-    color: #dc2626; /* WordPress red */
+    color: #dc2626;
+    /* WordPress red */
 }
 
 .row-actions a.text-danger:hover {
-    color: #b91c1c; /* Darker red on hover */
+    color: #b91c1c;
+    /* Darker red on hover */
     text-decoration: underline;
 }
 
 /* WordPress-style separators between actions */
 .row-actions a:not(:last-child)::after {
     content: '|';
-    color: #d1d5db; /* Light gray separator */
+    color: #d1d5db;
+    /* Light gray separator */
     margin-left: 4px;
     margin-right: 2px;
     font-weight: normal;
@@ -336,7 +736,8 @@
 
 /* Prevent layout shift - ensure row height doesn't change */
 .post-row {
-    min-height: 60px; /* Ensure consistent row height */
+    min-height: 60px;
+    /* Ensure consistent row height */
 }
 
 /* Override any conflicting styles for smooth behavior */
@@ -389,53 +790,121 @@ th:has(input[type="checkbox"])::after {
 /* ===== ENTERPRISE-GRADE BULK ACTION BAR ===== */
 /* Visually bind bulk actions to table - professional cohesion */
 #bulk-form .row {
-    border-bottom: 1px solid #d1d5db; /* Subtle border matching table */
-    padding-bottom: 8px; /* Reduced padding */
-    margin-bottom: 0; /* No bottom margin */
-    background-color: #ffffff; /* Clean white background matching header */
-    border-radius: 6px 6px 0 0; /* Rounded top corners */
+    border-bottom: 1px solid #d1d5db;
+    /* Subtle border matching table */
+    padding-bottom: 8px;
+    /* Reduced padding */
+    margin-bottom: 0;
+    /* No bottom margin */
+    background-color: #ffffff;
+    /* Clean white background matching header */
+    border-radius: 6px 6px 0 0;
+    /* Rounded top corners */
 }
 
 #bulk-form .row .col-md-9 {
-    padding-top: 4px; /* Fine-tuned alignment */
+    padding-top: 4px;
+    /* Fine-tuned alignment */
     color: #6b7280;
-    font-size: 12px; /* Smaller, more subtle */
+    font-size: 12px;
+    /* Smaller, more subtle */
     font-weight: 400;
 }
 
 /* Eliminate gap - bulk bar feels attached to table */
 #bulk-form {
-    margin-bottom: 0; /* Zero margin */
+    margin-bottom: 0;
+    /* Zero margin */
 }
 
 /* Table connection - seamless visual flow */
 .table-responsive {
-    border: 1px solid #d1d5db; /* Full border for containment */
-    border-top: none; /* No double border with bulk bar */
-    border-radius: 0 0 6px 6px; /* Rounded bottom corners only */
+    border: 1px solid #d1d5db;
+    /* Full border for containment */
+    border-top: none;
+    /* No double border with bulk bar */
+    border-radius: 0 0 6px 6px;
+    /* Rounded bottom corners only */
     overflow: hidden;
 }
 
 .table {
     margin-bottom: 0;
     border-radius: 0;
-    border: none; /* Remove default table borders */
+    border: none;
+    /* Remove default table borders */
 }
 
 /* ===== POLISHED SUCCESS NOTIFICATIONS ===== */
 .alert-success {
-    padding: 8px 12px; /* Reduced padding for subtlety */
+    padding: 8px 12px;
+    /* Reduced padding for subtlety */
     margin-bottom: 16px;
-    border: 1px solid #d1fae5; /* Subtle green border */
+    border: 1px solid #d1fae5;
+    /* Subtle green border */
     border-radius: 4px;
-    background-color: #f0fdf4; /* Very light green background */
-    color: #166534; /* Dark green text */
+    background-color: #f0fdf4;
+    /* Very light green background */
+    color: #166534;
+    /* Dark green text */
     font-size: 13px;
     font-weight: 500;
-    box-shadow: none; /* Remove heavy shadow */
+    box-shadow: none;
+    /* Remove heavy shadow */
 }
 
 .alert-success .btn-close {
     padding: 0.25rem;
     margin: -0.25rem -0.25rem -0.25rem 0.5rem;
+}
+
+/* ===== IMPROVED SIDEBAR TYPOGRAPHY ===== */
+.nav-link {
+    font-size: 14px !important;
+    /* Increased from 13px to match WP */
+    line-height: 1.3;
+    padding: 10px 16px;
+    /* Balanced padding */
+}
+
+.nav-icon {
+    font-size: 18px;
+    /* Slightly larger icons */
+    width: 24px;
+    /* Fixed width for alignment */
+    text-align: center;
+    opacity: 1;
+    /* Clearer icons */
+}
+
+/* ===== WP STATUS FILTERS ===== */
+.wp-status-filters {
+    margin-bottom: 15px;
+    font-size: 13px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: #646970;
+}
+
+.wp-status-filters a {
+    color: var(--wp-blue);
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.1s ease;
+}
+
+.wp-status-filters a:hover {
+    color: var(--wp-blue-hover);
+}
+
+.wp-status-filters a.current {
+    color: #000;
+    font-weight: 600;
+    cursor: default;
+}
+
+.wp-status-filters .count {
+    color: #555;
+    font-weight: 400;
 }

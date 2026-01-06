@@ -7,10 +7,7 @@
 
     {{-- ===== HEADER ===== --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <div>
-            <h4 class="mb-1">Analytics</h4>
-            <small class="text-muted">Blog performance insights and top content</small>
-        </div>
+        <h1 class="fs-4 fw-medium mb-0" style="color: #1d2327;">Analytics</h1>
         <div class="text-muted small">
             Data updated in real-time
         </div>

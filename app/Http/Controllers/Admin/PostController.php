@@ -26,12 +26,16 @@ class PostController extends Controller
     public function index(Request $request)
     {
         // OPTIMIZE: Selective eager loading - only load essential fields
-        $query = Post::with([
+        // OPTIMIZE: Selective eager loading - only load essential fields
+        $query = Post::withCount(['views' => function ($query) {
+            $query->where('viewed_at', '>=', now()->subDays(30));
+        }])
+        ->with([
             'categories:id,name',     // Only id and name for categories
             'tags:id,name',          // Only id and name for tags
             'primaryCategory:id,name' // Eager load primary category to prevent N+1
         ])->select([
-            'id', 'title', 'slug', 'status', 'thumbnail', 'created_at'
+            'id', 'title', 'slug', 'status', 'thumbnail', 'created_at', 'published_at', 'updated_at' // Added dates explicitly
         ]); // Select only necessary columns
 
         // Search
@@ -86,8 +90,13 @@ class PostController extends Controller
         // OPTIMIZE: Select only essential fields for filters
         $categories = Category::select('id', 'name')->orderBy('name')->get();
         $tags = Tag::select('id', 'name')->orderBy('name')->get();
+        
+        $dates = Post::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as date')
+            ->distinct()
+            ->orderBy('date', 'desc')
+            ->pluck('date');
 
-        return view('admin.posts.index', compact('posts', 'allCount', 'publishedCount', 'draftCount', 'categories', 'tags'));
+        return view('admin.posts.index', compact('posts', 'allCount', 'publishedCount', 'draftCount', 'categories', 'tags', 'dates'));
     }
 
     /**
@@ -108,10 +117,15 @@ class PostController extends Controller
     {
         $this->authorize('create', Post::class);
 
+        // Security: Prevent authors from publishing directly
+        if (in_array($request->status, ['published', 'approved']) && !$request->user()->can('publish', Post::class)) {
+            return back()->withErrors(['status' => 'You do not have permission to publish or approve posts.'])->withInput();
+        }
+
         $validated = $request->validate([
             'title' => 'required|min:5',
             'content' => 'required',
-            'status' => 'required|in:draft,published',
+            'status' => 'required|in:draft,review,approved,published',
             'thumbnail' => 'nullable|image|max:2048',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
@@ -166,10 +180,15 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
 
+        // Security: Prevent authors from publishing directly
+        if (in_array($request->status, ['published', 'approved']) && !$request->user()->can('publish', Post::class)) {
+            return back()->withErrors(['status' => 'You do not have permission to publish or approve posts.'])->withInput();
+        }
+
         $validated = $request->validate([
             'title' => 'required|min:5',
             'content' => 'required',
-            'status' => 'required|in:draft,published',
+            'status' => 'required|in:draft,review,approved,published',
             'thumbnail' => 'nullable|image|max:2048',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',

@@ -9,9 +9,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
-
-
 
     @stack('head')
 </head>
@@ -21,7 +20,7 @@
 <div class="admin-sidebar">
     <div class="sidebar-header">
         <a class="sidebar-brand" href="{{ url('/admin') }}">
-            <span>📝</span> Laravel Blog
+            <span class="nav-icon"><i class="fas fa-chart-line"></i></span> Laravel Blog
         </a>
     </div>
 
@@ -29,11 +28,11 @@
         <div class="nav-section">
             <div class="nav-section-title">Content</div>
             <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
-                <span class="nav-icon">📄</span>
+                <span class="nav-icon"><i class="fas fa-thumbtack"></i></span>
                 Posts
             </a>
             <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                <span class="nav-icon">🏷️</span>
+                <span class="nav-icon"><i class="fas fa-tags"></i></span>
                 Categories
             </a>
         </div>
@@ -41,15 +40,15 @@
         <div class="nav-section">
             <div class="nav-section-title">Analytics</div>
             <a href="{{ route('admin.analytics.index') }}" class="nav-link {{ request()->routeIs('admin.analytics.*') ? 'active' : '' }}">
-                <span class="nav-icon">📊</span>
+                <span class="nav-icon"><i class="fas fa-chart-bar"></i></span>
                 Analytics
             </a>
         </div>
 
         <div class="nav-section">
             <div class="nav-section-title">Media</div>
-            <a href="#" class="nav-link" onclick="openMediaLibrary()">
-                <span class="nav-icon">📎</span>
+            <a href="{{ route('admin.media.index') }}" class="nav-link {{ request()->routeIs('admin.media.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fas fa-images"></i></span>
                 Media Library
             </a>
         </div>
@@ -58,16 +57,16 @@
         <div class="nav-section">
             <div class="nav-section-title">System</div>
             <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                <span class="nav-icon">👥</span>
+                <span class="nav-icon"><i class="fas fa-users"></i></span>
                 Users
             </a>
             <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
-                <span class="nav-icon">🛡️</span>
+                <span class="nav-icon"><i class="fas fa-user-shield"></i></span>
                 Roles
             </a>
             @can('system.configure')
             <a href="{{ route('admin.site-settings.index') }}" class="nav-link {{ request()->routeIs('admin.site-settings.*') ? 'active' : '' }}">
-                <span class="nav-icon">⚙️</span>
+                <span class="nav-icon"><i class="fas fa-cog"></i></span>
                 Site Settings
             </a>
             @endcan
