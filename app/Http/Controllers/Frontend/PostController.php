@@ -32,6 +32,9 @@ class PostController extends Controller
             ->where('status', 'published')
             ->firstOrFail();
 
+        // Increment view count
+        $post->incrementView(request()->ip());
+
         $seoTitle = $post->seo_title ?: $post->title;
         $seoDescription = $post->seo_description ?: Str::limit(strip_tags($post->content), 160);
 

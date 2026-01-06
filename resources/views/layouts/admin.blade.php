@@ -39,6 +39,14 @@
         </div>
 
         <div class="nav-section">
+            <div class="nav-section-title">Analytics</div>
+            <a href="{{ route('admin.analytics.index') }}" class="nav-link {{ request()->routeIs('admin.analytics.*') ? 'active' : '' }}">
+                <span class="nav-icon">📊</span>
+                Analytics
+            </a>
+        </div>
+
+        <div class="nav-section">
             <div class="nav-section-title">Media</div>
             <a href="#" class="nav-link" onclick="openMediaLibrary()">
                 <span class="nav-icon">📎</span>

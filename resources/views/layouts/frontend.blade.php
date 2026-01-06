@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{{ $seoTitle ?? \App\Models\SiteSetting::get('seo_title') ?: \App\Models\SiteSetting::get('site_name', config('app.name')) }}</title>
-    <meta name="description" content="{{ $seoDescription ?: \App\Models\SiteSetting::get('seo_description') }}">
+    <meta name="description" content="{{ $seoDescription ?? \App\Models\SiteSetting::get('seo_description') }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 

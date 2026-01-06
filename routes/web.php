@@ -24,6 +24,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('analytics', [\App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('admin.analytics.index');
     Route::resource('posts', \App\Http\Controllers\Admin\PostController::class)->names('admin.posts');
     Route::post('posts/{post}/autosave', [\App\Http\Controllers\Admin\PostController::class, 'autosave'])->name('admin.posts.autosave');
     Route::post('posts/bulk', [\App\Http\Controllers\Admin\PostController::class, 'bulkAction'])->name('admin.posts.bulk');
