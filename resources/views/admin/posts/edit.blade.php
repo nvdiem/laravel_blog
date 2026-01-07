@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 
+@section('content')
+
 {{-- Include Media Picker Modal --}}
 @include('admin.media._media_picker')
-
-@section('content')
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="fs-3 fw-normal mb-0 font-monospace-system">Edit Post</h1>

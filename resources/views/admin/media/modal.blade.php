@@ -45,122 +45,141 @@
 let currentPage = 1;
 let selectedImageUrl = null;
 
-// Load media
-function loadMedia(page = 1) {
-    currentPage = page;
-    document.getElementById('loading').style.display = 'block';
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Load media
+    function loadMedia(page = 1) {
+        currentPage = page;
+        const loading = document.getElementById('loading');
+        if (loading) loading.style.display = 'block';
 
-    fetch(`{{ route('admin.media.index') }}?page=${page}`)
-        .then(response => response.json())
-        .then(data => {
-            renderMedia(data.data);
-            renderPagination(data);
-            document.getElementById('loading').style.display = 'none';
-        })
-        .catch(error => {
-            console.error('Error loading media:', error);
-            document.getElementById('loading').style.display = 'none';
-        });
-}
+        fetch(`{{ route('admin.media.index') }}?page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+                renderMedia(data.data);
+                renderPagination(data);
+                if (loading) loading.style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error loading media:', error);
+                if (loading) loading.style.display = 'none';
+            });
+    }
 
-// Render media grid
-function renderMedia(media) {
-    const grid = document.getElementById('mediaGrid');
-    grid.innerHTML = '';
+    // Render media grid
+    function renderMedia(media) {
+        const grid = document.getElementById('mediaGrid');
+        if (!grid) return;
 
-    media.forEach(item => {
-        const col = document.createElement('div');
-        col.className = 'col-md-3 col-sm-6';
+        grid.innerHTML = '';
 
-        col.innerHTML = `
-            <div class="card h-100">
-                <img src="${item.url}" class="card-img-top" style="height: 120px; object-fit: cover;" alt="${item.file_name}">
-                <div class="card-body p-2">
-                    <p class="card-text small mb-2 text-truncate" title="${item.file_name}">${item.file_name}</p>
-                    <div class="btn-group btn-group-sm w-100">
-                        <button class="btn btn-outline-primary btn-sm" onclick="selectImage('${item.url}')">Insert</button>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="copyUrl('${item.url}')">Copy URL</button>
+        media.forEach(item => {
+            const col = document.createElement('div');
+            col.className = 'col-md-3 col-sm-6';
+
+            col.innerHTML = `
+                <div class="card h-100">
+                    <img src="${item.url}" class="card-img-top" style="height: 120px; object-fit: cover;" alt="${item.file_name}">
+                    <div class="card-body p-2">
+                        <p class="card-text small mb-2 text-truncate" title="${item.file_name}">${item.file_name}</p>
+                        <div class="btn-group btn-group-sm w-100">
+                            <button class="btn btn-outline-primary btn-sm" onclick="selectImage('${item.url}')">Insert</button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="copyUrl('${item.url}')">Copy URL</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
 
-        grid.appendChild(col);
-    });
-}
-
-// Render pagination
-function renderPagination(data) {
-    const pagination = document.getElementById('mediaPagination');
-    pagination.innerHTML = '';
-
-    if (data.last_page <= 1) return;
-
-    const nav = document.createElement('nav');
-    nav.innerHTML = `
-        <ul class="pagination pagination-sm">
-            ${data.prev_page_url ? `<li class="page-item"><a class="page-link" href="#" onclick="loadMedia(${data.current_page - 1})">Previous</a></li>` : ''}
-            ${Array.from({length: data.last_page}, (_, i) => i + 1).map(page => `
-                <li class="page-item ${page === data.current_page ? 'active' : ''}">
-                    <a class="page-link" href="#" onclick="loadMedia(${page})">${page}</a>
-                </li>
-            `).join('')}
-            ${data.next_page_url ? `<li class="page-item"><a class="page-link" href="#" onclick="loadMedia(${data.current_page + 1})">Next</a></li>` : ''}
-        </ul>
-    `;
-    pagination.appendChild(nav);
-}
-
-// Select image
-function selectImage(url) {
-    selectedImageUrl = url;
-    // Insert into TinyMCE
-    if (window.tinymce && window.tinymce.activeEditor) {
-        window.tinymce.activeEditor.insertContent(`<img src="${url}" alt="" />`);
+            grid.appendChild(col);
+        });
     }
-    // Close modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('mediaLibraryModal'));
-    modal.hide();
-}
 
-// Copy URL
-function copyUrl(url) {
-    navigator.clipboard.writeText(url).then(() => {
-        alert('URL copied to clipboard!');
-    });
-}
+    // Render pagination
+    function renderPagination(data) {
+        const pagination = document.getElementById('mediaPagination');
+        if (!pagination) return;
 
-// Handle upload
-document.getElementById('uploadForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
+        pagination.innerHTML = '';
 
-    fetch('{{ route('admin.media.upload') }}', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        if (data.last_page <= 1) return;
+
+        const nav = document.createElement('nav');
+        nav.innerHTML = `
+            <ul class="pagination pagination-sm">
+                ${data.prev_page_url ? `<li class="page-item"><a class="page-link" href="#" onclick="loadMedia(${data.current_page - 1})">Previous</a></li>` : ''}
+                ${Array.from({length: data.last_page}, (_, i) => i + 1).map(page => `
+                    <li class="page-item ${page === data.current_page ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="loadMedia(${page})">${page}</a>
+                    </li>
+                `).join('')}
+                ${data.next_page_url ? `<li class="page-item"><a class="page-link" href="#" onclick="loadMedia(${data.current_page + 1})">Next</a></li>` : ''}
+            </ul>
+        `;
+        pagination.appendChild(nav);
+    }
+
+    // Select image
+    window.selectImage = function(url) {
+        selectedImageUrl = url;
+        // Insert into TinyMCE
+        if (window.tinymce && window.tinymce.activeEditor) {
+            window.tinymce.activeEditor.insertContent(`<img src="${url}" alt="" />`);
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Reset form
-            document.getElementById('fileInput').value = '';
-            // Reload media
-            loadMedia(currentPage);
-        } else {
-            alert('Upload failed');
-        }
-    })
-    .catch(error => {
-        console.error('Upload error:', error);
-        alert('Upload failed');
-    });
-});
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('mediaLibraryModal'));
+        if (modal) modal.hide();
+    };
 
-// Load media when modal opens
-document.getElementById('mediaLibraryModal').addEventListener('show.bs.modal', function() {
-    loadMedia(1);
+    // Copy URL
+    window.copyUrl = function(url) {
+        navigator.clipboard.writeText(url).then(() => {
+            alert('URL copied to clipboard!');
+        });
+    };
+
+    // Handle upload
+    const uploadForm = document.getElementById('uploadForm');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('{{ route('admin.media.upload') }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Reset form
+                    document.getElementById('fileInput').value = '';
+                    // Reload media
+                    loadMedia(currentPage);
+                } else {
+                    alert('Upload failed');
+                }
+            })
+            .catch(error => {
+                console.error('Upload error:', error);
+                alert('Upload failed');
+            });
+        });
+    }
+
+    // Load media when modal opens
+    const modal = document.getElementById('mediaLibraryModal');
+    if (modal) {
+        modal.addEventListener('show.bs.modal', function() {
+            loadMedia(1);
+        });
+    }
+
+    // Make functions globally available
+    window.loadMedia = loadMedia;
+    window.renderMedia = renderMedia;
+    window.renderPagination = renderPagination;
 });
 </script>

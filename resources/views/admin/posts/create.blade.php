@@ -1,8 +1,9 @@
 @extends('layouts.admin')
 
+@section('content')
+
 {{-- Include Media Picker Modal --}}
 @include('admin.media._media_picker')
-@section('content')
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="fs-3 fw-normal mb-0 font-monospace-system">Add New Post</h1>
@@ -57,8 +58,8 @@
                 <textarea name="content"
                           id="content"
                           rows="20"
-                          class="form-control rounded-0"
-                          placeholder="Start writing...">{{ old('content') }}</textarea>
+                          placeholder="Start writing..."
+                          style="width: 100%; border: 1px solid #ccc; padding: 10px;">{{ old('content') }}</textarea>
             </div>
         </div>
 
@@ -206,27 +207,36 @@
 {{-- ================= TINYMCE ================= --}}
 <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
 <script>
-tinymce.init({
-  selector:'#content',
-  license_key:'gpl',
-  height:600,
-  menubar:true,
-  plugins:'lists link code table fullscreen',
-  toolbar:'undo redo | blocks | bold italic | bullist numlist | link table | media | code fullscreen',
+document.addEventListener('DOMContentLoaded', function() {
+    tinymce.init({
+        selector: '#content',
+        license_key: 'gpl',
+        height: 600,
+        menubar: true,
+        plugins: 'lists link code table fullscreen',
+        toolbar: 'undo redo | blocks | bold italic | bullist numlist | link table | media | code fullscreen',
 
-  // Custom media button
-  setup: function(editor) {
-    editor.ui.registry.addButton('media', {
-      text: 'Media Library',
-      icon: 'image',
-      tooltip: 'Insert from Media Library',
-      onAction: function() {
-        // Open media library modal
-        const modal = new bootstrap.Modal(document.getElementById('mediaLibraryModal'));
-        modal.show();
-      }
+        // Custom media button
+        setup: function(editor) {
+            editor.ui.registry.addButton('media', {
+                text: 'Media Library',
+                icon: 'image',
+                tooltip: 'Insert from Media Library',
+                onAction: function() {
+                    // Open media library modal
+                    const modal = new bootstrap.Modal(document.getElementById('mediaLibraryModal'));
+                    if (modal) {
+                        modal.show();
+                    }
+                }
+            });
+        },
+
+        // Ensure proper initialization
+        init_instance_callback: function(editor) {
+            console.log('TinyMCE initialized successfully');
+        }
     });
-  }
 });
 </script>
 
