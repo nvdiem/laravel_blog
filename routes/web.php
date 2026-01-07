@@ -37,9 +37,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
     Route::post('users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('admin.users.update-role');
     Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class)->names('admin.roles');
+    Route::resource('pages', \App\Http\Controllers\Admin\PageController::class)->names('admin.pages');
+    Route::post('pages/{page}/upload', [\App\Http\Controllers\Admin\PageController::class, 'uploadBundle'])->name('admin.pages.upload');
     Route::get('site-settings', [\App\Http\Controllers\Admin\SiteSettingsController::class, 'index'])->name('admin.site-settings.index');
     Route::post('site-settings', [\App\Http\Controllers\Admin\SiteSettingsController::class, 'update'])->name('admin.site-settings.update');
 });
+
+// Public pages route
+Route::get('/p/{slug}', [\App\Http\Controllers\Frontend\PageController::class, 'show'])->name('pages.show');
 
 Route::get('/posts/{slug}', [FrontendPostController::class, 'show'])->name('posts.show');
 Route::get('/category/{slug}', [\App\Http\Controllers\Frontend\CategoryController::class, 'show'])->name('categories.show');

@@ -1,0 +1,193 @@
+@extends('layouts.admin')
+
+@section('content')
+
+{{-- ===== PAGE HEADER ===== --}}
+<div class="posts-page-header d-flex justify-content-between align-items-center">
+    <h1 class="fs-4 fw-medium mb-0" style="color: #1d2327;">Pages</h1>
+    @can('create', \App\Models\Page::class)
+    <a href="{{ route('admin.pages.create') }}" class="btn btn-primary d-inline-flex align-items-center gap-1">
+        <i class="fas fa-plus fa-xs"></i> Add New Page
+    </a>
+    @endcan
+</div>
+
+{{-- ===== ALERTS ===== --}}
+@if(session('success'))
+<div class="alert alert-success d-flex align-items-center small mb-3">
+    <i class="fas fa-check-circle me-2 text-success"></i>
+    <div>{{ session('success') }}</div>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert alert-danger d-flex align-items-center small mb-3">
+    <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
+    <div>{{ session('error') }}</div>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+</div>
+@endif
+
+@if($errors->any())
+<div class="alert alert-danger small mb-3">
+    <i class="fas fa-exclamation-circle me-2"></i> {{ $errors->first() }}
+</div>
+@endif
+
+{{-- ===== TABLE ===== --}}
+<div class="table-responsive posts-table">
+    <table class="table table-hover align-middle mb-0">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Slug</th>
+                <th>Status</th>
+                <th>Updated</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($pages as $page)
+            <tr class="post-row">
+                <td class="title-column">
+                    <div class="post-title">
+                        <a href="{{ route('admin.pages.edit', $page) }}">{{ $page->title }}</a>
+                    </div>
+                </td>
+                <td class="fw-monospace small text-muted">
+                    {{ $page->slug }}
+                </td>
+                <td>
+                    @if($page->status === 'published')
+                        <span class="badge badge-published">Published</span>
+                    @elseif($page->status === 'draft')
+                        <span class="badge badge-draft">Draft</span>
+                    @else
+                        <span class="badge bg-secondary">Disabled</span>
+                    @endif
+                </td>
+                <td class="date-column">
+                    <span class="text-muted">{{ $page->updated_at->format('M j, Y') }}</span>
+                </td>
+                <td class="text-center">
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ route('admin.pages.edit', $page) }}" class="btn btn-outline-secondary" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        @if($page->storage_path)
+                            <button class="btn btn-outline-info" title="Upload New Bundle"
+                                    onclick="openUploadModal({{ $page->id }}, '{{ addslashes($page->title) }}')">
+                                <i class="fas fa-upload"></i>
+                            </button>
+                        @else
+                            <button class="btn btn-outline-primary" title="Upload Bundle"
+                                    onclick="openUploadModal({{ $page->id }}, '{{ addslashes($page->title) }}')">
+                                <i class="fas fa-upload"></i>
+                            </button>
+                        @endif
+                        <form method="POST" action="{{ route('admin.pages.destroy', $page) }}" class="d-inline"
+                              onsubmit="return confirm('Are you sure you want to delete this page?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="5" class="text-center py-5 text-muted">
+                    <div class="empty-state">
+                        <i class="fas fa-file fa-3x mb-3 opacity-25"></i>
+                        <h6>No pages found</h6>
+                        <p class="mb-0">Create your first page to get started.</p>
+                        <a href="{{ route('admin.pages.create') }}" class="btn btn-primary btn-sm mt-3">
+                            <i class="fas fa-plus"></i> Add New Page
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
+{{-- ===== PAGINATION ===== --}}
+@if($pages->hasPages())
+<div class="mt-3 d-flex justify-content-between align-items-center">
+    <div class="text-muted small">
+        Showing {{ $pages->firstItem() }} to {{ $pages->lastItem() }} of {{ $pages->total() }} pages
+    </div>
+    <div>
+        {{ $pages->links('pagination::bootstrap-5') }}
+    </div>
+</div>
+@endif
+
+@endsection
+
+{{-- ===== UPLOAD BUNDLE MODAL ===== --}}
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadModalLabel">Upload Page Bundle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="bundleFile" class="form-label">ZIP Bundle File</label>
+                        <input type="file" class="form-control" id="bundleFile" name="bundle" accept=".zip" required>
+                        <div class="form-text">
+                            Upload a ZIP file containing your page assets. Must include index.html at root level.
+                        </div>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> Uploading a new bundle will overwrite the current page content.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="uploadBtn">Upload Bundle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+let currentPageId = null;
+
+function openUploadModal(pageId, pageTitle) {
+    currentPageId = pageId;
+    document.getElementById('uploadModalLabel').textContent = `Upload Bundle for "${pageTitle}"`;
+    document.getElementById('uploadForm').action = `/admin/pages/${pageId}/upload`;
+    document.getElementById('bundleFile').value = '';
+    new bootstrap.Modal(document.getElementById('uploadModal')).show();
+}
+
+document.getElementById('uploadBtn').addEventListener('click', function() {
+    const form = document.getElementById('uploadForm');
+    const fileInput = document.getElementById('bundleFile');
+
+    if (!fileInput.files[0]) {
+        alert('Please select a ZIP file to upload.');
+        return;
+    }
+
+    // Show loading state
+    this.disabled = true;
+    this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Uploading...';
+
+    // Submit form
+    form.submit();
+});
+</script>
+@endpush
