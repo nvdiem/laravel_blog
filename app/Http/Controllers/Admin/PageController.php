@@ -16,11 +16,30 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages = Page::with('creator')
-            ->orderBy('updated_at', 'desc')
-            ->paginate(20);
+        $query = Page::with('creator');
 
-        return view('admin.pages.index', compact('pages'));
+        // Filter by status
+        if (request('status')) {
+            $query->where('status', request('status'));
+        }
+
+        // Search by title or slug
+        if (request('search')) {
+            $search = request('search');
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('slug', 'like', "%{$search}%");
+            });
+        }
+
+        $pages = $query->orderBy('created_at', 'desc')->paginate(20);
+
+        // Get status counts for filter links
+        $allCount = Page::count();
+        $publishedCount = Page::where('status', 'published')->count();
+        $draftCount = Page::where('status', 'draft')->count();
+
+        return view('admin.pages.index', compact('pages', 'allCount', 'publishedCount', 'draftCount'));
     }
 
     /**

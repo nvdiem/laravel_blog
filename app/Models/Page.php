@@ -15,6 +15,8 @@ class Page extends Model
         'slug',
         'status',
         'allow_index',
+        'created_by',
+        'storage_path',
     ];
 
     protected static function booted()

@@ -12,6 +12,68 @@
     @endcan
 </div>
 
+{{-- ===== STATUS LINKS (ROW 1) ===== --}}
+<div class="wp-status-filters mb-2">
+    <a href="{{ route('admin.pages.index', array_merge(request()->query(), ['status' => ''])) }}"
+       class="{{ !request('status') ? 'current' : '' }}">
+        All <span class="count">({{ $allCount }})</span>
+    </a>
+    <span class="text-secondary opacity-25">|</span>
+
+    <a href="{{ route('admin.pages.index', array_merge(request()->query(), ['status' => 'published'])) }}"
+       class="{{ request('status') === 'published' ? 'current' : '' }}">
+        Published <span class="count">({{ $publishedCount }})</span>
+    </a>
+    <span class="text-secondary opacity-25">|</span>
+
+    <a href="{{ route('admin.pages.index', array_merge(request()->query(), ['status' => 'draft'])) }}"
+       class="{{ request('status') === 'draft' ? 'current' : '' }}">
+        Draft <span class="count">({{ $draftCount }})</span>
+    </a>
+    <span class="text-secondary opacity-25">|</span>
+
+    <a href="{{ route('admin.pages.index', array_merge(request()->query(), ['status' => 'disabled'])) }}"
+       class="{{ request('status') === 'disabled' ? 'current' : '' }}">
+        Disabled
+    </a>
+</div>
+
+{{-- ===== TOOLBAR (BULK ACTIONS + FILTERS + SEARCH) (ROW 2) ===== --}}
+<div class="bulk-actions-container d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-2 flex-wrap">
+        {{-- Bulk Actions --}}
+        <form method="POST" action="#" id="bulk-form" class="d-flex gap-2 align-items-center">
+            @csrf
+            <select name="action" class="form-select form-select-sm w-auto" id="bulk-action-select">
+                <option value="">Bulk Actions</option>
+                <option value="publish">Publish</option>
+                <option value="draft">Move to Draft</option>
+                <option value="disable">Disable</option>
+                <option value="delete">Move to Trash</option>
+            </select>
+            <button type="submit" class="btn btn-outline-secondary btn-sm" id="bulk-apply-btn">Apply</button>
+        </form>
+
+        {{-- Search --}}
+        <form method="GET" class="d-flex gap-1 align-items-center mb-0 ms-2" style="max-width: 200px;">
+            <input type="text" name="search" class="form-control form-control-sm"
+                   placeholder="Search pages..." value="{{ request('search') }}">
+            <button class="btn btn-outline-secondary btn-sm" type="submit">Search</button>
+        </form>
+
+        @if(request()->hasAny(['search', 'status']))
+            <a href="{{ route('admin.pages.index') }}" class="btn btn-link btn-sm text-decoration-none p-0 ms-1 text-danger">
+                Clear
+            </a>
+        @endif
+    </div>
+
+    {{-- Pagination Summary (Right) --}}
+    <div class="text-muted small">
+        {{ $pages->total() }} items
+    </div>
+</div>
+
 {{-- ===== ALERTS ===== --}}
 @if(session('success'))
 <div class="alert alert-success d-flex align-items-center small mb-3">

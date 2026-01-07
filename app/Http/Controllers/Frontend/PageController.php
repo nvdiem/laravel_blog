@@ -95,7 +95,7 @@ HTML;
         $baseUrl = asset("storage/{$storagePath}");
 
         // Convert relative paths to absolute URLs
-        $html = preg_replace('/(src|href)=["\']([^"\']*)["\']/', function($matches) use ($baseUrl) {
+        $html = preg_replace_callback('/(src|href)=["\']([^"\']*)["\']/', function($matches) use ($baseUrl) {
             $attr = $matches[1];
             $path = $matches[2];
 
@@ -120,4 +120,3 @@ HTML;
         return $html;
     }
 }
-

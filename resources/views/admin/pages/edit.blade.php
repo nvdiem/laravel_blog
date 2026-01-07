@@ -92,16 +92,21 @@
 
             {{-- Delete Section --}}
             @if($page->status !== 'published')
-            <div class="card mt-3 border-danger">
-                <div class="card-header text-danger">Danger Zone</div>
+            <div class="card mt-4 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Danger Zone
+                </div>
                 <div class="card-body">
-                    <p class="small text-muted mb-2">Once deleted, this page cannot be recovered.</p>
+                    <div class="alert alert-warning">
+                        <strong>Warning:</strong> Deleting this page will permanently remove it and cannot be undone.
+                    </div>
                     <form method="POST" action="{{ route('admin.pages.destroy', $page) }}"
-                          onsubmit="return confirm('Are you sure you want to permanently delete this page?')">
+                          onsubmit="return confirm('Are you absolutely sure you want to permanently delete this page? This action cannot be undone.')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                            <i class="fas fa-trash me-1"></i> Delete Page
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i> Permanently Delete Page
                         </button>
                     </form>
                 </div>
