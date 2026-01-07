@@ -3,7 +3,7 @@
 @section('content')
 
 {{-- ===== PAGE HEADER ===== --}}
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="posts-page-header d-flex justify-content-between align-items-center">
     <h1 class="fs-4 fw-medium mb-0" style="color: #1d2327;">Posts</h1>
     @can('create', \App\Models\Post::class)
     <a href="{{ route('admin.posts.create') }}" class="btn btn-primary d-inline-flex align-items-center gap-1">
@@ -118,20 +118,22 @@
 @endif
 
 {{-- ===== TABLE ===== --}}
-<div class="table-responsive">
+<div class="table-responsive posts-table">
     <table class="table table-hover align-middle mb-0">
         <thead>
             <tr>
-                <th width="30" class="text-center">
+                <th class="text-center">
                     <input type="checkbox" id="select-all-checkbox" class="form-check-input">
                 </th>
-                <th>Title</th>
+                <th class="title-column">Title</th>
                 <th>Author</th>
                 <th>Categories</th>
                 <th>Tags</th>
-                <th class="text-center"><i class="far fa-comments"></i></th>
-                <th width="80">Views</th>
-                <th width="150">Date</th>
+                <th class="comments-column text-center">
+                    <i class="far fa-comments" title="Comments"></i>
+                </th>
+                <th class="views-column">Views</th>
+                <th class="date-column">Date</th>
             </tr>
         </thead>
         <tbody>
@@ -140,73 +142,65 @@
                 <td class="text-center">
                     <input type="checkbox" class="form-check-input row-checkbox" name="post_ids[]" value="{{ $post->id }}" form="bulk-form">
                 </td>
-                <td class="position-relative">
-                    <strong class="d-block mb-1 post-title">
+                <td class="title-column position-relative">
+                    <div class="post-title">
                         <a href="{{ route('admin.posts.edit', $post) }}">{{ $post->title }}</a>
                         @if($post->status !== 'published')
-                            <span class="text-muted ms-1 small font-monospace">— {{ ucfirst($post->status) }}</span>
+                            <span class="status-text ms-2 badge badge-{{ $post->status }}">{{ ucfirst($post->status) }}</span>
                         @endif
-                    </strong>
-                    <div class="row-actions small">
-                        <span class="edit"><a href="{{ route('admin.posts.edit', $post) }}">Edit</a></span>
-                         <span class="text-muted opacity-50">|</span> 
-                        <span class="view"><a href="{{ route('admin.posts.show', $post) }}" target="_blank">View</a></span>
-                         <span class="text-muted opacity-50">|</span> 
-                        <span class="trash"><a href="#" class="text-danger" onclick="if(confirm('Delete post?')) { document.getElementById('delete-form-{{ $post->id }}').submit(); return false; }">Trash</a></span>
-                        
+                    </div>
+                    <div class="row-actions">
+                        <a href="{{ route('admin.posts.edit', $post) }}">Edit</a> |
+                        <a href="{{ route('admin.posts.show', $post) }}" target="_blank">View</a> |
+                        <a href="#" class="text-danger" onclick="if(confirm('Delete post?')) { document.getElementById('delete-form-{{ $post->id }}').submit(); return false; }">Trash</a>
+
                         <form id="delete-form-{{ $post->id }}" action="{{ route('admin.posts.destroy', $post) }}" method="POST" class="d-none">
                             @method('DELETE')
                             @csrf
                         </form>
                     </div>
                 </td>
-                <td><a href="#" class="text-decoration-none text-body">{{ $post->author->name ?? 'Admin' }}</a></td>
-                <td>{{ $post->primaryCategory->first()?->name ?? '—' }}</td>
-                <td>
+                <td class="author-column">
+                    <a href="#">{{ $post->author->name ?? 'Admin' }}</a>
+                </td>
+                <td class="categories-column">
+                    {{ $post->primaryCategory->first()?->name ?? '—' }}
+                </td>
+                <td class="tags-column">
                     @forelse($post->tags->take(3) as $tag)
                         {{ $tag->name }}{{ !$loop->last ? ', ' : '' }}
                     @empty
                         <span class="text-muted">—</span>
                     @endforelse
                 </td>
-                <td class="text-center">
-                    <span class="badge position-relative">
-                        0
-                    </span>
+                <td class="comments-column text-center">
+                    <span class="badge bg-light text-dark border">0</span>
                 </td>
-                <td>
-                    {{ $post->views_count ?? 0 }}
+                <td class="views-column">
+                    {{ number_format($post->views_count ?? 0) }}
                 </td>
-                <td>
+                <td class="date-column">
                     @if($post->status === 'published' && $post->published_at)
                          Published<br>
-                         {{ $post->published_at->format('Y/m/d') }}
+                         <span class="text-muted">{{ $post->published_at->format('M j, Y') }}</span>
                     @else
                          Modified<br>
-                         {{ $post->updated_at->format('Y/m/d') }}
+                         <span class="text-muted">{{ $post->updated_at->format('M j, Y') }}</span>
                     @endif
                 </td>
             </tr>
             @empty
             <tr>
                 <td colspan="8" class="text-center py-5 text-muted">
-                    No posts found.
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt fa-3x mb-3 opacity-25"></i>
+                        <h6>No posts found</h6>
+                        <p class="mb-0">Create your first post to get started.</p>
+                    </div>
                 </td>
             </tr>
             @endforelse
         </tbody>
-        <tfoot>
-            <tr>
-                <th class="text-center"><input type="checkbox" class="form-check-input select-all-footer"></th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Categories</th>
-                <th>Tags</th>
-                <th class="text-center"><i class="far fa-comments"></i></th>
-                <th>Views</th>
-                <th>Date</th>
-            </tr>
-        </tfoot>
     </table>
 </div>
 
