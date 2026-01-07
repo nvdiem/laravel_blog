@@ -126,7 +126,7 @@ class PostController extends Controller
             'title' => 'required|min:5',
             'content' => 'required',
             'status' => 'required|in:draft,review,approved,published',
-            'thumbnail' => 'nullable|image|max:2048',
+            'thumbnail' => 'nullable|string',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
             'primary_category' => 'nullable|exists:categories,id',
@@ -134,6 +134,14 @@ class PostController extends Controller
             'seo_title' => 'nullable|string',
             'seo_description' => 'nullable|string',
         ]);
+
+        // Handle file upload for thumbnail if present
+        if ($request->hasFile('thumbnail')) {
+            $fileValidation = $request->validate([
+                'thumbnail' => 'image|max:2048'
+            ]);
+            $validated['thumbnail'] = $fileValidation['thumbnail'];
+        }
 
         // Validate primary category is in selected categories
         if ($request->primary_category && !in_array($request->primary_category, $request->categories ?? [])) {
@@ -189,7 +197,7 @@ class PostController extends Controller
             'title' => 'required|min:5',
             'content' => 'required',
             'status' => 'required|in:draft,review,approved,published',
-            'thumbnail' => 'nullable|image|max:2048',
+            'thumbnail' => 'nullable',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
             'primary_category' => 'nullable|exists:categories,id',
@@ -197,6 +205,19 @@ class PostController extends Controller
             'seo_title' => 'nullable|string',
             'seo_description' => 'nullable|string',
         ]);
+
+        // Handle thumbnail - can be file upload or existing path
+        if ($request->hasFile('thumbnail')) {
+            $validated['thumbnail'] = $request->validate([
+                'thumbnail' => 'image|max:2048'
+            ])['thumbnail'];
+        } elseif ($request->filled('thumbnail') && !str_starts_with($request->thumbnail, 'http')) {
+            // It's an existing path, keep it as string
+            $validated['thumbnail'] = $request->thumbnail;
+        } else {
+            // Keep existing thumbnail
+            $validated['thumbnail'] = $post->thumbnail;
+        }
 
         // Validate primary category is in selected categories
         if ($request->primary_category && !in_array($request->primary_category, $request->categories ?? [])) {

@@ -105,29 +105,52 @@ class PostService
     /**
      * Handle file upload for new post.
      */
-    protected function handleFileUpload(?UploadedFile $file): ?string
+    protected function handleFileUpload(mixed $file): ?string
     {
         if (!$file) {
             return null;
         }
 
-        return $file->store('posts', 'public');
+        // If it's already a string path (from media picker)
+        if (is_string($file) && !str_starts_with($file, 'http')) {
+            return $file;
+        }
+
+        // If it's an uploaded file
+        if ($file instanceof UploadedFile) {
+            return $file->store('posts', 'public');
+        }
+
+        return null;
     }
 
     /**
      * Handle file update for existing post.
      */
-    protected function handleFileUpdate(Post $post, ?UploadedFile $file): ?string
+    protected function handleFileUpdate(Post $post, mixed $file): ?string
     {
         if (!$file) {
             return $post->thumbnail;
         }
 
-        if ($post->thumbnail) {
-            Storage::disk('public')->delete($post->thumbnail);
+        // If it's a string path (from media picker)
+        if (is_string($file) && !str_starts_with($file, 'http')) {
+            // Delete old thumbnail if different from new one
+            if ($post->thumbnail && $post->thumbnail !== $file) {
+                Storage::disk('public')->delete($post->thumbnail);
+            }
+            return $file;
         }
 
-        return $file->store('posts', 'public');
+        // If it's an uploaded file
+        if ($file instanceof UploadedFile) {
+            if ($post->thumbnail) {
+                Storage::disk('public')->delete($post->thumbnail);
+            }
+            return $file->store('posts', 'public');
+        }
+
+        return $post->thumbnail;
     }
 
     /**

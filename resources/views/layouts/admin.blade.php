@@ -28,7 +28,7 @@
         <div class="nav-section">
             <div class="nav-section-title">Content</div>
             <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
-                <span class="nav-icon"><i class="fas fa-thumbtack"></i></span>
+                <span class="nav-icon"><i class="fas fa-file-alt"></i></span>
                 Posts
             </a>
             <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">

@@ -223,11 +223,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon: 'image',
                 tooltip: 'Insert from Media Library',
                 onAction: function() {
-                    // Open media library modal
-                    const modal = new bootstrap.Modal(document.getElementById('mediaLibraryModal'));
-                    if (modal) {
-                        modal.show();
-                    }
+                    openMediaPicker(function(mediaId, mediaUrl) {
+                        // Insert image into TinyMCE
+                        editor.insertContent(`<img src="${mediaUrl}" alt="" />`);
+                    });
                 }
             });
         },
