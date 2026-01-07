@@ -81,6 +81,10 @@ body {
     margin-bottom: var(--space-4);
 }
 
+.nav-section:first-of-type {
+    margin-bottom: var(--space-2);
+}
+
 .nav-section-title {
     padding: var(--space-2) var(--space-4);
     font-size: 11px;
@@ -907,4 +911,37 @@ th:has(input[type="checkbox"])::after {
 .wp-status-filters .count {
     color: #555;
     font-weight: 400;
+}
+
+/* ===== MEDIA PICKER MODAL TABS ===== */
+#mediaPicker .nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+}
+
+#mediaPicker .nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-bottom: none;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    font-weight: 500;
+    transition: all 0.15s ease-in-out;
+}
+
+#mediaPicker .nav-tabs .nav-link:hover {
+    background-color: #e9ecef;
+    color: #495057;
+    border-color: #adb5bd;
+}
+
+#mediaPicker .nav-tabs .nav-link.active {
+    background-color: var(--wp-blue);
+    border-color: var(--wp-blue) var(--wp-blue) #fff;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+#mediaPicker .nav-tabs .nav-link.active:hover {
+    background-color: var(--wp-blue-hover);
+    border-color: var(--wp-blue-hover) var(--wp-blue-hover) #fff;
+    color: #ffffff;
 }
