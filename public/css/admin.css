@@ -1,45 +1,58 @@
-/* ===== WORDPRESS PRO MAX DESIGN TOKENS ===== */
 :root {
-    /* Colors */
-    --wp-admin-dark: #1d2327;
-    /* Darker, truer black/gray */
-    --wp-blue: #2271b1;
-    --wp-blue-hover: #135e96;
-    --wp-blue-focus: #4f94d4;
-    --wp-red: #d63638;
-    --wp-green: #008a20;
-    --wp-bg: #f0f0f1;
-    --wp-text: #3c434a;
-    --wp-text-dark: #101517;
-    --wp-border: #c3c4c7;
-    /* Darker border for better definition */
-    --wp-input-border: #8c8f94;
+    --bg-app: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-sidebar: #e2e8f0;
+    --bg-hover: #e2e8f0;
+    --bg-accent: #ffffff;
 
-    /* Status Colors - Soft and readable */
-    --wp-status-draft: #f6f7f7;
-    --wp-status-draft-text: #646970;
-    --wp-status-published: #edfaef;
-    --wp-status-published-text: #046c4e;
-    --wp-status-review: #fef3c7;
-    --wp-status-review-text: #92400e;
-    --wp-status-approved: #ecfdf5;
-    --wp-status-approved-text: #166534;
+    --text-primary: #111827;
+    --text-secondary: #374151;
+    --text-muted: #6b7280;
+    --text-white: #ffffff;
 
-    /* Spacing - More compact for density */
+    --border-light: #d1d5db;
+    --border-medium: #9ca3af;
+    --border-dark: #6b7280;
+
+    --primary-blue: #60a5fa;
+    --primary-blue-hover: #3b82f6;
+    --primary-blue-focus: #2563eb;
+
+    --status-draft-bg: #f1f5f9;
+    --status-draft-text: #6b7280;
+    --status-published-bg: #ecfdf5;
+    --status-published-text: #065f46;
+    --status-review-bg: #fefce8;
+    --status-review-text: #92400e;
+    --status-approved-bg: #ecfdf5;
+    --status-approved-text: #065f46;
+
+    --accent-green: #10b981;
+    --accent-red: #ef4444;
+    --accent-yellow: #f59e0b;
+
     --space-1: 4px;
-    --space-2: 6px;
-    --space-3: 8px;
-    --space-4: 12px;
-    --space-5: 16px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-7: 32px;
+    --space-8: 40px;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 2px 4px -1px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 4px 8px -2px rgba(0, 0, 0, 0.1);
 }
 
 body {
-    background-color: var(--wp-bg);
-    color: var(--wp-text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    font-size: 13px;
-    /* WP Default size */
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+    font-size: 14px;
     line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* ===== ADMIN SIDEBAR LAYOUT ===== */
@@ -47,92 +60,103 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 250px;
-    /* Reduced from 250 in classic, but 250 is fine for modern */
+    width: 260px;
     height: 100vh;
-    background-color: var(--wp-admin-dark);
-    color: #e5e7eb;
+    background-color: var(--bg-sidebar);
+    color: var(--text-primary);
     overflow-y: auto;
     z-index: 1000;
+    border-right: 1px solid var(--border-light);
 }
 
 .admin-main {
-    margin-left: 250px;
+    margin-left: 260px;
     min-height: 100vh;
-    background-color: var(--wp-bg);
+    background-color: var(--bg-app);
 }
 
 /* Sidebar Header */
 .sidebar-header {
-    padding: var(--space-4);
-    background-color: rgba(0, 0, 0, 0.2);
+    padding: var(--space-6) var(--space-5);
+    background-color: #f0f4f8;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .sidebar-brand {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    color: #fff;
+    gap: var(--space-3);
+    color: var(--text-primary);
     text-decoration: none;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .sidebar-brand:hover {
-    color: #ffffff;
+    color: var(--primary-blue);
 }
 
 /* Sidebar Navigation */
 .sidebar-nav {
-    padding: var(--space-3) 0;
+    padding: var(--space-4) 0;
 }
 
 .nav-section {
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
 }
 
 .nav-section:first-of-type {
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-3);
 }
 
 .nav-section-title {
-    padding: var(--space-2) var(--space-4);
+    padding: var(--space-2) var(--space-5);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 500;
     text-transform: uppercase;
-    color: #9ca3af;
+    color: var(--text-muted);
     letter-spacing: 0.05em;
 }
 
 .nav-link {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
-    color: #f3f4f6;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-5);
+    color: var(--text-secondary);
     text-decoration: none;
-    transition: all 0.1s ease-in-out;
-    font-size: 13px;
-    border-left: 3px solid transparent;
+    transition: all 0.15s ease;
+    font-size: 14px;
+    border-radius: 6px;
+    margin: 1px var(--space-2);
+    position: relative;
 }
 
 .nav-link:hover {
-    color: var(--wp-blue) !important;
-    /* WP Hover */
-    background-color: rgba(255, 255, 255, 0.05);
-    /* Subtle hover */
+    color: var(--primary-blue);
+    background-color: var(--bg-hover);
 }
 
 .nav-link.active {
-    background-color: var(--wp-blue);
-    color: #ffffff !important;
-    border-left-color: #ffffff;
-    /* Contrast marker */
-    font-weight: 600;
+    background-color: var(--primary-blue);
+    color: var(--text-white);
+    font-weight: 500;
+}
+
+.nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 16px;
+    background-color: var(--text-white);
+    border-radius: 2px;
 }
 
 .nav-icon {
-    font-size: 14px;
+    font-size: 16px;
     width: 20px;
     text-align: center;
     opacity: 0.8;
@@ -144,8 +168,9 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: var(--space-4);
-    background-color: rgba(0, 0, 0, 0.2);
+    padding: var(--space-5);
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-light);
 }
 
 .user-info {
@@ -155,17 +180,16 @@ body {
 }
 
 .user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
-    /* Square with slight radius like WP */
-    background-color: #374151;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: var(--primary-blue);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    color: #fff;
-    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-white);
+    font-size: 14px;
 }
 
 .user-details {
@@ -173,179 +197,193 @@ body {
 }
 
 .user-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: #f3f4f6;
-    line-height: 1.2;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.4;
 }
 
 .logout-btn {
     background: none;
     border: none;
-    color: #9ca3af;
-    font-size: 11px;
+    color: var(--text-muted);
+    font-size: 12px;
     cursor: pointer;
-    padding: 0;
-    margin-top: 2px;
+    padding: var(--space-1) var(--space-2);
+    border-radius: 4px;
+    margin-top: 4px;
+    text-decoration: none;
+    transition: all 0.15s ease;
 }
 
 .logout-btn:hover {
-    color: #ef4444;
-    /* Red for logout */
+    color: var(--accent-red);
+    background-color: rgba(239, 68, 68, 0.1);
     text-decoration: none;
 }
 
 /* ===== ADMIN TOP NAVBAR ===== */
 .admin-navbar {
-    background-color: #ffffff !important;
-    border-bottom: 1px solid var(--wp-border);
-    padding: var(--space-2) var(--space-5);
-    height: 50px;
-    /* Reduced height */
+    background-color: #f1f5f9;
+    border-bottom: 1px solid var(--border-light);
+    padding: var(--space-4) var(--space-6);
+    height: 64px;
+    box-shadow: var(--shadow-sm);
 }
 
 .admin-navbar .navbar-text {
-    color: #1d2327;
+    color: var(--text-primary);
     font-weight: 600;
     font-size: 18px;
-    /* Page title size */
 }
 
 /* ===== ADMIN CONTENT ===== */
 .admin-content {
-    padding: var(--space-5);
+    padding: var(--space-6);
     max-width: 1400px;
-    /* Limit width for readability */
 }
 
 /* ===== ADMIN FOOTER ===== */
 .admin-footer {
-    background-color: transparent;
-    border-top: none;
-    color: #646970;
-    font-size: 11px;
+    background-color: #f0f4f8;
+    border-top: 1px solid var(--border-light);
+    color: var(--text-muted);
+    font-size: 12px;
     padding: var(--space-4);
 }
 
-/* ===== FORMS & INPUTS (WP STYLE) ===== */
+/* ===== FORMS & INPUTS ===== */
 .form-control,
 .form-select {
-    border-radius: 3px;
-    /* WP square-ish look */
-    border: 1px solid var(--wp-input-border);
-    padding: 2px 8px;
-    /* Compact */
-    font-size: 13px;
-    /* Standard WP admin font size */
-    line-height: normal;
-    min-height: 30px;
+    border-radius: 6px;
+    border: 1px solid var(--border-medium);
+    padding: var(--space-3) var(--space-4);
+    font-size: 14px;
+    line-height: 1.4;
+    min-height: 36px;
     box-shadow: none;
+    background-color: var(--bg-card);
+    transition: all 0.15s ease;
+    color: var(--text-primary);
 }
 
 .form-control:focus,
 .form-select:focus {
-    border-color: var(--wp-blue);
-    box-shadow: 0 0 0 1px var(--wp-blue);
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.15);
+    outline: none;
+}
+
+.form-control:hover,
+.form-select:hover {
+    border-color: var(--border-dark);
 }
 
 .form-label {
     font-size: 13px;
-    /* Standard */
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: #1d2327;
+    font-weight: 500;
+    margin-bottom: var(--space-2);
+    color: var(--text-primary);
 }
 
+/* ===== BUTTONS ===== */
 .btn {
-    border-radius: 3px;
+    border-radius: 6px;
     font-size: 13px;
-    padding: 3px 10px;
-    font-weight: 400;
-    /* Regular weight buttons */
-    line-height: 2;
-    transition: 0.05s all ease-in-out;
+    padding: var(--space-3) var(--space-4);
+    font-weight: 500;
+    line-height: 1.4;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+    box-shadow: none;
+    cursor: pointer;
 }
 
 .btn-primary {
-    background-color: var(--wp-blue);
-    border-color: var(--wp-blue);
-    color: #fff;
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: var(--text-white);
 }
 
 .btn-primary:hover {
-    background-color: var(--wp-blue-hover);
-    border-color: var(--wp-blue-hover);
+    background-color: var(--primary-blue-hover);
+    border-color: var(--primary-blue-hover);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:focus {
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
 }
 
 .btn-outline-secondary {
-    color: var(--wp-blue);
-    border-color: var(--wp-blue);
+    color: var(--text-secondary);
+    border-color: var(--border-medium);
     background: transparent;
 }
 
 .btn-outline-secondary:hover {
-    background: #f0f6fc;
-    color: var(--wp-blue-hover);
-    border-color: var(--wp-blue-hover);
+    background-color: var(--bg-hover);
+    border-color: var(--border-dark);
+    color: var(--text-primary);
 }
 
-/* ===== TABLES (WP LIST TABLE STYLE) ===== */
+/* ===== TABLES ===== */
 .table-responsive {
-    background: #fff;
-    border: 1px solid #c3c4c7;
-    /* WP Table Border */
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .table {
     margin-bottom: 0;
-    font-size: 13px;
-    color: #3c434a;
+    font-size: 14px;
+    color: var(--text-primary);
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .table thead th {
-    background: #ffffff;
-    border-bottom: 1px solid #c3c4c7;
-    font-weight: 600;
-    /* Distinct header */
-    color: #1d2327;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-light);
+    font-weight: 500;
+    color: var(--text-secondary);
     text-transform: none;
-    /* WP uses normal case */
-    font-size: 14px;
-    padding: 8px 10px;
+    font-size: 12px;
+    padding: var(--space-4) var(--space-5);
     vertical-align: middle;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
 }
 
 .table tbody td {
-    padding: 8px 10px;
-    vertical-align: top;
-    border-bottom: 1px solid #f0f0f1;
-    /* Light row separator */
+    padding: var(--space-4) var(--space-5);
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-light);
 }
 
 /* Post Row Specifics */
 .post-title a {
-    font-weight: 600;
-    color: var(--wp-blue);
-    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary-blue);
+    font-size: 15px;
     text-decoration: none;
 }
 
 .post-title a:hover {
-    color: var(--wp-blue-hover);
+    color: var(--primary-blue-hover);
 }
 
 .post-row:hover {
-    background-color: #f6f7f7;
-    /* Very light gray hover */
+    background-color: var(--bg-hover);
 }
 
 .row-actions {
     visibility: hidden;
-    /* Hide until hover */
-    font-size: 11px;
-    color: #ddd;
-    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: var(--space-2);
 }
 
 .post-row:hover .row-actions {
@@ -353,29 +391,30 @@ body {
 }
 
 .row-actions a {
-    color: var(--wp-blue);
+    color: var(--text-secondary);
     text-decoration: none;
-    margin: 0 2px;
+    margin: 0 4px;
 }
 
 .row-actions a:hover {
-    color: var(--wp-red);
-    /* Danger hover implies action */
+    color: var(--accent-red);
 }
 
 /* Badges */
 .badge {
-    border-radius: 2px;
-    font-weight: 600;
-    font-size: 10px;
-    padding: 3px 6px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 11px;
+    padding: 3px 8px;
     text-transform: uppercase;
+    letter-spacing: 0.025em;
+    border: 1px solid transparent;
 }
 
 /* ===== BULK ACTIONS & FILTER BAR ===== */
 #filter-form,
 #bulk-form {
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
     align-items: center;
 }
 
@@ -386,575 +425,105 @@ body {
     align-items: center;
 }
 
-/* ===== CARDS (WP METABOX STYLE) ===== */
+/* ===== CARDS ===== */
 .card {
-    border: 1px solid #c3c4c7;
-    background: #fff;
-    border-radius: 0;
-    /* Square cards */
-    box-shadow: none;
-    /* Cleaner */
-    margin-bottom: 20px;
+    border: 1px solid var(--border-light);
+    background: var(--bg-card);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-5);
+    overflow: hidden;
 }
 
 .card-header {
-    background: #fff;
-    /* White header */
-    border-bottom: 1px solid #f0f0f1;
-    padding: 8px 12px;
-    font-weight: 600;
-    font-size: 14px;
-    color: #1d2327;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-light);
+    padding: var(--space-4) var(--space-5);
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--text-primary);
 }
 
 .card-body {
-    padding: 12px;
+    padding: var(--space-5);
 }
 
-.admin-main {
-    margin-left: 250px;
-    min-height: 100vh;
-    background-color: #f9fafb;
-}
-
-/* Sidebar Header */
-.sidebar-header {
-    padding: 1.5rem 1rem;
-    border-bottom: 1px solid #374151;
-}
-
-.sidebar-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #f3f4f6;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-.sidebar-brand:hover {
-    color: #ffffff;
-}
-
-.sidebar-brand span {
-    font-size: 1.2rem;
-}
-
-/* Sidebar Navigation */
-.sidebar-nav {
-    padding: 1rem 0;
-}
-
-.nav-section {
-    margin-bottom: 1.5rem;
-}
-
-.nav-section-title {
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #9ca3af;
-    margin-bottom: 0.5rem;
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    color: #d1d5db;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    font-size: 0.875rem;
-}
-
-.nav-link:hover {
-    background-color: #374151;
-    color: #f9fafb;
-}
-
-.nav-link.active {
-    background-color: #3b82f6;
-    color: #ffffff;
-    border-right: 3px solid #60a5fa;
-}
-
-.nav-icon {
-    font-size: 1rem;
-    width: 1.25rem;
-    text-align: center;
-}
-
-/* Sidebar Footer */
-.sidebar-footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1rem;
-    border-top: 1px solid #374151;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.user-avatar {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    background-color: #3b82f6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    color: #ffffff;
-}
-
-.user-details {
-    flex: 1;
-}
-
-.user-name {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #f3f4f6;
-    margin-bottom: 0.25rem;
-}
-
-.logout-btn {
-    background: none;
-    border: none;
-    color: #9ca3af;
-    font-size: 0.75rem;
-    cursor: pointer;
-    padding: 0;
-    text-decoration: underline;
-}
-
-.logout-btn:hover {
-    color: #f3f4f6;
-}
-
-/* ===== ADMIN TOP NAVBAR ===== */
-.admin-navbar {
-    background-color: #ffffff !important;
-    border-bottom: 1px solid #e5e7eb;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.admin-navbar .navbar-text {
-    color: #374151;
-    font-weight: 600;
-}
-
-/* ===== ADMIN CONTENT ===== */
-.admin-content {
-    padding: 24px;
-}
-
-/* ===== ADMIN FOOTER ===== */
-.admin-footer {
-    background-color: #ffffff;
-    border-top: 1px solid #e5e7eb;
-    color: #6b7280;
-    font-size: 0.875rem;
-}
-
-/* ===== ADMIN POSTS INDEX STYLES ===== */
-/* Toolbar alignment */
-#filter-form .form-control,
-#filter-form .form-select {
-    height: 30px;
-    font-size: 13px;
-}
-
-#filter-form .form-control:focus {
-    border-color: #9ca3af;
-    box-shadow: none;
-}
-
-#filter-form .form-control::placeholder {
-    color: #9ca3af;
-    opacity: 0.7;
-}
-
-/* Filter button secondary */
-#filter-form .btn-outline-secondary {
-    border-color: #d1d5db;
-    color: #6b7280;
-}
-
-#filter-form .btn-outline-secondary:hover {
-    background-color: #f3f4f6;
-    border-color: #9ca3af;
-}
-
-/* ===== ENTERPRISE-GRADE TABLE HEADER ===== */
-/* Professional table header - cohesive with table design */
-.table thead th {
-    font-weight: 400;
-    /* Light weight */
-    font-size: 11px;
-    /* Smaller for metadata feel */
-    color: #6b7280;
-    /* Muted gray */
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    /* Refined spacing */
-    border-bottom: 1px solid #d1d5db;
-    /* Match table borders */
-    padding: 12px 8px;
-    /* Consistent padding */
-    background-color: #ffffff;
-    /* Clean white background */
-    position: relative;
-}
-
-/* Header checkbox alignment - perfect centering */
-.table thead th input[type="checkbox"] {
-    margin: 0;
-    vertical-align: middle;
-}
-
-/* Checkbox column - reduce visual weight */
-.table thead th:first-child {
-    width: 40px;
-    text-align: center;
-    font-weight: 300;
-    color: #9ca3af;
-    /* Even more muted */
-}
-
-/* Title hierarchy */
-.post-row .fw-medium {
-    color: #111827;
-    font-weight: 600;
-}
-
-/* Soften other elements */
-.post-row .badge {
-    font-size: 11px;
-    opacity: 0.8;
-}
-
-.post-row td:not(:nth-child(2)) {
-    color: #6b7280;
-}
-
-/* Table borders */
-.table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.table td,
-.table th {
-    border-top: 1px solid rgba(229, 231, 235, 0.5);
-    border-bottom: 1px solid rgba(229, 231, 235, 0.5);
-}
-
-.table thead th {
-    border-bottom: 1px solid rgba(209, 213, 219, 0.8);
-}
-
-/* ===== EMPTY STATE STYLING ===== */
-.empty-state {
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.empty-state h6 {
-    font-weight: 500;
-    color: #374151;
-    margin-bottom: 0.5rem;
-}
-
-.empty-state p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 1rem;
-}
-
-.empty-state .btn {
-    font-weight: 500;
-}
-
-/* ===== WORDPRESS-STYLE ROW ACTIONS ===== */
-
-/* Row actions - hidden by default, zero height and opacity */
-.row-actions {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    margin-top: 3px;
-    font-size: 12px;
-    line-height: 1.4;
-    transition: opacity 0.1s ease-in-out, max-height 0.1s ease-in-out;
-}
-
-/* Show row actions on post row hover - smooth reveal */
-.post-row:hover .row-actions {
-    opacity: 1;
-    max-height: 20px;
-    /* Sufficient height for single line of text */
-}
-
-/* Row action links - WordPress style */
-.row-actions a {
-    color: #6b7280;
-    /* Muted gray */
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 400;
-    margin: 0 2px;
-    padding: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-    transition: color 0.1s ease-in-out;
-}
-
-.row-actions a:hover {
-    color: #374151;
-    /* Darker gray on hover */
-    text-decoration: underline;
-}
-
-/* Trash action - WordPress red */
-.row-actions a.text-danger {
-    color: #dc2626;
-    /* WordPress red */
-}
-
-.row-actions a.text-danger:hover {
-    color: #b91c1c;
-    /* Darker red on hover */
-    text-decoration: underline;
-}
-
-/* WordPress-style separators between actions */
-.row-actions a:not(:last-child)::after {
-    content: '|';
-    color: #d1d5db;
-    /* Light gray separator */
-    margin-left: 4px;
-    margin-right: 2px;
-    font-weight: normal;
-}
-
-/* Prevent layout shift - ensure row height doesn't change */
-.post-row {
-    min-height: 60px;
-    /* Ensure consistent row height */
-}
-
-/* Override any conflicting styles for smooth behavior */
-.post-row:hover .row-actions {
-    display: block !important;
-}
-
-/* ===== WORDPRESS-STYLE UX IMPROVEMENTS ===== */
-
-/* Header Checkbox - Larger Click Area */
-th input[type="checkbox"] {
-    position: relative;
-    z-index: 1;
-}
-
-th input[type="checkbox"]::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: -8px;
-    right: -8px;
-    bottom: -8px;
-    background: transparent;
-    cursor: pointer;
-    z-index: 0;
-}
-
-th:hover input[type="checkbox"]::before {
-    background: rgba(59, 130, 246, 0.05);
-    border-radius: 4px;
-}
-
-/* Make the entire header cell clickable for checkbox */
-th:has(input[type="checkbox"]) {
-    position: relative;
-    cursor: pointer;
-}
-
-th:has(input[type="checkbox"])::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    cursor: pointer;
-    z-index: -1;
-}
-
-/* ===== ENTERPRISE-GRADE BULK ACTION BAR ===== */
-/* Visually bind bulk actions to table - professional cohesion */
-#bulk-form .row {
-    border-bottom: 1px solid #d1d5db;
-    /* Subtle border matching table */
-    padding-bottom: 8px;
-    /* Reduced padding */
-    margin-bottom: 0;
-    /* No bottom margin */
-    background-color: #ffffff;
-    /* Clean white background matching header */
-    border-radius: 6px 6px 0 0;
-    /* Rounded top corners */
-}
-
-#bulk-form .row .col-md-9 {
-    padding-top: 4px;
-    /* Fine-tuned alignment */
-    color: #6b7280;
-    font-size: 12px;
-    /* Smaller, more subtle */
-    font-weight: 400;
-}
-
-/* Eliminate gap - bulk bar feels attached to table */
-#bulk-form {
-    margin-bottom: 0;
-    /* Zero margin */
-}
-
-/* Table connection - seamless visual flow */
-.table-responsive {
-    border: 1px solid #d1d5db;
-    /* Full border for containment */
-    border-top: none;
-    /* No double border with bulk bar */
-    border-radius: 0 0 6px 6px;
-    /* Rounded bottom corners only */
-    overflow: hidden;
-}
-
-.table {
-    margin-bottom: 0;
-    border-radius: 0;
-    border: none;
-    /* Remove default table borders */
-}
-
-/* ===== POLISHED SUCCESS NOTIFICATIONS ===== */
+/* ===== ALERTS ===== */
 .alert-success {
-    padding: 8px 12px;
-    /* Reduced padding for subtlety */
-    margin-bottom: 16px;
-    border: 1px solid #d1fae5;
-    /* Subtle green border */
-    border-radius: 4px;
-    background-color: #f0fdf4;
-    /* Very light green background */
-    color: #166534;
-    /* Dark green text */
-    font-size: 13px;
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-4);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 6px;
+    background-color: rgba(16, 185, 129, 0.05);
+    color: #10b981;
+    font-size: 14px;
     font-weight: 500;
     box-shadow: none;
-    /* Remove heavy shadow */
 }
 
-.alert-success .btn-close {
-    padding: 0.25rem;
-    margin: -0.25rem -0.25rem -0.25rem 0.5rem;
-}
-
-/* ===== IMPROVED SIDEBAR TYPOGRAPHY ===== */
-.nav-link {
-    font-size: 14px !important;
-    /* Increased from 13px to match WP */
-    line-height: 1.3;
-    padding: 10px 16px;
-    /* Balanced padding */
-}
-
-.nav-icon {
-    font-size: 18px;
-    /* Slightly larger icons */
-    width: 24px;
-    /* Fixed width for alignment */
-    text-align: center;
-    opacity: 1;
-    /* Clearer icons */
-}
-
-/* ===== WP STATUS FILTERS ===== */
+/* ===== STATUS FILTERS ===== */
 .wp-status-filters {
-    margin-bottom: 15px;
-    font-size: 13px;
+    margin-bottom: var(--space-4);
+    font-size: 14px;
     display: flex;
-    gap: 8px;
+    gap: var(--space-3);
     align-items: center;
-    color: #646970;
+    color: var(--text-secondary);
 }
 
 .wp-status-filters a {
-    color: var(--wp-blue);
+    color: var(--primary-blue);
     text-decoration: none;
-    font-weight: 400;
-    transition: color 0.1s ease;
+    font-weight: 500;
+    transition: color 0.15s ease;
+    padding: var(--space-1) var(--space-2);
+    border-radius: 4px;
 }
 
 .wp-status-filters a:hover {
-    color: var(--wp-blue-hover);
+    color: var(--primary-blue-hover);
+    background-color: rgba(96, 165, 250, 0.05);
 }
 
 .wp-status-filters a.current {
-    color: #000;
-    font-weight: 600;
+    color: var(--text-white);
+    background-color: var(--primary-blue);
+    font-weight: 500;
     cursor: default;
 }
 
-.wp-status-filters .count {
-    color: #555;
-    font-weight: 400;
-}
-
-/* ===== MEDIA LIBRARY ENHANCEMENTS ===== */
-/* Media grid - more compact and WordPress-like */
+/* ===== MEDIA LIBRARY ===== */
 .media-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-4);
 }
 
 .media-item {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
     overflow: hidden;
-    transition: all 0.15s ease-in-out;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.15s ease;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
 }
 
 .media-item:hover {
-    border-color: var(--wp-blue);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-md);
     transform: translateY(-1px);
 }
 
 .media-thumbnail {
     position: relative;
     aspect-ratio: 4/3;
-    background: #f9fafb;
+    background: var(--bg-hover);
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-light);
     overflow: hidden;
 }
 
@@ -962,28 +531,28 @@ th:has(input[type="checkbox"])::after {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.15s ease-in-out;
+    transition: transform 0.15s ease;
 }
 
 .media-item:hover .media-thumbnail img {
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 .media-thumbnail .file-icon {
-    font-size: 2rem;
-    color: #9ca3af;
+    font-size: 2.5rem;
+    color: var(--text-muted);
 }
 
 .media-info {
-    padding: 8px;
+    padding: var(--space-4);
 }
 
 .media-filename {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
-    color: #374151;
-    line-height: 1.3;
-    margin-bottom: 4px;
+    color: var(--text-primary);
+    line-height: 1.4;
+    margin-bottom: var(--space-2);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -991,418 +560,237 @@ th:has(input[type="checkbox"])::after {
 }
 
 .media-meta {
-    font-size: 11px;
-    color: #6b7280;
-    line-height: 1.2;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
 }
 
 .media-actions {
-    padding: 8px;
+    padding: var(--space-4);
     padding-top: 0;
     display: flex;
-    gap: 4px;
+    gap: var(--space-2);
 }
 
 .media-actions .btn {
     flex: 1;
-    font-size: 11px;
-    padding: 4px 8px;
-}
-
-/* Media list view */
-.media-list-table .table thead th {
-    padding: 8px 12px;
     font-size: 12px;
-    font-weight: 600;
-    color: #6b7280;
-    background-color: #f9fafb;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.media-list-table .table tbody td {
-    padding: 12px;
-    vertical-align: middle;
-    border-bottom: 1px solid #f3f4f6;
-}
-
-.media-list-table .preview-cell {
-    width: 80px;
-}
-
-.media-list-table .preview-cell img {
-    width: 60px;
-    height: 45px;
-    object-fit: cover;
-    border-radius: 2px;
-    border: 1px solid #e5e7eb;
-}
-
-.media-list-table .filename-cell {
-    font-weight: 500;
-    color: #374151;
-}
-
-.media-list-table .filename-cell small {
-    color: #6b7280;
-    font-weight: 400;
-}
-
-.media-list-table .dimensions-cell,
-.media-list-table .size-cell,
-.media-list-table .date-cell {
-    font-size: 12px;
-    color: #6b7280;
-}
-
-.media-list-table .actions-cell {
-    width: 180px;
-}
-
-.media-list-table .actions-cell .btn {
-    font-size: 12px;
-    padding: 4px 8px;
-}
-
-/* Media toolbar - more compact */
-.media-toolbar {
-    margin-bottom: 16px;
-    padding: 12px 16px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-}
-
-.media-toolbar .view-toggle .btn {
-    border-color: #d1d5db;
-    color: #6b7280;
-}
-
-.media-toolbar .view-toggle .btn.active {
-    background-color: var(--wp-blue);
-    border-color: var(--wp-blue);
-    color: #fff;
-}
-
-.media-toolbar .filters {
-    gap: 8px;
-}
-
-.media-toolbar .stats {
-    font-size: 13px;
-    color: #6b7280;
-}
-
-/* Media upload modal improvements */
-.upload-zone {
-    border: 2px dashed #d1d5db !important;
-    background: #f9fafb !important;
-    transition: all 0.15s ease-in-out;
-}
-
-.upload-zone:hover {
-    border-color: var(--wp-blue) !important;
-    background: #f0f6fc !important;
-}
-
-.upload-zone.dragover {
-    border-color: var(--wp-blue) !important;
-    background: #f0f6fc !important;
-}
-
-/* ===== MEDIA PICKER MODAL TABS ===== */
-#mediaPicker .nav-tabs {
-    border-bottom: 1px solid #dee2e6;
-}
-
-#mediaPicker .nav-tabs .nav-link {
-    border: 1px solid transparent;
-    border-bottom: none;
-    background-color: #f8f9fa;
-    color: #6c757d;
-    font-weight: 500;
-    transition: all 0.15s ease-in-out;
-}
-
-#mediaPicker .nav-tabs .nav-link:hover {
-    background-color: #e9ecef;
-    color: #495057;
-    border-color: #adb5bd;
-}
-
-#mediaPicker .nav-tabs .nav-link.active {
-    background-color: var(--wp-blue);
-    border-color: var(--wp-blue) var(--wp-blue) #fff;
-    color: #ffffff;
-    font-weight: 600;
-}
-
-#mediaPicker .nav-tabs .nav-link.active:hover {
-    background-color: var(--wp-blue-hover);
-    border-color: var(--wp-blue-hover) var(--wp-blue-hover) #fff;
-    color: #ffffff;
-}
-
-/* ===== CATEGORY TABS IN POST CREATE/EDIT ===== */
-#categoryTabs .nav-link {
-    border: 1px solid transparent;
-    border-bottom: none;
-    background-color: #f8f9fa;
-    color: #6c757d;
-    font-weight: 500;
-    transition: all 0.15s ease-in-out;
-}
-
-#categoryTabs .nav-link:hover {
-    background-color: #e9ecef;
-    color: #495057;
-    border-color: #adb5bd;
-}
-
-#categoryTabs .nav-link.active {
-    background-color: var(--wp-blue);
-    border-color: var(--wp-blue) var(--wp-blue) #fff;
-    color: #ffffff;
-    font-weight: 600;
-}
-
-#categoryTabs .nav-link.active:hover {
-    background-color: var(--wp-blue-hover);
-    border-color: var(--wp-blue-hover) var(--wp-blue-hover) #fff;
-    color: #ffffff;
+    padding: var(--space-2) var(--space-3);
 }
 
 /* ===== POST STATUS BADGES ===== */
 .badge-draft {
-    background-color: var(--wp-status-draft) !important;
-    color: var(--wp-status-draft-text) !important;
-    border: 1px solid #e5e7eb;
+    background-color: var(--status-draft-bg);
+    color: var(--status-draft-text);
+    border-color: var(--border-medium);
 }
 
 .badge-published {
-    background-color: var(--wp-status-published) !important;
-    color: var(--wp-status-published-text) !important;
-    border: 1px solid #d1fae5;
+    background-color: var(--status-published-bg);
+    color: var(--status-published-text);
+    border-color: rgba(16, 185, 129, 0.2);
 }
 
 .badge-review {
-    background-color: var(--wp-status-review) !important;
-    color: var(--wp-status-review-text) !important;
-    border: 1px solid #fed7aa;
+    background-color: var(--status-review-bg);
+    color: var(--status-review-text);
+    border-color: rgba(245, 144, 11, 0.2);
 }
 
 .badge-approved {
-    background-color: var(--wp-status-approved) !important;
-    color: var(--wp-status-approved-text) !important;
-    border: 1px solid #d1fae5;
+    background-color: var(--status-approved-bg);
+    color: var(--status-approved-text);
+    border-color: rgba(16, 185, 129, 0.2);
 }
 
-/* ===== POSTS TABLE ENHANCEMENTS ===== */
-/* More compact table for WordPress-like density */
+/* ===== POSTS TABLE ===== */
 .posts-table .table thead th {
-    padding: 6px 10px;
+    padding: var(--space-4) var(--space-5);
     font-size: 12px;
-    font-weight: 600;
-    color: #6b7280;
-    background-color: #f9fafb;
-    border-bottom: 1px solid #e5e7eb;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .posts-table .table tbody td {
-    padding: 8px 10px;
-    font-size: 13px;
-    border-bottom: 1px solid #f3f4f6;
+    padding: var(--space-4) var(--space-5);
+    font-size: 14px;
+    border-bottom: 1px solid var(--border-light);
 }
 
-/* Views column - right aligned */
 .posts-table .views-column {
     text-align: right;
     font-variant-numeric: tabular-nums;
     font-weight: 500;
-    color: #374151;
+    color: var(--text-primary);
 }
 
-/* Date column formatting */
 .posts-table .date-column {
-    font-size: 12px;
-    color: #6b7280;
-    line-height: 1.3;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
 }
 
-/* Comments column - center aligned badge */
 .posts-table .comments-column {
     text-align: center;
 }
 
-/* Title column - ensure proper hierarchy */
 .posts-table .title-column {
-    max-width: 300px;
+    max-width: 320px;
 }
 
 .posts-table .post-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 2px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
 }
 
 .posts-table .post-title a {
-    color: #111827;
+    color: var(--text-primary);
     text-decoration: none;
 }
 
 .posts-table .post-title a:hover {
-    color: var(--wp-blue);
+    color: var(--primary-blue);
 }
 
-/* Status text in title */
 .posts-table .status-text {
     font-size: 11px;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.025em;
 }
 
-/* Author column */
 .posts-table .author-column a {
-    color: #374151;
+    color: var(--text-primary);
     text-decoration: none;
 }
 
 .posts-table .author-column a:hover {
-    color: var(--wp-blue);
+    color: var(--primary-blue);
 }
 
-/* Categories and Tags columns */
 .posts-table .categories-column,
 .posts-table .tags-column {
-    font-size: 12px;
-    color: #6b7280;
-}
-
-/* Bulk actions bar - more compact */
-.bulk-actions-container {
-    margin-bottom: 12px;
-    padding: 12px 16px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-}
-
-/* Status filters - more compact */
-.wp-status-filters {
-    margin-bottom: 12px;
-    padding: 8px 16px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-}
-
-.wp-status-filters a {
     font-size: 13px;
-    font-weight: 500;
+    color: var(--text-secondary);
 }
 
-/* Page header - more compact */
+.bulk-actions-container {
+    margin-bottom: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    box-shadow: var(--shadow-sm);
+}
+
+.wp-status-filters {
+    margin-bottom: var(--space-4);
+    padding: var(--space-3) var(--space-5);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    box-shadow: var(--shadow-sm);
+}
+
 .posts-page-header {
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-light);
 }
 
-/* ===== POST EDITOR ENHANCEMENTS ===== */
-/* Editor Layout - Two column WordPress style */
+/* ===== POST EDITOR ===== */
 .post-editor-main {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
 }
 
-.post-editor-sidebar {
-    /* Sidebar styling handled by existing card styles */
-}
-
-/* Title field - prominent */
 .post-title-input {
-    font-size: 1.5rem !important;
-    font-weight: 600 !important;
-    border: 2px solid #e5e7eb !important;
-    border-radius: 4px !important;
-    padding: 12px 16px !important;
-    background: #fff !important;
-    transition: border-color 0.15s ease-in-out;
+    font-size: 24px;
+    font-weight: 600;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    padding: var(--space-4) var(--space-5);
+    background: var(--bg-card);
+    transition: border-color 0.15s ease;
+    line-height: 1.3;
+    color: var(--text-primary);
 }
 
 .post-title-input:focus {
-    border-color: var(--wp-blue) !important;
-    box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.1) !important;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.15);
+    outline: none;
 }
 
-/* Permalink preview */
 .permalink-preview {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background: var(--bg-hover);
+    border: 1px solid var(--border-light);
     border-radius: 4px;
-    padding: 8px 12px;
+    padding: var(--space-3) var(--space-4);
     font-size: 13px;
-    color: #6b7280;
+    color: var(--text-secondary);
 }
 
 .permalink-preview .permalink-url {
-    color: var(--wp-blue);
+    color: var(--primary-blue);
     font-weight: 500;
 }
 
-/* Content editor area */
 .post-content-editor {
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    background: #fff;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    background: var(--bg-card);
     min-height: 500px;
 }
 
-/* Publish metabox button hierarchy */
 .publish-actions {
-    border-top: 1px solid #e5e7eb;
-    padding-top: 16px;
-    margin-top: 16px;
+    border-top: 1px solid var(--border-light);
+    padding-top: var(--space-4);
+    margin-top: var(--space-4);
 }
 
 .publish-actions .btn-primary {
-    font-weight: 600;
-    padding: 8px 16px;
+    font-weight: 500;
+    padding: var(--space-3) var(--space-5);
+    font-size: 14px;
 }
 
 .publish-actions .btn-outline-secondary {
-    border-color: #d1d5db;
-    color: #6b7280;
+    border-color: var(--border-medium);
+    color: var(--text-secondary);
 }
 
 .publish-actions .btn-outline-secondary:hover {
-    background-color: #f9fafb;
-    border-color: #9ca3af;
-    color: #374151;
+    background-color: var(--bg-hover);
+    border-color: var(--border-dark);
+    color: var(--text-primary);
 }
 
 .publish-actions .btn-link {
-    color: var(--wp-blue);
+    color: var(--primary-blue);
     text-decoration: none;
     font-size: 13px;
-    padding: 4px 0;
+    padding: var(--space-1) 0;
 }
 
 .publish-actions .btn-link:hover {
-    color: var(--wp-blue-hover);
+    color: var(--primary-blue-hover);
     text-decoration: underline;
 }
 
-/* Status indicator */
 .post-status-indicator {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 8px;
-    border-radius: 4px;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: 16px;
     font-size: 12px;
     font-weight: 500;
     text-transform: uppercase;
@@ -1410,206 +798,127 @@ th:has(input[type="checkbox"])::after {
 }
 
 .post-status-indicator.status-draft {
-    background-color: var(--wp-status-draft);
-    color: var(--wp-status-draft-text);
-    border: 1px solid #e5e7eb;
+    background-color: var(--status-draft-bg);
+    color: var(--status-draft-text);
+    border: 1px solid var(--border-medium);
 }
 
 .post-status-indicator.status-published {
-    background-color: var(--wp-status-published);
-    color: var(--wp-status-published-text);
-    border: 1px solid #d1fae5;
+    background-color: var(--status-published-bg);
+    color: var(--status-published-text);
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .post-status-indicator.status-review {
-    background-color: var(--wp-status-review);
-    color: var(--wp-status-review-text);
-    border: 1px solid #fed7aa;
+    background-color: var(--status-review-bg);
+    color: var(--status-review-text);
+    border: 1px solid rgba(245, 144, 11, 0.2);
 }
 
 .post-status-indicator.status-approved {
-    background-color: var(--wp-status-approved);
-    color: var(--wp-status-approved-text);
-    border: 1px solid #d1fae5;
+    background-color: var(--status-approved-bg);
+    color: var(--status-approved-text);
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
-/* Featured image preview */
 .featured-image-preview {
     position: relative;
-    background: #f9fafb;
-    border: 2px dashed #d1d5db;
-    border-radius: 4px;
-    min-height: 150px;
+    background: var(--bg-hover);
+    border: 1px solid var(--border-medium);
+    border-radius: 6px;
+    min-height: 160px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: border-color 0.15s ease-in-out;
+    transition: border-color 0.15s ease;
     overflow: hidden;
 }
 
 .featured-image-preview.has-image {
-    border-style: solid;
-    border-color: #e5e7eb;
+    border-color: var(--border-light);
+}
+
+.featured-image-preview:hover {
+    border-color: var(--primary-blue);
 }
 
 .featured-image-preview img {
     max-width: 100%;
     max-height: 200px;
     object-fit: cover;
-    border-radius: 2px;
+    border-radius: 4px;
 }
 
 .featured-image-preview .no-image-text {
-    color: #9ca3af;
+    color: var(--text-muted);
     font-size: 14px;
     text-align: center;
 }
 
 .featured-image-actions {
-    margin-top: 12px;
+    margin-top: var(--space-4);
 }
 
-.featured-image-actions .btn {
-    font-size: 13px;
-}
-
-/* Metabox styling */
 .metabox-card {
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    box-shadow: var(--shadow-sm);
+    background: var(--bg-card);
 }
 
 .metabox-header {
-    background: #f9fafb;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 12px 16px;
+    background: var(--bg-hover);
+    border-bottom: 1px solid var(--border-light);
+    padding: var(--space-4) var(--space-5);
     font-size: 14px;
-    font-weight: 600;
-    color: #374151;
+    font-weight: 500;
+    color: var(--text-primary);
     margin: 0;
 }
 
 .metabox-body {
-    padding: 16px;
+    padding: var(--space-4);
 }
 
-/* Autosave status */
-.autosave-status {
-    font-size: 12px;
-    font-style: italic;
-    color: #6b7280;
-    margin-top: 8px;
-}
-
-.autosave-status.saving {
-    color: #f59e0b;
-}
-
-.autosave-status.saved {
-    color: #10b981;
-}
-
-.autosave-status.error {
-    color: #ef4444;
-}
-
-/* Loading states for buttons */
-.btn-loading {
-    position: relative;
-    color: transparent !important;
-}
-
-.btn-loading::after {
-    content: "";
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    top: 50%;
-    left: 50%;
-    margin-left: -8px;
-    margin-top: -8px;
-    border: 2px solid #ffffff;
-    border-radius: 50%;
-    border-top-color: transparent;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Toast notifications */
-.toast-notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #10b981;
-    color: white;
-    padding: 12px 16px;
-    border-radius: 4px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
-    font-size: 14px;
-    font-weight: 500;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.3s ease-in-out;
-}
-
-.toast-notification.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.toast-notification.error {
-    background: #ef4444;
-}
-
-.toast-notification.warning {
-    background: #f59e0b;
-}
-
-/* ===== USERS MANAGEMENT ENHANCEMENTS ===== */
-/* Users table - compact and clean */
+/* ===== USERS MANAGEMENT ===== */
 .users-table .table thead th {
-    padding: 6px 10px;
+    padding: var(--space-4) var(--space-5);
     font-size: 12px;
-    font-weight: 600;
-    color: #6b7280;
-    background-color: #f9fafb;
-    border-bottom: 1px solid #e5e7eb;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .users-table .table tbody td {
-    padding: 8px 10px;
-    font-size: 13px;
-    border-bottom: 1px solid #f3f4f6;
+    padding: var(--space-4) var(--space-5);
+    font-size: 14px;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .users-table .id-column {
     width: 60px;
     text-align: center;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--text-secondary);
 }
 
 .users-table .username-column {
     font-weight: 500;
-    color: #374151;
+    color: var(--text-primary);
 }
 
 .users-table .name-column {
-    color: #374151;
+    color: var(--text-primary);
 }
 
 .users-table .email-column a {
-    color: #374151;
+    color: var(--text-primary);
     text-decoration: none;
 }
 
 .users-table .email-column a:hover {
-    color: var(--wp-blue);
+    color: var(--primary-blue);
 }
 
 .users-table .role-column {
@@ -1621,31 +930,24 @@ th:has(input[type="checkbox"])::after {
     text-align: center;
 }
 
-/* User avatar in table */
-.users-table .user-avatar-cell {
-    width: 50px;
-    text-align: center;
-}
-
 .users-table .user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--wp-blue);
-    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background-color: var(--primary-blue);
+    color: var(--text-white);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
 }
 
-/* Role badges */
 .role-badge {
     display: inline-flex;
     align-items: center;
-    padding: 2px 6px;
-    border-radius: 3px;
+    padding: var(--space-1) var(--space-2);
+    border-radius: 12px;
     font-size: 11px;
     font-weight: 500;
     text-transform: uppercase;
@@ -1665,208 +967,57 @@ th:has(input[type="checkbox"])::after {
 }
 
 .role-badge.author {
-    background-color: #f0f6fc;
+    background-color: #eff6ff;
     color: #1e40af;
-    border: 1px solid var(--wp-blue);
+    border: 1px solid var(--primary-blue);
 }
 
 .role-badge.contributor {
-    background-color: #f9fafb;
-    color: #6b7280;
-    border: 1px solid #d1d5db;
+    background: var(--bg-hover);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
 }
 
 .role-badge.subscriber {
-    background-color: #f3f4f6;
-    color: #374151;
-    border: 1px solid #9ca3af;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-medium);
 }
 
-/* Posts count badge */
 .posts-count-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 24px;
-    height: 24px;
-    padding: 0 6px;
-    background-color: #f3f4f6;
-    color: #374151;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 var(--space-2);
+    background: var(--bg-hover);
+    color: var(--text-primary);
     border-radius: 12px;
     font-size: 12px;
     font-weight: 500;
 }
 
-/* Bulk actions for users */
 .users-bulk-actions {
-    margin-bottom: 12px;
-    padding: 12px 16px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
+    margin-bottom: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    box-shadow: var(--shadow-sm);
 }
 
-.users-bulk-actions .form-select,
-.users-bulk-actions .btn {
-    font-size: 13px;
-}
-
-/* User page header */
 .users-page-header {
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-light);
 }
 
-/* Role selector in edit mode */
-.role-selector {
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    background: #fff;
-    padding: 8px;
-}
-
-.role-selector select {
-    border: none;
-    background: transparent;
-    color: var(--wp-blue);
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.role-selector select:focus {
-    outline: none;
-    box-shadow: none;
-}
-
-/* ===== SIDEBAR/NAVIGATION POLISH ===== */
-/* More compact sidebar spacing */
-.sidebar-nav {
-    padding: 8px 0;
-}
-
-.nav-section {
-    margin-bottom: 8px;
-}
-
-.nav-section-title {
-    padding: 4px 16px 2px 16px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #9ca3af;
-    margin-bottom: 2px;
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 16px;
-    color: #d1d5db;
-    text-decoration: none;
-    transition: all 0.15s ease-in-out;
-    font-size: 13px;
-    font-weight: 500;
-    border-radius: 4px;
-    margin: 1px 4px;
-    cursor: pointer;
-}
-
-.nav-link:hover {
-    background-color: #374151;
-    color: #f9fafb;
-    padding-left: 20px;
-}
-
-.nav-link.active {
-    background-color: var(--wp-blue);
-    color: #ffffff;
-    font-weight: 600;
-    border-left: 3px solid #60a5fa;
-    margin-left: 0;
-    padding-left: 13px;
-}
-
-.nav-icon {
-    font-size: 16px;
-    width: 18px;
-    text-align: center;
-    opacity: 0.9;
-}
-
-/* Group separators - subtle visual grouping */
-.nav-section + .nav-section {
-    border-top: 1px solid rgba(75, 85, 99, 0.3);
-    padding-top: 8px;
-}
-
-/* Sidebar footer - more compact */
-.sidebar-footer {
-    padding: 12px;
-    border-top: 1px solid #374151;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.user-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background-color: var(--wp-blue);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    color: #ffffff;
-    font-size: 12px;
-}
-
-.user-details {
-    flex: 1;
-}
-
-.user-name {
-    font-size: 12px;
-    font-weight: 500;
-    color: #f3f4f6;
-    line-height: 1.2;
-}
-
-.logout-btn {
-    background: none;
-    border: none;
-    color: #9ca3af;
-    font-size: 11px;
-    cursor: pointer;
-    padding: 2px 0;
-    text-decoration: underline;
-    font-weight: 400;
-}
-
-.logout-btn:hover {
-    color: #f3f4f6;
-}
-
-/* Sidebar overall - ensure proper height and scrolling */
+/* ===== SIDEBAR POLISH ===== */
 .admin-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 240px;
-    height: 100vh;
-    background-color: var(--wp-admin-dark);
-    color: #e5e7eb;
-    overflow-y: auto;
-    overflow-x: hidden;
-    z-index: 1000;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+    width: 260px;
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--border-light);
 }
 
 .admin-sidebar::-webkit-scrollbar {
@@ -1878,36 +1029,436 @@ th:has(input[type="checkbox"])::after {
 }
 
 .admin-sidebar::-webkit-scrollbar-thumb {
-    background: rgba(156, 163, 175, 0.3);
+    background: rgba(148, 163, 184, 0.3);
     border-radius: 2px;
 }
 
 .admin-sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgba(156, 163, 175, 0.5);
+    background: rgba(148, 163, 184, 0.5);
 }
 
-/* Sidebar brand - more compact */
-.sidebar-header {
-    padding: 16px 16px 12px 16px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+.nav-link {
+    font-size: 14px;
+    line-height: 1.4;
+    padding: var(--space-3) var(--space-5);
+    border-radius: 6px;
+    margin: 1px var(--space-2);
+}
+
+.nav-icon {
+    font-size: 16px;
+    width: 20px;
+    opacity: 0.8;
+}
+
+.sidebar-footer {
+    padding: var(--space-5);
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-light);
+}
+
+.user-avatar {
+    border-radius: 6px;
+}
+
+.user-name {
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 .sidebar-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
+    font-size: 16px;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.empty-state h6 {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+}
+
+.empty-state p {
     font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: var(--space-4);
+}
+
+.empty-state .btn {
+    font-weight: 500;
+}
+
+/* ===== MEDIA MODALS ===== */
+#mediaPicker .nav-tabs {
+    border-bottom: 1px solid var(--border-light);
+}
+
+#mediaPicker .nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-bottom: none;
+    background-color: var(--bg-card);
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: all 0.15s ease;
+    border-radius: 4px 4px 0 0;
+}
+
+#mediaPicker .nav-tabs .nav-link:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+}
+
+#mediaPicker .nav-tabs .nav-link.active {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue) var(--primary-blue) var(--bg-card);
+    color: var(--text-white);
+    font-weight: 500;
+}
+
+#mediaPicker .nav-tabs .nav-link.active:hover {
+    background-color: var(--primary-blue-hover);
+    border-color: var(--primary-blue-hover) var(--primary-blue-hover) var(--bg-card);
+    color: var(--text-white);
+}
+
+#categoryTabs .nav-link {
+    border: 1px solid transparent;
+    border-bottom: none;
+    background-color: var(--bg-card);
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: all 0.15s ease;
+    border-radius: 4px 4px 0 0;
+}
+
+#categoryTabs .nav-link:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+}
+
+#categoryTabs .nav-link.active {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue) var(--primary-blue) var(--bg-card);
+    color: var(--text-white);
+    font-weight: 500;
+}
+
+#categoryTabs .nav-link.active:hover {
+    background-color: var(--primary-blue-hover);
+    border-color: var(--primary-blue-hover) var(--primary-blue-hover) var(--bg-card);
+    color: var(--text-white);
+}
+
+/* ===== MEDIA TOOLBAR ===== */
+.media-toolbar {
+    margin-bottom: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    box-shadow: var(--shadow-sm);
+}
+
+.media-toolbar .view-toggle .btn {
+    border-color: var(--border-medium);
+    color: var(--text-secondary);
+}
+
+.media-toolbar .view-toggle .btn.active {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: var(--text-white);
+}
+
+.media-toolbar .filters {
+    gap: var(--space-3);
+}
+
+.media-toolbar .stats {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.upload-zone {
+    border: 1px solid var(--border-medium);
+    background: var(--bg-hover);
+    transition: all 0.15s ease;
+    border-radius: 6px;
+}
+
+.upload-zone:hover {
+    border-color: var(--primary-blue);
+    background: rgba(96, 165, 250, 0.02);
+}
+
+.upload-zone.dragover {
+    border-color: var(--primary-blue);
+    background: rgba(96, 165, 250, 0.05);
+}
+
+/* ===== MEDIA LIST VIEW ===== */
+.media-list-table .table thead th {
+    padding: var(--space-4) var(--space-5);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.media-list-table .table tbody td {
+    padding: var(--space-4) var(--space-5);
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.media-list-table .preview-cell {
+    width: 80px;
+}
+
+.media-list-table .preview-cell img {
+    width: 60px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 3px;
+    border: 1px solid var(--border-light);
+}
+
+.media-list-table .filename-cell {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.media-list-table .filename-cell small {
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.media-list-table .dimensions-cell,
+.media-list-table .size-cell,
+.media-list-table .date-cell {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.media-list-table .actions-cell {
+    width: 180px;
+}
+
+.media-list-table .actions-cell .btn {
+    font-size: 12px;
+    padding: var(--space-2) var(--space-3);
+}
+
+/* ===== TOAST NOTIFICATIONS ===== */
+.toast-notification {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: var(--accent-green);
+    color: var(--text-white);
+    padding: var(--space-4) var(--space-5);
+    border-radius: 6px;
+    box-shadow: var(--shadow-md);
+    z-index: 9999;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-notification.error {
+    background: var(--accent-red);
+}
+
+.toast-notification.warning {
+    background: var(--accent-yellow);
+}
+
+/* ===== LOADING STATES ===== */
+.btn-loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid var(--text-white);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== AUTOSAVE STATUS ===== */
+.autosave-status {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-top: var(--space-2);
+}
+
+.autosave-status.saving {
+    color: var(--accent-yellow);
+}
+
+.autosave-status.saved {
+    color: var(--accent-green);
+}
+
+.autosave-status.error {
+    color: var(--accent-red);
+}
+
+/* ===== ROW ACTIONS ===== */
+.row-actions {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    margin-top: var(--space-2);
+    font-size: 12px;
+    line-height: 1.4;
+    transition: opacity 0.15s ease, max-height 0.15s ease;
+}
+
+.post-row:hover .row-actions {
+    opacity: 1;
+    max-height: 20px;
+}
+
+.row-actions a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 400;
+    margin: 0 4px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.row-actions a:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
+
+.row-actions a.text-danger {
+    color: var(--accent-red);
+}
+
+.row-actions a.text-danger:hover {
+    color: #dc2626;
+    text-decoration: underline;
+}
+
+.row-actions a:not(:last-child)::after {
+    content: '|';
+    color: var(--border-medium);
+    margin-left: 4px;
+    margin-right: 2px;
+    font-weight: normal;
+}
+
+.post-row {
+    min-height: 64px;
+}
+
+.post-row:hover .row-actions {
+    display: block;
+}
+
+/* ===== BULK ACTION BAR ===== */
+#bulk-form .row {
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: var(--space-3);
+    margin-bottom: 0;
+    background-color: var(--bg-card);
+    border-radius: 6px 6px 0 0;
+}
+
+#bulk-form .row .col-md-9 {
+    padding-top: var(--space-2);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 400;
+}
+
+#bulk-form {
+    margin-bottom: 0;
+}
+
+.table-responsive {
+    border: 1px solid var(--border-light);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+    border-radius: 0;
+    border: none;
+}
+
+/* ===== HEADER CHECKBOX ===== */
+th input[type="checkbox"] {
+    position: relative;
+    z-index: 1;
+}
+
+th input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    background: transparent;
+    cursor: pointer;
+    z-index: 0;
+}
+
+th:hover input[type="checkbox"]::before {
+    background: rgba(96, 165, 250, 0.05);
+    border-radius: 4px;
+}
+
+th:has(input[type="checkbox"]) {
+    position: relative;
     cursor: pointer;
 }
 
-.sidebar-brand:hover {
-    color: #ffffff;
-}
-
-.sidebar-brand span {
-    font-size: 16px;
+th:has(input[type="checkbox"])::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    cursor: pointer;
+    z-index: -1;
 }

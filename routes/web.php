@@ -39,6 +39,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class)->names('admin.roles');
     Route::resource('pages', \App\Http\Controllers\Admin\PageController::class)->names('admin.pages');
     Route::post('pages/{page}/upload', [\App\Http\Controllers\Admin\PageController::class, 'uploadBundle'])->name('admin.pages.upload');
+    Route::get('leads', [\App\Http\Controllers\Admin\LeadController::class, 'index'])->name('admin.leads.index');
+    Route::get('leads/export', [\App\Http\Controllers\Admin\LeadController::class, 'export'])->name('admin.leads.export');
     Route::get('site-settings', [\App\Http\Controllers\Admin\SiteSettingsController::class, 'index'])->name('admin.site-settings.index');
     Route::post('site-settings', [\App\Http\Controllers\Admin\SiteSettingsController::class, 'update'])->name('admin.site-settings.update');
 });

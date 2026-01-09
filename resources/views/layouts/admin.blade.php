@@ -42,6 +42,14 @@
         </div>
 
         <div class="nav-section">
+            <div class="nav-section-title">Leads</div>
+            <a href="{{ route('admin.leads.index') }}" class="nav-link {{ request()->routeIs('admin.leads.*') ? 'active' : '' }}">
+                <span class="nav-icon"><i class="fas fa-users"></i></span>
+                Leads
+            </a>
+        </div>
+
+        <div class="nav-section">
             <div class="nav-section-title">Analytics</div>
             <a href="{{ route('admin.analytics.index') }}" class="nav-link {{ request()->routeIs('admin.analytics.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fas fa-chart-bar"></i></span>
@@ -78,7 +86,7 @@
         @endcan
     </nav>
 
-    <div class="sidebar-footer">
+    {{-- <div class="sidebar-footer">
         @auth
         <div class="user-info">
             <div class="user-avatar">
@@ -93,7 +101,8 @@
             </div>
         </div>
         @endauth
-    </div>
+    </div> --}}
+
 </div>
 
     <!-- ===== ADMIN MAIN ===== -->
