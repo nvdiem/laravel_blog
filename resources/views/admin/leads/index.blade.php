@@ -28,7 +28,7 @@
 @endif
 
 {{-- ===== TABLE ===== --}}
-<div class="table-responsive posts-table">
+<div class="table-responsive posts-table admin-content-box">
     <table class="table table-hover align-middle mb-0">
         <thead>
             <tr>
@@ -76,11 +76,13 @@
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="text-center py-5 text-muted">
-                    <div class="empty-state">
-                        <i class="fas fa-users fa-3x mb-3 opacity-25"></i>
-                        <h6>No leads found</h6>
-                        <p class="mb-0">Lead submissions will appear here once users submit forms on published pages.</p>
+                <td colspan="6">
+                    <div class="admin-empty">
+                        <div class="admin-empty-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h6 class="admin-empty-title">No leads yet</h6>
+                        <p class="admin-empty-description">Lead submissions will appear here once users submit forms on published pages.</p>
                     </div>
                 </td>
             </tr>

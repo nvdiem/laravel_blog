@@ -224,15 +224,15 @@ body {
 
 /* ===== ADMIN TOP NAVBAR ===== */
 .admin-navbar {
-    background-color: #f1f5f9;
-    border-bottom: 1px solid var(--border-light);
+    background-color: #f6f7f7;
+    border-bottom: 1px solid #dcdcde;
     padding: var(--space-4) var(--space-6);
     height: 64px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: none;
 }
 
 .admin-navbar .navbar-text {
-    color: var(--text-primary);
+    color: #1d2327;
     font-weight: 600;
     font-size: 18px;
 }
@@ -245,10 +245,10 @@ body {
 
 /* ===== ADMIN FOOTER ===== */
 .admin-footer {
-    background-color: #f0f4f8;
-    border-top: 1px solid var(--border-light);
-    color: var(--text-muted);
-    font-size: 12px;
+    background-color: #f0f0f1;
+    border-top: 1px solid #dcdcde;
+    color: #646970;
+    font-size: 13px;
     padding: var(--space-4);
 }
 
@@ -333,7 +333,7 @@ body {
     border: 1px solid var(--border-light);
     box-shadow: var(--shadow-sm);
     border-radius: 8px;
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 .table {
@@ -1461,4 +1461,78 @@ th:has(input[type="checkbox"])::after {
     bottom: 0;
     cursor: pointer;
     z-index: -1;
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 767px) {
+    .admin-sidebar {
+        position: fixed;
+        left: -260px;
+        transition: left 0.3s ease;
+        z-index: 1050;
+    }
+
+    .admin-sidebar.open {
+        left: 0;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
+    .admin-main {
+        margin-left: 0;
+    }
+
+    .admin-navbar {
+        padding: var(--space-2) var(--space-4);
+    }
+
+    .admin-footer {
+        padding: var(--space-2);
+        font-size: 12px;
+    }
+
+    .posts-table .categories-column,
+    .posts-table .author-column,
+    .posts-table .date-column,
+    .posts-table .tags-column,
+    .posts-table .comments-column,
+    .posts-table .views-column {
+        display: none;
+    }
+
+    .wp-status-filters {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: var(--space-3) var(--space-4);
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .wp-status-filters a {
+        padding: var(--space-2) var(--space-3);
+        font-size: 14px;
+    }
+
+    .users-table .role-column,
+    .users-table .posts-column {
+        display: none;
+    }
+
+    .media-list-table .dimensions-cell,
+    .media-list-table .size-cell,
+    .media-list-table .date-cell {
+        display: none;
+    }
 }

@@ -11,7 +11,7 @@
 </div>
 
 {{-- ===== TOOLBAR ===== --}}
-<div class="bulk-actions-container d-flex justify-content-between align-items-center">
+<div class="bulk-actions-container media-toolbar d-flex justify-content-between align-items-center">
     <div class="d-flex gap-2 flex-wrap align-items-center">
         {{-- View Toggle --}}
         <div class="btn-group btn-group-sm">
@@ -77,7 +77,7 @@
 {{-- ===== GRID VIEW (Default) ===== --}}
 <div id="media-grid" class="media-grid mt-3">
     @forelse($media as $item)
-        <div class="media-item" data-id="{{ $item->id }}">
+        <div class="media-item media-card" data-id="{{ $item->id }}">
             <div class="media-thumbnail">
                 @if($item->isImage())
                     <img src="{{ $item->url }}" alt="{{ $item->alt_text ?? $item->file_name }}" loading="lazy">
@@ -110,11 +110,14 @@
             </div>
         </div>
     @empty
-        <div class="col-12 text-center py-5 text-muted">
-            <i class="fas fa-images fa-3x mb-3 opacity-25"></i>
-            <p>No media files found.</p>
-            <button class="btn btn-primary btn-sm" onclick="openUploadModal()">
-                <i class="fas fa-upload"></i> Upload Your First File
+        <div class="admin-empty">
+            <div class="admin-empty-icon">
+                <i class="fas fa-images"></i>
+            </div>
+            <h6 class="admin-empty-title">No media files yet</h6>
+            <p class="admin-empty-description">Upload your first image or document to get started.</p>
+            <button class="btn btn-primary" onclick="openUploadModal()">
+                <i class="fas fa-upload me-1"></i> Upload Files
             </button>
         </div>
     @endforelse

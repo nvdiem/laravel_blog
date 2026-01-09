@@ -48,7 +48,7 @@
 <div class="bulk-actions-container d-flex justify-content-between align-items-center">
     <div class="d-flex gap-2 flex-wrap">
         {{-- Bulk Actions --}}
-        <form method="POST" action="{{ route('admin.posts.bulk') }}" id="bulk-form" class="d-flex gap-2 align-items-center">
+        <form method="POST" action="{{ route('admin.posts.bulk') }}" id="bulk-form" class="d-flex gap-2 align-items-center d-none d-md-flex">
             @csrf
             <select name="action" class="form-select form-select-sm w-auto" id="bulk-action-select">
                 <option value="">Bulk Actions</option>
@@ -60,7 +60,7 @@
         </form>
 
         {{-- Filters --}}
-        <form method="GET" id="filter-form" class="d-flex gap-2 align-items-center mb-0 ms-2">
+        <form method="GET" id="filter-form" class="d-flex gap-2 align-items-center mb-0 ms-2 d-none d-md-flex">
             <select name="date" class="form-select form-select-sm w-auto">
                 <option value="">All Dates</option>
                 @foreach($dates as $date)
@@ -80,26 +80,27 @@
             </select>
 
             <button type="submit" class="btn btn-outline-secondary btn-sm">Filter</button>
-            
+
             @if(request()->hasAny(['search','status','category_id','tag_id', 'date']))
                 <a href="{{ route('admin.posts.index') }}" class="btn btn-link btn-sm text-decoration-none p-0 ms-1 text-danger">
                     Clear
                 </a>
             @endif
         </form>
-
-        {{-- Search (Moved here) --}}
-        <form method="GET" class="d-flex gap-1 align-items-center mb-0 ms-2" style="max-width: 200px;">
-            <input type="text" name="search" class="form-control form-control-sm" 
-                   placeholder="Search posts..." value="{{ request('search') }}">
-            <button class="btn btn-outline-secondary btn-sm" type="submit">Search</button>
-        </form>
     </div>
-    
+
     {{-- Pagination Summary (Right) --}}
     <div class="text-muted small">
         {{ $posts->total() }} items
     </div>
+</div>
+
+{{-- ===== MOBILE SEARCH (ABOVE TABLE) ===== --}}
+<div class="d-md-none mb-3">
+    <form method="GET" class="d-flex gap-2">
+        <input type="text" name="search" class="form-control" placeholder="Search posts..." value="{{ request('search') }}">
+        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+    </form>
 </div>
 
 {{-- ===== ALERTS ===== --}}

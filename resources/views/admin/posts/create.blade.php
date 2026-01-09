@@ -67,9 +67,9 @@
         <div class="col-lg-3">
 
             {{-- PUBLISH META BOX --}}
-            <div class="card mb-3">
-                <div class="card-header">Publish</div>
-                <div class="card-body">
+            <div class="admin-card mb-3">
+                <div class="admin-card-header">Publish</div>
+                <div class="admin-card-body">
                     <div class="mb-3">
                         <label class="form-label small text-muted">Status:</label>
                         <select class="form-select form-select-sm" name="status" required>
@@ -90,9 +90,9 @@
             </div>
 
             {{-- CATEGORY META BOX --}}
-            <div class="card mb-3">
-                <div class="card-header">Categories</div>
-                <div class="card-body p-0">
+            <div class="admin-card mb-3">
+                <div class="admin-card-header">Categories</div>
+                <div class="admin-card-body p-0">
                     <div class="p-2 border-bottom bg-light">
                         <ul class="nav nav-tabs nav-fill small card-header-tabs" id="categoryTabs" role="tablist">
                             <li class="nav-item">
@@ -145,9 +145,9 @@
             </div>
 
             {{-- TAGS META BOX --}}
-            <div class="card mb-3">
-                <div class="card-header">Tags</div>
-                <div class="card-body">
+            <div class="admin-card mb-3">
+                <div class="admin-card-header">Tags</div>
+                <div class="admin-card-body">
                     <div class="mb-2">
                         <input type="text" id="tag-input" class="form-control form-control-sm" placeholder="Add new tag" autocomplete="off">
                         <small class="text-muted d-block mt-1">Separate tags with commas</small>
@@ -159,9 +159,9 @@
             </div>
 
             {{-- THUMBNAIL META BOX --}}
-            <div class="card mb-3">
-                <div class="card-header">Featured Image</div>
-                <div class="card-body">
+            <div class="admin-card mb-3">
+                <div class="admin-card-header">Featured Image</div>
+                <div class="admin-card-body">
                     <div id="thumbnailPreview" class="mb-2 bg-light border d-flex align-items-center justify-content-center text-muted small" style="min-height: 150px; border-style: dashed !important;">
                         <span id="noImageText">No Image Selected</span>
                         <img id="thumbnailImage" src="" alt="Thumbnail" class="img-fluid d-none" style="max-height: 200px;">
@@ -186,9 +186,9 @@
             
             
             {{-- SEO META BOX --}}
-             <div class="card mb-3">
-                <div class="card-header">SEO Settings</div>
-                <div class="card-body">
+             <div class="admin-card mb-3">
+                <div class="admin-card-header">SEO Settings</div>
+                <div class="admin-card-body">
                     <div class="mb-2">
                         <label class="form-label small text-muted">SEO Title</label>
                         <input type="text" class="form-control form-control-sm" name="seo_title" value="{{ old('seo_title') }}">

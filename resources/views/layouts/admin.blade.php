@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Admin · Laravel Blog</title>
+    <title>{{ config('app.name') }} — Dashboard</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin-custom.css') }}" rel="stylesheet">
 
     @stack('head')
 </head>
@@ -20,7 +21,7 @@
 <div class="admin-sidebar">
     <div class="sidebar-header">
         <a class="sidebar-brand" href="{{ url('/admin') }}">
-            <span class="nav-icon"><i class="fas fa-chart-line"></i></span> Laravel Blog
+            <span class="nav-icon"><i class="fas fa-chart-line"></i></span> {{ config('app.name') }}
         </a>
     </div>
 
@@ -105,13 +106,18 @@
 
 </div>
 
+<div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
     <!-- ===== ADMIN MAIN ===== -->
     <div class="admin-main">
         <!-- ===== ADMIN NAVBAR ===== -->
         <nav class="navbar navbar-light bg-white admin-navbar">
             <div class="container-fluid">
+                <button class="navbar-toggler d-md-none me-2" type="button" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <span class="navbar-text mb-0 fw-semibold">
-                    {{ $title ?? 'Admin Panel' }}
+                    {{ $title ?? 'Dashboard' }}
                 </span>
 
                 <div class="d-flex gap-2">
@@ -131,7 +137,7 @@
 <!-- ===== FOOTER ===== -->
 <footer class="border-top py-3 bg-white admin-footer">
     <div class="container-fluid text-center">
-        Laravel Blog · Admin Panel
+{{ config('app.name') }}
     </div>
 </footer>
 
@@ -142,6 +148,17 @@
 function openMediaLibrary() {
     const modal = new bootstrap.Modal(document.getElementById('mediaLibraryModal'));
     modal.show();
+}
+
+// Sidebar toggle functions
+function toggleSidebar() {
+    document.querySelector('.admin-sidebar').classList.toggle('open');
+    document.querySelector('.sidebar-overlay').classList.toggle('show');
+}
+
+function closeSidebar() {
+    document.querySelector('.admin-sidebar').classList.remove('open');
+    document.querySelector('.sidebar-overlay').classList.remove('show');
 }
 </script>
 

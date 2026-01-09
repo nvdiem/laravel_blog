@@ -98,7 +98,7 @@
 @endif
 
 {{-- ===== TABLE ===== --}}
-<div class="table-responsive posts-table">
+<div class="table-responsive posts-table admin-table-container">
     <table class="table table-hover align-middle mb-0">
         <thead>
             <tr>
@@ -122,28 +122,28 @@
                 </td>
                 <td>
                     @if($page->status === 'published')
-                        <span class="badge badge-published">Published</span>
+                        <span class="badge-soft badge-soft-success">Published</span>
                     @elseif($page->status === 'draft')
-                        <span class="badge badge-draft">Draft</span>
+                        <span class="badge-soft badge-soft-warning">Draft</span>
                     @else
-                        <span class="badge bg-secondary">Disabled</span>
+                        <span class="badge-soft">Disabled</span>
                     @endif
                 </td>
                 <td class="date-column">
                     <span class="text-muted">{{ $page->updated_at->format('M j, Y') }}</span>
                 </td>
-                <td class="text-center">
-                    <div class="btn-group btn-group-sm">
-                        <a href="{{ route('admin.pages.edit', $page) }}" class="btn btn-outline-secondary" title="Edit">
+                {{-- <td class="text-center">
+                    <div class="d-flex gap-1 justify-content-center">
+                        <a href="{{ route('admin.pages.edit', $page) }}" class="btn btn-outline-secondary btn-sm" title="Edit">
                             <i class="fas fa-edit"></i>
                         </a>
                         @if($page->storage_path)
-                            <button class="btn btn-outline-info" title="Upload New Bundle"
+                            <button class="btn btn-outline-info btn-sm" title="Upload New Bundle"
                                     onclick="openUploadModal({{ $page->id }}, '{{ addslashes($page->title) }}')">
                                 <i class="fas fa-upload"></i>
                             </button>
                         @else
-                            <button class="btn btn-outline-primary" title="Upload Bundle"
+                            <button class="btn btn-outline-primary btn-sm" title="Upload Bundle"
                                     onclick="openUploadModal({{ $page->id }}, '{{ addslashes($page->title) }}')">
                                 <i class="fas fa-upload"></i>
                             </button>
@@ -152,22 +152,56 @@
                               onsubmit="return confirm('Are you sure you want to delete this page?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger" title="Delete">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
                     </div>
-                </td>
+                </td> --}}
+
+                <td class="text-center">
+    <div class="admin-actions justify-content-center">
+        
+        <a href="{{ route('admin.pages.edit', $page) }}"
+           class="action-btn"
+           title="Edit">
+            <i class="fas fa-pen"></i>
+        </a>
+
+        <button class="action-btn"
+                title="Upload Bundle"
+                onclick="openUploadModal({{ $page->id }}, '{{ addslashes($page->title) }}')">
+            <i class="fas fa-upload"></i>
+        </button>
+
+        <form method="POST"
+              action="{{ route('admin.pages.destroy', $page) }}"
+              class="m-0"
+              onsubmit="return confirm('Are you sure you want to delete this page?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                    class="action-btn action-delete"
+                    title="Delete">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+
+    </div>
+</td>
+
             </tr>
             @empty
             <tr>
-                <td colspan="5" class="text-center py-5 text-muted">
-                    <div class="empty-state">
-                        <i class="fas fa-file fa-3x mb-3 opacity-25"></i>
-                        <h6>No pages found</h6>
-                        <p class="mb-0">Create your first page to get started.</p>
-                        <a href="{{ route('admin.pages.create') }}" class="btn btn-primary btn-sm mt-3">
-                            <i class="fas fa-plus"></i> Add New Page
+                <td colspan="5">
+                    <div class="admin-empty">
+                        <div class="admin-empty-icon">
+                            <i class="fas fa-file"></i>
+                        </div>
+                        <h6 class="admin-empty-title">No pages yet</h6>
+                        <p class="admin-empty-description">Create your first page to get started.</p>
+                        <a href="{{ route('admin.pages.create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i> Add New Page
                         </a>
                     </div>
                 </td>
