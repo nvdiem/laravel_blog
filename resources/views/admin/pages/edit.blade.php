@@ -8,7 +8,7 @@
 
 <form action="{{ route('admin.pages.update', $page) }}" method="POST">
     @csrf
-    @method('PUT')
+    @method('PATCH')
 
     <div class="row g-3">
         {{-- Main Content --}}
@@ -23,18 +23,12 @@
             {{-- Slug --}}
             <div class="mb-3">
                 <label for="slug" class="form-label">Page Slug <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="slug" name="slug"
-                       value="{{ old('slug', $page->slug) }}" placeholder="page-slug" required>
-                <div class="form-text">Used in URL: /p/{slug}</div>
-            </div>
-
-            {{-- Public URL --}}
-            <div class="mb-3">
-                <label class="form-label">Public URL</label>
                 <div class="input-group">
                     <span class="input-group-text">{{ url('/p') }}/</span>
                     <input type="text" class="form-control" value="{{ $page->slug }}" readonly>
                 </div>
+                <input type="hidden" name="slug" value="{{ $page->slug }}">
+                <div class="form-text">Used in URL: /p/{slug}. Slug cannot be changed after creation.</div>
                 @if($page->status === 'published')
                 <div class="form-text">
                     <a href="{{ url('/p/' . $page->slug) }}" target="_blank" class="text-primary">
@@ -89,29 +83,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Delete Section --}}
-            @if($page->status !== 'published')
-            <div class="card mt-4 border-danger">
-                <div class="card-header bg-danger text-white">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    Danger Zone
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-warning">
-                        <strong>Warning:</strong> Deleting this page will permanently remove it and cannot be undone.
-                    </div>
-                    <form method="POST" action="{{ route('admin.pages.destroy', $page) }}"
-                          onsubmit="return confirm('Are you absolutely sure you want to permanently delete this page? This action cannot be undone.')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash me-2"></i> Permanently Delete Page
-                        </button>
-                    </form>
-                </div>
-            </div>
-            @endif
         </div>
     </div>
 </form>

@@ -19,6 +19,10 @@ class Page extends Model
         'storage_path',
     ];
 
+    protected $guarded = [
+        'public_token',
+    ];
+
     protected static function booted()
     {
         static::creating(function ($page) {

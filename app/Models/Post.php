@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\DB;
 
 class Post extends Model
 {
@@ -93,7 +94,7 @@ class Post extends Model
      */
     public function scopePopular($query, $days = 7, $minViews = 5)
     {
-        return $query->select('posts.*')
+        return $query->select('posts.id', DB::raw('COUNT(post_views.id) as view_count'))
             ->leftJoin('post_views', 'posts.id', '=', 'post_views.post_id')
             ->where('post_views.viewed_at', '>=', now()->subDays($days))
             ->groupBy('posts.id')

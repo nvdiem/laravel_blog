@@ -7,6 +7,7 @@ use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use ZipArchive;
 
 class PageController extends Controller
@@ -67,9 +68,13 @@ class PageController extends Controller
             $validated['slug'] = Str::slug($validated['title']);
         }
 
-        $validated['created_by'] = auth()->id();
-
-        Page::create($validated);
+        $page = new Page();
+        $page->title = $validated['title'];
+        $page->slug = $validated['slug'];
+        $page->status = $validated['status'];
+        $page->allow_index = $validated['allow_index'] ?? false;
+        $page->created_by = auth()->id();
+        $page->save();
 
         return redirect()->route('admin.pages.index')
             ->with('success', 'Page created successfully.');
@@ -101,10 +106,18 @@ class PageController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:pages,slug,' . $page->id,
             'status' => 'required|in:draft,published,disabled',
-            'allow_index' => 'boolean',
         ]);
+        Log::info('BEFORE UPDATE', $page->getAttributes());
 
-        $page->update($validated);
+
+        // Explicitly update only the editable fields to prevent data loss
+        $page->title = $validated['title'];
+        $page->slug = $validated['slug'];
+        $page->status = $validated['status'];
+        $page->allow_index = $request->has('allow_index');
+        $page->created_by = auth()->id();
+        $page->save();
+        Log::info('AFTER SAVE', $page->fresh()->getAttributes());
 
         return redirect()->route('admin.pages.index')
             ->with('success', 'Page updated successfully.');
