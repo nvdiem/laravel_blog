@@ -46,7 +46,33 @@ class Media extends Model
      */
     public function getUrlAttribute(): string
     {
-        return Storage::disk($this->disk)->url($this->file_path);
+        return $this->getPublicUrl();
+    }
+
+    /**
+     * Get public URL for the media file
+     */
+    public function getPublicUrl(): string
+    {
+        // New content structure (Mode A)
+        if ($this->disk === config('cms.storage.media.disk')) {
+            return url(config('cms.storage.media.url_base') . '/' . $this->file_path);
+        }
+
+        // Backward compatibility for old data
+        if (config('cms.backward_compatibility.enabled') &&
+            $this->disk === config('cms.backward_compatibility.old_media_disk')) {
+            return asset('storage/' . $this->file_path);
+        }
+
+        // Fallback to Storage URL (construct manually since some disks may not have url config)
+        $diskConfig = config("filesystems.disks.{$this->disk}");
+        if (isset($diskConfig['url'])) {
+            return rtrim($diskConfig['url'], '/') . '/' . $this->file_path;
+        }
+
+        // Last resort - construct basic URL
+        return url($this->file_path);
     }
 
     public function getFormattedSizeAttribute(): string

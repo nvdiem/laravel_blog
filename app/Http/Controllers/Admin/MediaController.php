@@ -56,15 +56,16 @@ class MediaController extends Controller
     public function upload(Request $request)
     {
         try {
-            $maxSize = config('media.upload.max_size', 5120);
-            
+            $maxSize = config('cms.security.upload_limits.max_file_size', 10 * 1024 * 1024); // 10MB
+            $maxFiles = config('cms.security.upload_limits.max_files_per_upload', 10);
+
             $request->validate([
-                'files' => 'required|array',
-                'files.*' => "image|mimes:jpg,jpeg,png,webp,gif|max:{$maxSize}",
+                'files' => 'required|array|max:' . $maxFiles,
+                'files.*' => "required|file|max:{$maxSize}|image|mimes:jpg,jpeg,png,webp,gif",
             ]);
 
             $files = $request->file('files');
-            
+
             if (!$files || count($files) === 0) {
                 return response()->json([
                     'success' => false,
@@ -75,24 +76,28 @@ class MediaController extends Controller
             $uploaded = [];
 
             foreach ($files as $file) {
+                // Security validation
+                if (!$this->isFileAllowed($file)) {
+                    continue; // Skip dangerous files
+                }
+
                 $originalName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
+                $extension = strtolower($file->getClientOriginalExtension());
                 $filename = time() . '_' . uniqid() . '.' . $extension;
-                
-                // Store in year/month structure
-                $storedPath = $file->storeAs(
-                    'media/' . date('Y') . '/' . date('m'),
-                    $filename,
-                    config('media.storage.disk', 'public')
-                );
+
+                // Store in organized structure: uploads/YYYY/MM/filename.ext
+                $relativePath = config('cms.storage.media.path') . '/' . date('Y') . '/' . date('m') . '/' . $filename;
+
+                $disk = config('cms.storage.media.disk');
+                Storage::disk($disk)->put($relativePath, file_get_contents($file->getRealPath()));
 
                 // Extract image dimensions
                 $dimensions = @getimagesize($file->getRealPath());
 
                 $media = Media::create([
                     'file_name' => $originalName,
-                    'file_path' => $storedPath,
-                    'disk' => config('media.storage.disk', 'public'),
+                    'file_path' => $relativePath,
+                    'disk' => $disk,
                     'mime_type' => $file->getMimeType(),
                     'size' => $file->getSize(),
                     'width' => $dimensions[0] ?? null,
@@ -101,6 +106,13 @@ class MediaController extends Controller
                 ]);
 
                 $uploaded[] = $media;
+            }
+
+            if (empty($uploaded)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No valid files were uploaded.',
+                ], 400);
             }
 
             if ($request->expectsJson()) {
@@ -112,7 +124,7 @@ class MediaController extends Controller
             }
 
             return back()->with('success', count($uploaded) . ' file(s) uploaded successfully.');
-            
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($request->expectsJson()) {
                 return response()->json([
@@ -123,17 +135,43 @@ class MediaController extends Controller
             }
             throw $e;
         } catch (\Exception $e) {
-            \Log::error('Media upload error: ' . $e->getMessage());
-            
+            \Illuminate\Support\Facades\Log::error('Media upload error: ' . $e->getMessage());
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Upload failed: ' . $e->getMessage(),
                 ], 500);
             }
-            
+
             return back()->withErrors(['upload' => 'Upload failed: ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Check if file is allowed (security validation)
+     */
+    private function isFileAllowed($file): bool
+    {
+        $extension = strtolower($file->getClientOriginalExtension());
+        $mimeType = $file->getMimeType();
+
+        // Check forbidden extensions
+        if (in_array($extension, config('cms.security.forbidden_extensions', []))) {
+            \Illuminate\Support\Facades\Log::warning("Blocked upload of forbidden file extension: {$extension}");
+            return false;
+        }
+
+        // Check forbidden MIME types
+        if (in_array($mimeType, config('cms.security.forbidden_mime_types', []))) {
+            \Illuminate\Support\Facades\Log::warning("Blocked upload of forbidden MIME type: {$mimeType}");
+            return false;
+        }
+
+        // Additional security checks can be added here
+        // e.g., file content scanning, virus scanning, etc.
+
+        return true;
     }
 
     /**

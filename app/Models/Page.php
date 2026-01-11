@@ -16,7 +16,10 @@ class Page extends Model
         'status',
         'allow_index',
         'created_by',
-        'storage_path',
+        'storage_path', // Legacy field - keep for backward compatibility
+        'bundle_disk',
+        'bundle_path',
+        'bundle_version',
     ];
 
     protected $guarded = [

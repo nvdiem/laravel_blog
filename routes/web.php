@@ -51,3 +51,24 @@ Route::get('/p/{slug}', [\App\Http\Controllers\Frontend\PageController::class, '
 Route::get('/posts/{slug}', [FrontendPostController::class, 'show'])->name('posts.show');
 Route::get('/category/{slug}', [\App\Http\Controllers\Frontend\CategoryController::class, 'show'])->name('categories.show');
 Route::get('/preview/posts/{post}', [\App\Http\Controllers\Frontend\PostController::class, 'preview'])->name('posts.preview')->middleware('signed');
+
+// Installer routes
+Route::middleware('installation')->prefix('install')->group(function () {
+    Route::get('/', [\App\Http\Controllers\InstallController::class, 'index'])->name('install.index');
+    Route::post('/start', [\App\Http\Controllers\InstallController::class, 'start'])->name('install.start');
+    Route::get('/step/{step}', [\App\Http\Controllers\InstallController::class, 'showStep'])->name('install.step');
+    Route::post('/step/{step}', [\App\Http\Controllers\InstallController::class, 'processStep'])->name('install.process');
+    Route::get('/complete', [\App\Http\Controllers\InstallController::class, 'complete'])->name('install.complete');
+    Route::get('/progress', [\App\Http\Controllers\InstallController::class, 'progress'])->name('install.progress');
+});
+
+// Updater routes
+Route::middleware(['auth', 'can:system.configure'])->prefix('update')->group(function () {
+    Route::get('/', [\App\Http\Controllers\UpdateController::class, 'index'])->name('update.index');
+    Route::post('/start', [\App\Http\Controllers\UpdateController::class, 'start'])->name('update.start');
+    Route::get('/step/{step}', [\App\Http\Controllers\UpdateController::class, 'showStep'])->name('update.step');
+    Route::post('/step/{step}', [\App\Http\Controllers\UpdateController::class, 'processStep'])->name('update.process');
+    Route::get('/complete', [\App\Http\Controllers\UpdateController::class, 'complete'])->name('update.complete');
+    Route::get('/progress', [\App\Http\Controllers\UpdateController::class, 'progress'])->name('update.progress');
+    Route::post('/cancel', [\App\Http\Controllers\UpdateController::class, 'cancel'])->name('update.cancel');
+});

@@ -178,7 +178,7 @@
                 <div class="card-body">
                     <div id="thumbnailPreview" class="mb-2 bg-light border d-flex align-items-center justify-content-center text-muted small" style="min-height: 150px; border-style: dashed !important;">
                         @if($post->thumbnail)
-                            <img id="thumbnailImage" src="{{ asset('storage/'.$post->thumbnail) }}" alt="Thumbnail" class="img-fluid" style="max-height: 200px;">
+                            <img id="thumbnailImage" src="{{ $post->thumbnail }}" alt="Thumbnail" class="img-fluid" style="max-height: 200px;">
                             <span id="noImageText" class="d-none">No Image Selected</span>
                         @else
                             <span id="noImageText">No Image Selected</span>

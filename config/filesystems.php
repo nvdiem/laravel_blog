@@ -44,6 +44,38 @@ return [
             'throw' => false,
         ],
 
+        'content' => [
+            'driver' => 'local',
+            'root' => public_path('content'),
+            'url' => env('APP_URL').'/content',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
+        'content_uploads' => [
+            'driver' => 'local',
+            'root' => public_path('content/uploads'),
+            'url' => env('APP_URL').'/content/uploads',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
+        'page_bundles' => [
+            'driver' => 'local',
+            'root' => public_path('content/page-bundles'),
+            'url' => env('APP_URL').'/content/page-bundles',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
+        'content_tmp' => [
+            'driver' => 'local',
+            'root' => public_path('content/tmp'),
+            'url' => env('APP_URL').'/content/tmp',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

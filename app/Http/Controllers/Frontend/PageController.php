@@ -26,13 +26,15 @@ class PageController extends Controller
             abort(404);
         }
 
-        // Page content not ready yet (storage_path is null)
-        if (is_null($page->storage_path)) {
+        // Check if page has bundle (new system or legacy)
+        $bundleInfo = $this->getBundleInfo($page);
+
+        if (!$bundleInfo) {
             return response()->view('frontend.pages.coming-soon', compact('page'), 200);
         }
 
         // Load and serve the page HTML
-        $htmlPath = storage_path("app/public/{$page->storage_path}/index.html");
+        $htmlPath = $bundleInfo['full_path'];
 
         if (!file_exists($htmlPath)) {
             return response()->view('frontend.pages.coming-soon', compact('page'), 200);
@@ -45,7 +47,7 @@ class PageController extends Controller
         $htmlContent = $this->injectCmsConfig($htmlContent, $cmsConfig);
 
         // Fix asset paths to be absolute URLs
-        $htmlContent = $this->fixAssetPaths($htmlContent, $page->storage_path);
+        $htmlContent = $this->fixAssetPaths($htmlContent, $bundleInfo);
 
         return response($htmlContent, 200)
             ->header('Content-Type', 'text/html');
@@ -88,11 +90,63 @@ HTML;
     }
 
     /**
+     * Get bundle information for the page (new or legacy)
+     */
+    private function getBundleInfo(Page $page): ?array
+    {
+        // Check for new bundle system first
+        if ($page->bundle_disk && $page->bundle_path) {
+            $disk = $page->bundle_disk;
+            $path = $page->bundle_path;
+
+            // Check if file exists in new system
+            if (Storage::disk($disk)->exists($path . '/index.html')) {
+                $diskConfig = config("filesystems.disks.{$disk}");
+
+                // For content disks, construct path relative to public/content
+                if (str_starts_with($disk, 'content_')) {
+                    $fullPath = public_path('content/' . $path . '/index.html');
+                    $baseUrl = rtrim($diskConfig['url'] ?? url('/content'), '/') . '/' . $path;
+                } else {
+                    // Fallback for other disks - construct path manually
+                    $rootPath = $diskConfig['root'] ?? '';
+                    $fullPath = rtrim($rootPath, '/') . '/' . $path . '/index.html';
+                    $baseUrl = rtrim($diskConfig['url'] ?? '', '/') . '/' . $path;
+                }
+
+                return [
+                    'disk' => $disk,
+                    'path' => $path,
+                    'full_path' => $fullPath,
+                    'base_url' => $baseUrl,
+                    'is_legacy' => false
+                ];
+            }
+        }
+
+        // Fallback to legacy system (backward compatibility)
+        if ($page->storage_path && config('cms.backward_compatibility.enabled')) {
+            $legacyPath = storage_path("app/public/{$page->storage_path}/index.html");
+            if (file_exists($legacyPath)) {
+                return [
+                    'disk' => 'public',
+                    'path' => $page->storage_path,
+                    'full_path' => $legacyPath,
+                    'base_url' => asset("storage/{$page->storage_path}"),
+                    'is_legacy' => true
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Fix relative asset paths to absolute URLs
      */
-    private function fixAssetPaths(string $html, string $storagePath): string
+    private function fixAssetPaths(string $html, array $bundleInfo): string
     {
-        $baseUrl = asset("storage/{$storagePath}");
+        $baseUrl = $bundleInfo['base_url'];
 
         // Convert relative paths to absolute URLs
         $html = preg_replace_callback('/(src|href)=["\']([^"\']*)["\']/', function($matches) use ($baseUrl) {
