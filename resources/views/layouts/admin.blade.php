@@ -52,7 +52,7 @@
     <div class="sidebar-header">
         <a class="sidebar-brand" href="{{ url('/admin') }}">
             <span class="nav-icon">
-                <img src="{{ asset(config('brand.assets.logo.icon')) }}" alt="{{ config('brand.name') }}" style="width: 20px; height: 20px; filter: brightness(0) invert(1);">
+                <img src="{{ asset(config('brand.assets.logo.icon')) }}" alt="{{ config('brand.name') }}" style="width: 20px; height: 20px;">
             </span>
             {{ config('brand.name') }}
         </a>
@@ -119,23 +119,6 @@
         </div>
         @endcan
     </nav>
-
-    {{-- <div class="sidebar-footer">
-        @auth
-        <div class="user-info">
-            <div class="user-avatar">
-                {{ substr(Auth::user()->name, 0, 1) }}
-            </div>
-            <div class="user-details">
-                <div class="user-name">{{ Auth::user()->name }}</div>
-                <form action="{{ route('logout') }}" method="POST" class="logout-form">
-                    @csrf
-                    <button type="submit" class="logout-btn">Logout</button>
-                </form>
-            </div>
-        </div>
-        @endauth
-    </div> --}}
 
 </div>
 

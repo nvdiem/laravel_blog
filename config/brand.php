@@ -119,7 +119,7 @@ return [
     */
 
     'footer' => [
-        'copyright' => '© ' . date('Y') . ' PointOne. Tất cả quyền được bảo lưu.',
+        'copyright' => '© ' . date('Y') . ' PointOne. All rights reserved.',
         'links' => [
             'about' => 'https://pointone.vn/about',
             'contact' => 'https://pointone.vn/contact',

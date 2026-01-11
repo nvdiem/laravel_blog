@@ -260,6 +260,8 @@ tinymce.init({
   menubar:true,
   plugins:'lists link code table fullscreen',
   toolbar:'undo redo | blocks | bold italic | bullist numlist | link table | media | code fullscreen',
+  relative_urls: false,
+  remove_script_host: false,
 
   // Custom media button
   setup: function(editor) {

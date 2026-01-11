@@ -126,9 +126,70 @@ class PostService
             }
         }
 
-        // If it's an uploaded file, we should upload it to media library first
-        // For now, return null - thumbnails should be selected from media library
+        // If it's an uploaded file, upload it to media library
+        if ($thumbnail instanceof \Illuminate\Http\UploadedFile) {
+            return $this->uploadThumbnailFile($thumbnail);
+        }
+
         return null;
+    }
+
+    /**
+     * Upload thumbnail file and create Media record
+     */
+    protected function uploadThumbnailFile(\Illuminate\Http\UploadedFile $file): ?int
+    {
+        // Security validation
+        if (!$this->isFileAllowed($file)) {
+            return null;
+        }
+
+        $originalName = $file->getClientOriginalName();
+        $extension = strtolower($file->getClientOriginalExtension());
+        $filename = time() . '_' . uniqid() . '.' . $extension;
+
+        // Store in organized structure: uploads/YYYY/MM/filename.ext
+        $relativePath = config('cms.storage.media.path') . '/' . date('Y') . '/' . date('m') . '/' . $filename;
+
+        $disk = config('cms.storage.media.disk');
+        \Illuminate\Support\Facades\Storage::disk($disk)->put($relativePath, file_get_contents($file->getRealPath()));
+
+        // Extract image dimensions
+        $dimensions = @getimagesize($file->getRealPath());
+
+        $media = \App\Models\Media::create([
+            'file_name' => $originalName,
+            'file_path' => $relativePath,
+            'disk' => $disk,
+            'mime_type' => $file->getMimeType(),
+            'size' => $file->getSize(),
+            'width' => $dimensions[0] ?? null,
+            'height' => $dimensions[1] ?? null,
+            'created_by' => auth()->id(),
+        ]);
+
+        return $media->id;
+    }
+
+    /**
+     * Check if file is allowed (security validation)
+     */
+    private function isFileAllowed($file): bool
+    {
+        $extension = strtolower($file->getClientOriginalExtension());
+        $mimeType = $file->getMimeType();
+
+        // Check forbidden extensions
+        if (in_array($extension, config('cms.security.forbidden_extensions', []))) {
+            return false;
+        }
+
+        // Check forbidden MIME types
+        if (in_array($mimeType, config('cms.security.forbidden_mime_types', []))) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

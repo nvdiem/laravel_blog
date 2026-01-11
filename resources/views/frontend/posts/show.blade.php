@@ -55,10 +55,10 @@
             </header>
 
             {{-- Thumbnail --}}
-            @if($post->thumbnail)
+            @if($post->thumbnail_url)
             <div class="mb-5">
                 <img
-                    src="{{ asset('storage/' . $post->thumbnail) }}"
+                    src="{{ $post->thumbnail_url }}"
                     alt="{{ $post->title }}"
                     class="img-fluid rounded shadow-sm"
                     style="width: 100%; max-height: 400px; object-fit: cover;"

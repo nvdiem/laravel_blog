@@ -28,7 +28,7 @@ return [
         'media' => [
             'disk' => 'content_uploads',
             'path' => 'uploads', // Base path within disk
-            'url_base' => '/content/uploads', // Public URL base
+            'url_base' => '/content', // Public URL base
         ],
 
         /*

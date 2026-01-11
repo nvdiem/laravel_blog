@@ -54,7 +54,7 @@ return [
 
         'content_uploads' => [
             'driver' => 'local',
-            'root' => public_path('content/uploads'),
+            'root' => public_path('content'),
             'url' => env('APP_URL').'/content/uploads',
             'visibility' => 'public',
             'throw' => false,
@@ -62,7 +62,7 @@ return [
 
         'page_bundles' => [
             'driver' => 'local',
-            'root' => public_path('content/page-bundles'),
+            'root' => public_path('content'),
             'url' => env('APP_URL').'/content/page-bundles',
             'visibility' => 'public',
             'throw' => false,
@@ -70,7 +70,7 @@ return [
 
         'content_tmp' => [
             'driver' => 'local',
-            'root' => public_path('content/tmp'),
+            'root' => public_path('content'),
             'url' => env('APP_URL').'/content/tmp',
             'visibility' => 'public',
             'throw' => false,

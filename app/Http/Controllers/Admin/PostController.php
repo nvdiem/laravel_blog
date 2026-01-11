@@ -163,7 +163,7 @@ class PostController extends Controller
     {
         $this->authorize('view', $post);
 
-        $post->load('tags');
+        $post->load(['tags', 'thumbnail']);
         $seoTitle = $post->seo_title ?: $post->title;
         $seoDescription = $post->seo_description ?: Str::limit(strip_tags($post->content), 160);
         return view('admin.posts.show', compact('post', 'seoTitle', 'seoDescription'));
@@ -176,7 +176,7 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
 
-        $post->load('categories'); // Load categories relationship
+        $post->load(['categories', 'thumbnail']); // Load categories and thumbnail relationships
         $categories = Category::active()->orderBy('name')->get();
         return view('admin.posts.edit', compact('post', 'categories'));
     }

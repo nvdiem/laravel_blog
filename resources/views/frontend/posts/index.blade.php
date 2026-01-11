@@ -24,7 +24,7 @@
                     {{-- THUMBNAIL --}}
                     <a href="{{ route('posts.show', $post->slug) }}" class="post-thumbnail d-block position-relative">
                         @if($post->thumbnail)
-                            <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}">
+                            <img src="{{ $post->thumbnail_url }}" alt="{{ $post->title }}">
                         @else
                              {{-- Generative colored placeholder --}}
                             <div style="width:100%; height:100%; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); display:flex; align-items:center; justify-content:center; color:#9ca3af;">

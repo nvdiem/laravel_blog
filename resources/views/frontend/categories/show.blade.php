@@ -39,7 +39,7 @@
                     {{-- THUMBNAIL --}}
                     @if($post->thumbnail)
                         <img
-                            src="{{ asset('storage/' . $post->thumbnail) }}"
+                            src="{{ $post->thumbnail_url }}"
                             class="card-img-top"
                             alt="{{ $post->title }}"
                         >

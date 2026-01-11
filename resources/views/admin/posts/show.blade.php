@@ -24,7 +24,7 @@
                 <div class="card-body">
                     @if($post->thumbnail)
                     <div class="mb-3">
-                        <img src="{{ asset('storage/' . $post->thumbnail) }}"
+                        <img src="{{ $post->thumbnail_url }}"
                              class="img-fluid rounded"
                              alt="{{ $post->title }}">
                     </div>
