@@ -177,8 +177,8 @@
                 <div class="card-header">Featured Image</div>
                 <div class="card-body">
                     <div id="thumbnailPreview" class="mb-2 bg-light border d-flex align-items-center justify-content-center text-muted small" style="min-height: 150px; border-style: dashed !important;">
-                        @if($post->thumbnail)
-                            <img id="thumbnailImage" src="{{ $post->thumbnail }}" alt="Thumbnail" class="img-fluid" style="max-height: 200px;">
+                        @if($post->thumbnail_url)
+                            <img id="thumbnailImage" src="{{ $post->thumbnail_url }}" alt="Thumbnail" class="img-fluid" style="max-height: 200px;">
                             <span id="noImageText" class="d-none">No Image Selected</span>
                         @else
                             <span id="noImageText">No Image Selected</span>
@@ -205,8 +205,8 @@
 <script>
 function openThumbnailPicker() {
     openMediaPicker(function(mediaId, mediaUrl) {
-        // Set thumbnail
-        document.getElementById('thumbnailInput').value = mediaUrl.replace('{{ config('app.url') }}/storage/', '');
+        // Set thumbnail - store Media ID for new system
+        document.getElementById('thumbnailInput').value = mediaId;
         document.getElementById('thumbnailImage').src = mediaUrl;
         document.getElementById('thumbnailImage').classList.remove('d-none');
         document.getElementById('noImageText').classList.add('d-none');

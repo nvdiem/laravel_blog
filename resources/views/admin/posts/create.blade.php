@@ -417,8 +417,8 @@ document.getElementById('title').addEventListener('input', function() {
 <script>
 function openThumbnailPicker() {
     openMediaPicker(function(mediaId, mediaUrl) {
-        // Set thumbnail
-        document.getElementById('thumbnailInput').value = mediaUrl.replace('{{ config('app.url') }}/storage/', '');
+        // Set thumbnail - store Media ID for new system
+        document.getElementById('thumbnailInput').value = mediaId;
         document.getElementById('thumbnailImage').src = mediaUrl;
         document.getElementById('thumbnailImage').classList.remove('d-none');
         document.getElementById('noImageText').classList.add('d-none');

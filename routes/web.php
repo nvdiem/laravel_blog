@@ -51,8 +51,3 @@ Route::get('/p/{slug}', [\App\Http\Controllers\Frontend\PageController::class, '
 Route::get('/posts/{slug}', [FrontendPostController::class, 'show'])->name('posts.show');
 Route::get('/category/{slug}', [\App\Http\Controllers\Frontend\CategoryController::class, 'show'])->name('categories.show');
 Route::get('/preview/posts/{post}', [\App\Http\Controllers\Frontend\PostController::class, 'preview'])->name('posts.preview')->middleware('signed');
-
-// Web App Manifest
-Route::get('/site.webmanifest', function () {
-    return response()->view('web-app-manifest')->header('Content-Type', 'application/manifest+json');
-})->name('web-app-manifest');

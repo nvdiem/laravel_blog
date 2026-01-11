@@ -126,7 +126,7 @@ class PostController extends Controller
             'title' => 'required|min:5',
             'content' => 'required',
             'status' => 'required|in:draft,review,approved,published',
-            'thumbnail' => 'nullable|string',
+            'thumbnail' => 'nullable|integer|exists:media,id', // Changed to validate Media ID
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
             'primary_category' => 'nullable|exists:categories,id',
@@ -197,7 +197,7 @@ class PostController extends Controller
             'title' => 'required|min:5',
             'content' => 'required',
             'status' => 'required|in:draft,review,approved,published',
-            'thumbnail' => 'nullable',
+            'thumbnail' => 'nullable|integer|exists:media,id', // Changed to validate Media ID
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
             'primary_category' => 'nullable|exists:categories,id',

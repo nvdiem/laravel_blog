@@ -16,7 +16,7 @@ class Post extends Model
         'title',
         'slug',
         'content',
-        'thumbnail',
+        'thumbnail_id', // Changed from 'thumbnail' to store Media ID
         'status',
         'published_at',
         'seo_title',
@@ -56,12 +56,53 @@ class Post extends Model
                     ->withTimestamps();
     }
 
-    // Get featured/thumbnail image
+    // Thumbnail relationship (belongsTo Media)
+    public function thumbnail()
+    {
+        return $this->belongsTo(Media::class, 'thumbnail_id');
+    }
+
+    // Get featured/thumbnail image (legacy morph relationship)
     public function featuredImage()
     {
         return $this->morphToMany(Media::class, 'mediable')
                     ->wherePivot('context', 'thumbnail')
                     ->first();
+    }
+
+    // Get thumbnail URL accessor
+    public function getThumbnailUrlAttribute()
+    {
+        // First try new thumbnail relationship
+        if ($this->thumbnail && is_object($this->thumbnail)) {
+            return $this->thumbnail->getPublicUrl();
+        }
+
+        // Fallback to legacy featuredImage
+        $featuredImage = $this->featuredImage();
+        if ($featuredImage) {
+            return $featuredImage->getPublicUrl();
+        }
+
+        // Fallback to old thumbnail_id field (for backward compatibility)
+        if ($this->thumbnail_id && is_numeric($this->thumbnail_id)) {
+            $media = Media::find($this->thumbnail_id);
+            if ($media) {
+                return $media->getPublicUrl();
+            }
+        }
+
+        // Last fallback - if thumbnail_id contains a URL directly (for migration)
+        if ($this->thumbnail_id && filter_var($this->thumbnail_id, FILTER_VALIDATE_URL)) {
+            return $this->thumbnail_id;
+        }
+
+        // Check old thumbnail field for backward compatibility
+        if ($this->getRawOriginal('thumbnail') && filter_var($this->getRawOriginal('thumbnail'), FILTER_VALIDATE_URL)) {
+            return $this->getRawOriginal('thumbnail');
+        }
+
+        return null;
     }
 
     // Post views relationship

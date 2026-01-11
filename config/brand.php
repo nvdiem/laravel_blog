@@ -37,11 +37,11 @@ return [
             'png_32' => 'brand/pointone/favicon-32.png',
         ],
 
-        'app_icons' => [
-            'apple_touch' => 'brand/pointone/apple-touch-icon.png', // 180x180
-            'icon_192' => 'brand/pointone/icon-192.png',
-            'icon_512' => 'brand/pointone/icon-512.png',
-        ],
+        // 'app_icons' => [
+        //     'apple_touch' => 'brand/pointone/apple-touch-icon.png', // 180x180
+        //     'icon_512' => 'brand/pointone/icon-512.png',
+        // ],
+        // Temporarily commented out until assets are available
 
         'social' => [
             'og_image' => 'brand/pointone/og-1200x630.png', // 1200x630
