@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Log In ‹ Laravel Blog — WordPress</title>
+    <title>{{ __('Log In') }} ‹ {{ config('brand.name') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -228,13 +228,13 @@
     </style>
 </head>
 <body>
-    <a href="{{ url('/') }}" class="back-link">← Back to Laravel Blog</a>
+    <a href="{{ url('/') }}" class="back-link">← {{ __('Back to') }} {{ config('brand.name') }}</a>
 
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
                 <h1 class="login-logo">
-                    <span></></span> Laravel Blog
+                    <span></></span> {{ config('brand.name') }}
                 </h1>
             </div>
 

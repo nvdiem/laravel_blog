@@ -4,8 +4,39 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ $seoTitle ?? \App\Models\SiteSetting::get('seo_title') ?: \App\Models\SiteSetting::get('site_name', config('app.name')) }}</title>
-    <meta name="description" content="{{ $seoDescription ?? \App\Models\SiteSetting::get('seo_description') }}">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset(config('brand.assets.favicon.ico')) }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset(config('brand.assets.favicon.png_16')) }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset(config('brand.assets.favicon.png_32')) }}">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset(config('brand.assets.app_icons.apple_touch')) }}">
+
+    <!-- Primary Meta Tags -->
+    <title>{{ $seoTitle ?? \App\Models\SiteSetting::get('seo_title') ?: config('brand.meta.title') }}</title>
+    <meta name="title" content="{{ $seoTitle ?? \App\Models\SiteSetting::get('seo_title') ?: config('brand.meta.title') }}">
+    <meta name="description" content="{{ $seoDescription ?? \App\Models\SiteSetting::get('seo_description') ?: config('brand.meta.description') }}">
+    <meta name="keywords" content="{{ config('brand.meta.keywords') }}">
+    <meta name="author" content="{{ config('brand.meta.author') }}">
+    <meta name="robots" content="{{ config('brand.meta.robots') }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{{ config('brand.social.og.type') }}">
+    <meta property="og:site_name" content="{{ config('brand.social.og.site_name') }}">
+    <meta property="og:title" content="{{ $seoTitle ?? \App\Models\SiteSetting::get('seo_title') ?: config('brand.social.og.title') }}">
+    <meta property="og:description" content="{{ $seoDescription ?? \App\Models\SiteSetting::get('seo_description') ?: config('brand.social.og.description') }}">
+    <meta property="og:image" content="{{ config('brand.social.og.image') }}">
+    <meta property="og:image:width" content="{{ config('brand.social.og.image_width') }}">
+    <meta property="og:image:height" content="{{ config('brand.social.og.image_height') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="{{ config('brand.social.twitter.card') }}">
+    <meta property="twitter:site" content="{{ config('brand.social.twitter.site') }}">
+    <meta property="twitter:creator" content="{{ config('brand.social.twitter.creator') }}">
+    <meta property="twitter:title" content="{{ $seoTitle ?? \App\Models\SiteSetting::get('seo_title') ?: config('brand.social.twitter.title') }}">
+    <meta property="twitter:description" content="{{ $seoDescription ?? \App\Models\SiteSetting::get('seo_description') ?: config('brand.social.twitter.description') }}">
+    <meta property="twitter:image" content="{{ config('brand.social.twitter.image') }}">
 
     {{-- FONTS --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,11 +57,16 @@
         <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
             @if(\App\Models\SiteSetting::get('site_logo'))
                 <img src="{{ asset('storage/' . \App\Models\SiteSetting::get('site_logo')) }}"
-                     alt="{{ \App\Models\SiteSetting::get('site_name', 'Laravel Blog') }}"
+                     alt="{{ \App\Models\SiteSetting::get('site_name', config('brand.name')) }}"
                      class="me-2"
                      style="height: 32px; width: auto; max-width: 120px;">
+            @else
+                <img src="{{ asset(config('brand.assets.logo.icon')) }}"
+                     alt="{{ config('brand.name') }}"
+                     class="me-2"
+                     style="height: 24px; width: 24px;">
             @endif
-            {{ \App\Models\SiteSetting::get('site_name', 'Antigravity') }}
+            {{ \App\Models\SiteSetting::get('site_name', config('brand.name')) }}
         </a>
 
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
@@ -67,10 +103,10 @@
 <footer>
     <div class="container text-center text-muted">
         <p class="mb-2">
-            © {{ date('Y') }} {{ \App\Models\SiteSetting::get('site_name', 'Laravel Blog') }}. All rights reserved.
+            {{ config('brand.footer.copyright') }}
         </p>
         <small>
-            Built for developers.
+            {{ config('brand.tagline') }}
         </small>
     </div>
 </footer>

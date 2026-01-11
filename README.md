@@ -1,7 +1,7 @@
-# Laravel Blog – Technical CMS
+# PointOne – Modern CMS Platform
 
-A lightweight, production-ready technical blog CMS built with Laravel.
-Designed for developers who value clean architecture, writing experience,
+A lightweight, production-ready content management system built with Laravel.
+Designed for modern websites that need clean architecture, excellent user experience,
 and long-term maintainability.
 
 ---
@@ -102,4 +102,3 @@ This system is intentionally simple and explicit.
 This project uses **AI-first documentation**.
 
 Important documents:
-

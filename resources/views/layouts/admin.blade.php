@@ -4,9 +4,44 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name') }} — Dashboard</title>
+    <!-- Primary Meta Tags -->
+    <title>{{ config('brand.meta.title') }} - {{ $title ?? 'Dashboard' }}</title>
+    <meta name="title" content="{{ config('brand.meta.title') }}">
+    <meta name="description" content="{{ config('brand.meta.description') }}">
+    <meta name="keywords" content="{{ config('brand.meta.keywords') }}">
+    <meta name="author" content="{{ config('brand.meta.author') }}">
+    <meta name="robots" content="{{ config('brand.meta.robots') }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{{ config('brand.social.og.type') }}">
+    <meta property="og:site_name" content="{{ config('brand.social.og.site_name') }}">
+    <meta property="og:title" content="{{ config('brand.social.og.title') }}">
+    <meta property="og:description" content="{{ config('brand.social.og.description') }}">
+    <meta property="og:image" content="{{ config('brand.social.og.image') }}">
+    <meta property="og:image:width" content="{{ config('brand.social.og.image_width') }}">
+    <meta property="og:image:height" content="{{ config('brand.social.og.image_height') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="{{ config('brand.social.twitter.card') }}">
+    <meta property="twitter:site" content="{{ config('brand.social.twitter.site') }}">
+    <meta property="twitter:creator" content="{{ config('brand.social.twitter.creator') }}">
+    <meta property="twitter:title" content="{{ config('brand.social.twitter.title') }}">
+    <meta property="twitter:description" content="{{ config('brand.social.twitter.description') }}">
+    <meta property="twitter:image" content="{{ config('brand.social.twitter.image') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset(config('brand.assets.favicon.ico')) }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset(config('brand.assets.favicon.png_16')) }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset(config('brand.assets.favicon.png_32')) }}">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset(config('brand.assets.app_icons.apple_touch')) }}">
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="{{ route('web-app-manifest') }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -21,7 +56,10 @@
 <div class="admin-sidebar">
     <div class="sidebar-header">
         <a class="sidebar-brand" href="{{ url('/admin') }}">
-            <span class="nav-icon"><i class="fas fa-chart-line"></i></span> {{ config('app.name') }}
+            <span class="nav-icon">
+                <img src="{{ asset(config('brand.assets.logo.icon')) }}" alt="{{ config('brand.name') }}" style="width: 20px; height: 20px; filter: brightness(0) invert(1);">
+            </span>
+            {{ config('brand.name') }}
         </a>
     </div>
 
@@ -137,7 +175,7 @@
 <!-- ===== FOOTER ===== -->
 <footer class="border-top py-3 bg-white admin-footer">
     <div class="container-fluid text-center">
-{{ config('app.name') }}
+        <small class="text-muted">{{ config('brand.footer.copyright') }}</small>
     </div>
 </footer>
 

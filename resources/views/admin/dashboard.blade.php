@@ -206,7 +206,7 @@
                     </div>
                     <hr>
                     <div class="text-center text-muted">
-                        <small>Laravel Blog CMS v1.0</small>
+                        <small>{{ config('brand.name') }} CMS v1.0</small>
                     </div>
                 </div>
             </div>

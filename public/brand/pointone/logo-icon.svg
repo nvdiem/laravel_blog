@@ -1,0 +1,10 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="pointone-icon">
+    <path d="M140 430V150C140 105.817 175.817 70 220 70H260C326.274 70 380 123.726 380 190C380 205.9 377.1 221.1 371.8 235"
+          stroke="#2563EB"
+          stroke-width="56"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+    <circle cx="390" cy="275" r="36" fill="#00DC82"/>
+</g>
+</svg>
